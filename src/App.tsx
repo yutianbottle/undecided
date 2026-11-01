@@ -3,6 +3,7 @@ import { LangProvider } from './i18n';
 import { useRoute } from './router';
 import Desk from './pages/Desk';
 import NewCase from './pages/NewCase';
+import Check from './pages/Check';
 import CaseFlow from './pages/CaseFlow';
 import Sealed from './pages/Sealed';
 import Reopen from './pages/Reopen';
@@ -16,6 +17,7 @@ function Root() {
   switch (route.name) {
     case 'desk': return <Desk />;
     case 'new': return <NewCase />;
+    case 'check': return <Check />;
     case 'case': return <CaseFlow id={route.id} />;
     case 'sealed': return <Sealed key={route.id} id={route.id} />;
     case 'reopen': return <Reopen key={route.id} id={route.id} />;

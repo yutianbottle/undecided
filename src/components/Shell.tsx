@@ -25,7 +25,7 @@ export function Shell({ children, glow = 0.10 }: { children: ReactNode; glow?: n
   const route = useRoute();
   const t = useT();
   const { saveMessage, saveOK, readIssue, retrySave } = useStore();
-  const focus = ['case', 'new', 'sealed', 'reopen'].includes(route.name);
+  const focus = ['case', 'new', 'check', 'sealed', 'reopen'].includes(route.name);
   useEffect(() => {
     const viewport = window.visualViewport;
     const update = () => document.documentElement.classList.toggle('keyboard-open', !!viewport && window.innerHeight - viewport.height > 150);
@@ -38,7 +38,7 @@ export function Shell({ children, glow = 0.10 }: { children: ReactNode; glow?: n
     {!focus && <Navigation />}
     {!saveOK && <aside className="save-alert" role="alert"><span>{saveMessage}</span><a href="#/me/data">{t.shell.openData}</a>{!readIssue && <button onClick={retrySave}>{t.shell.retry}</button>}</aside>}
     {children}
-    {focus && <span className="proto" role="status">{saveOK ? t.shell.saved : t.shell.saveErr}</span>}
+    {focus && route.name !== 'check' && <span className="proto" role="status">{saveOK ? t.shell.saved : t.shell.saveErr}</span>}
   </div>;
 }
 

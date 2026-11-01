@@ -4,6 +4,7 @@ import type { GateId } from './state/types';
 export type Route =
   | { name: 'desk' }
   | { name: 'new' }
+  | { name: 'check' }
   | { name: 'case'; id: string }
   | { name: 'sealed'; id: string }
   | { name: 'reopen'; id: string }
@@ -18,6 +19,7 @@ export function parse(hash: string): Route {
   if (p.length === 0) return { name: 'desk' };
   switch (p[0]) {
     case 'new': return { name: 'new' };
+    case 'check': return { name: 'check' };
     case 'ledger': return p[1] && ['quoting','accept','pricing','product','hiring','partner','channel','priceup'].includes(p[1]) ? { name: 'gate', gate: p[1] as GateId } : { name: 'ledger' };
     case 'me': return { name: 'me', tab: ['predictions', 'results', 'history', 'data'].includes(p[1]) ? p[1] as 'predictions' | 'results' | 'history' | 'data' : undefined };
     case 'about': return { name: 'about' };
@@ -35,6 +37,7 @@ export function href(r: Route): string {
   switch (r.name) {
     case 'desk': return '#/';
     case 'new': return '#/new';
+    case 'check': return '#/check';
     case 'case': return `#/case/${r.id}`;
     case 'sealed': return `#/case/${r.id}/sealed`;
     case 'reopen': return `#/case/${r.id}/reopen`;
