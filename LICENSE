@@ -1,0 +1,47 @@
+MIT License
+
+Copyright (c) 2026 未决 (Weijue) contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+内容与引用声明（NOTICE）
+
+1. 本项目的代码、界面文案、决策卡文字，采用上面这份 MIT 许可。
+
+2. 决策照明卡中的概念与方法，是对下列公开出版物的**转述与引用**，
+   不含任何原文摘录。版权归原作者与出版方所有：
+   Kahneman & Tversky (1974, 1979, 1981)；Kahneman (2011)；Arkes & Blumer (1985)；
+   Tversky & Kahneman (1973)；Wason (1960)；Buehler et al. (1994)；Sheeran (2002)；
+   Heath & Heath (2013)；Klein (2007)；Kross et al. (2014)；Flyvbjerg (2006)；
+   UK Department for Transport (2013)；CB Insights (2026)；Bezos (2015)；
+   Cialdini (2006)；Loftus (2005)；Moore & Healy (2008)；Samuelson & Zeckhauser (1988)；
+   Thaler (1980, 1985)；Staw (1976)；Fischhoff (1975)；Frederick et al. (2002)；
+   Ariely & Wertenbroch (2002)。
+
+   完整条目（含卷期页码与对应卡片）见应用内「关于 → 版权声明与引用来源」。
+
+3. 若权利人认为某处引用不当，请提出，会在核实后删除或改写。
+
+4. 本项目不提供法律、财税、心理、投资或医疗建议。
+   涉及合伙、股权、合同的决定，请咨询执业律师。
+
+5. 本项目不收集、不上传、不保存任何用户数据。所有内容仅存于使用者本机的浏览器存储中。
+   开发者不承担任何数据留存、备份或恢复的责任。

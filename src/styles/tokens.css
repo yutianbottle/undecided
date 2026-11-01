@@ -1,0 +1,63 @@
+:root{
+  /* 底色用深灰而不是纯黑：纯黑底上的浅字会出现 halation（笔画周围发雾），
+     中文小字尤其糊。深灰把"硬对比"换成"软对比"。 */
+  --ink:#111318;
+  --ink-2:#1A1E25;
+  --ink-3:#22272F;
+
+  /* 文字全部用实色 hex，不用 rgba——
+     rgba 的灰在卡片面上会二次混合，同一个 token 在不同面上呈现不同对比度。 */
+  --paper:#EDEBE6;      /* 15.6:1  正文 */
+  --paper-88:#DBD8D2;   /* 13.1:1  弱化正文 */
+  --paper-78:#C4C1BB;   /* 10.4:1  次要 */
+  --paper-66:#ADA9A3;   /*  7.9:1  说明 / hint */
+  --paper-56:#97938E;   /*  6.1:1  最小字：标签、天数 */
+  --paper-42:#76736E;   /*  3.9:1  仅占位符与装饰，不承载信息 */
+
+  --line:rgba(237,235,230,.16);
+  --line-2:rgba(237,235,230,.09);
+
+  --lamp:#D9AE63;       /* 9.0:1 */
+  --lamp-dim:rgba(217,174,99,.14);
+  --lamp-25:rgba(217,174,99,.26);
+  --fog:#93A3B5;        /* 7.2:1 */
+  --rust:#C4766A;       /* 5.4:1 */
+
+  --serif:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  --sans:"PingFang SC","Noto Sans SC",-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:"SF Mono","JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+
+  /* 中文最小 12px：11px 的汉字笔画会连在一起，加对比度也救不回来 */
+  --fs-q:30px; --fs-h1:34px; --fs-h2:22px; --fs-body:15px;
+  --fs-hint:13px; --fs-label:12px; --fs-micro:12px;
+  --lh:1.9; --lh-tight:1.5;
+  --sp1:8px; --sp2:16px; --sp3:24px; --sp4:40px; --sp5:72px;
+  --radius:2px;
+  --w:680px;
+  --glow:.14;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+  --t-fast:160ms; --t-base:240ms; --t-slow:600ms;
+}
+
+/* 底噪：压住深灰的色阶带 */
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:60;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  opacity:.035;
+}
+
+/* 光：四段色标，避免椭圆硬边 */
+.glow{
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 36% 28% at 50% 11%,
+      rgba(222,186,126,calc(var(--glow) * 1.00)) 0%,
+      rgba(210,172,110,calc(var(--glow) * 0.32)) 55%,
+      rgba(198,161,91,0) 100%),
+    radial-gradient(ellipse 110% 92% at 50% -12%,
+      rgba(198,161,91,calc(var(--glow) * 0.26)) 0%,
+      rgba(198,161,91,calc(var(--glow) * 0.08)) 52%,
+      rgba(198,161,91,0) 100%);
+  transition:background 1200ms var(--ease);
+}
