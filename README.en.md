@@ -82,6 +82,23 @@ Eight kinds: quoting, taking a client, pricing, keep or kill, hiring, partnershi
 
 ---
 
+## Before you start: check your state
+
+"New decision" does not drop you straight into the flow. First it asks four things:
+
+- **Tired** — short on sleep, or running on empty
+- **Hungry** — you have not eaten properly today
+- **Angry** — a conflict just happened and has not settled
+- **Rushed** — you want it settled today, badly
+
+Tick any one and it will not let you continue. All it says is: **it will still be here tomorrow.**
+
+This is not a moral reminder. In that state everything tilts one way — what deserves caution gets rushed, what deserves letting go gets held onto. It is not that your judgement is poor; it is that what you can see right now is off.
+
+It is not recorded, not scored, and not one of the seven steps. It just stands at the door.
+
+---
+
 ## How one decision goes
 
 1. **Options** — one of them must be "do nothing / decline / keep as is", and you mark it yourself.

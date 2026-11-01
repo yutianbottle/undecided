@@ -77,7 +77,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
   const unlocked = completed.length > 0;
   const begin = () => {
     try { sessionStorage.setItem('weijue.prefill', JSON.stringify({ gate })); } catch { /* 手动选择仍可继续 */ }
-    window.location.hash = '#/new';
+    window.location.hash = '#/check';
   };
 
   // 按你在这个场景做过几次，逐步展开。不是加密，是"没做过看了也记不住"

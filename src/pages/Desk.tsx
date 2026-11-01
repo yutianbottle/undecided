@@ -7,7 +7,7 @@ import type { DecisionCase, GateId } from '../state/types';
 
 function start(gate: GateId, question: string) {
   try { sessionStorage.setItem('weijue.prefill', JSON.stringify({ gate, question })); } catch { /* 仍可手动新建 */ }
-  window.location.hash = '#/new';
+  window.location.hash = '#/check';
 }
 
 export default function Desk() {
@@ -60,7 +60,7 @@ export default function Desk() {
             <h1 className="h1">{t.nav.brand}</h1>
             <div className="hint" style={{ marginTop: 6 }}>{t.desk.tagline}</div>
           </div>
-          <a className="btn" href="#/new">{t.desk.newCase}</a>
+          <a className="btn" href="#/check">{t.desk.newCase}</a>
         </div>
 
         {!empty && <p className="hint desk-count">{t.desk.count(live.length, sealed.length)}</p>}
@@ -84,7 +84,7 @@ export default function Desk() {
             </div>
 
             <div style={{ marginTop: 'var(--sp4)' }}>
-              <a className="btn" href="#/new">{t.desk.writeOwn}</a>
+              <a className="btn" href="#/check">{t.desk.writeOwn}</a>
             </div>
           </div>
         ) : (
@@ -125,7 +125,7 @@ export default function Desk() {
               </>
             )}
 
-            <a className="newrow" href="#/new">{t.desk.newRow}</a>
+            <a className="newrow" href="#/check">{t.desk.newRow}</a>
           </>
         )}
 
