@@ -128,7 +128,7 @@ export default function About() {
           </p><p className="card-d" style={{ fontSize: 13, marginTop: 20 }}>
             {L('5.', '5.')} {L('基准率', 'Base rates')}{L('：有来源的会标注来源；没有来源的写明“暂无基准”。绝不编造数字——这是本项目唯一的硬约束。', ': sourced numbers are cited; unsourced ones are marked “no base rate” — no invented figures, that being the project’s one hard rule.')}
           </p><p className="card-d" style={{ fontSize: 13, marginTop: 20 }}>
-            {L('6.', '6.')} {L('代码许可', 'Licence')}{L('：MIT。可以自由使用、修改、分发，包括商用；不附带任何担保。完整条款见仓库根目录的 LICENSE 文件。', ': MIT. Use it, change it, redistribute it, including commercially; no warranty. Full terms in LICENSE at the repo root.')}
+            {L('6.', '6.')} {L('代码许可', 'Licence')}{L('：PolyForm Noncommercial 1.0.0。可以自己用、自己改、非商业分发；不可用于任何商业目的，改过的版本也一样。商业授权需单独书面同意。完整条款见仓库根目录的 LICENSE。', ': PolyForm Noncommercial 1.0.0. Use it, change it, share it non-commercially; no commercial use, including of modified versions. Commercial use requires written permission. Full terms in LICENSE at the repo root.')}
           </p>
         </Section>
 

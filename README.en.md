@@ -224,7 +224,7 @@ Homepage: <https://longway-li.pages.dev>
 
 ## Licence and sources
 
-- Code and original text: **MIT**, see [LICENSE](./LICENSE).
+- Code and original text: **PolyForm Noncommercial 1.0.0**, see [LICENSE](./LICENSE). Use it, change it, share it non-commercially; **no commercial use, including of modified versions**. Commercial licensing requires a separate agreement. [Commits published before 2026-11-02 were MIT; those grants cannot be revoked.]
 - The concepts and methods in the decision cards are **paraphrases and citations** of published work, with no verbatim excerpts; copyright remains with the authors and publishers. The full list is in the app under "About → Copyright and sources"; the card index is in [docs/02-决策照明卡总表.md](./docs/02-决策照明卡总表.md).
 - **No legal, tax, psychological, investment or medical advice.** For partnership, equity or contract decisions, consult a practising lawyer.
 - **No promise of better decisions.** It helps you see clearly, write it down, and come back to it.
@@ -241,7 +241,7 @@ It only guarantees that you thought about it, wrote it down, and will come back 
 
 ## Support
 
-This project is free, has no ads, and uploads nothing. The code is MIT — take it, change it, ship it.
+This project is free, has no ads, and uploads nothing. Take the code, change it for yourself — but not for commercial use.
 
 If it helped you settle something that had been hanging for a while, you can buy me a coffee.
 
