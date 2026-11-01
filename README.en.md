@@ -199,7 +199,7 @@ The cost is just as clear: change computer, change browser, clear the cache, and
 
 ## About the author
 
-**Longway Li** — a company of one, building tools on the side.
+**Longway Li** — a studio of one, building tools on the side.
 
 Homepage: <https://longway-li.pages.dev>
 
