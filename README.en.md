@@ -197,6 +197,14 @@ The cost is just as clear: change computer, change browser, clear the cache, and
 
 ---
 
+## About the author
+
+**Longway Li** — a company of one, building tools on the side.
+
+Homepage: <https://longway-li.pages.dev>
+
+---
+
 ## Licence and sources
 
 - Code and original text: **MIT**, see [LICENSE](./LICENSE).
@@ -211,3 +219,14 @@ The cost is just as clear: change computer, change browser, clear the cache, and
 This desk does not tell you what to choose.
 
 It only guarantees that you thought about it, wrote it down, and will come back to settle the account.
+
+---
+
+## Support
+
+This project is free, has no ads, and uploads nothing. The code is MIT — take it, change it, ship it.
+
+If it helped you settle something that had been hanging for a while, you can buy me a coffee. The money is not the point; knowing someone actually uses it is.
+
+<img src="./docs/donate.jpg" alt="Donation QR code" width="300">
+
