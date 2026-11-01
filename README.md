@@ -201,7 +201,7 @@ npm run preview    # 本地预览
 
 ## 关于作者
 
-**龙威（Longway Li）** —— 一个人做公司，顺便做工具。
+**龙威（Longway Li）**：一个人做工作室，顺便做工具。
 
 个人主页：<https://longway-li.pages.dev>
 
