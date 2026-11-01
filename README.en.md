@@ -226,7 +226,7 @@ It only guarantees that you thought about it, wrote it down, and will come back 
 
 This project is free, has no ads, and uploads nothing. The code is MIT — take it, change it, ship it.
 
-If it helped you settle something that had been hanging for a while, you can buy me a coffee. The money is not the point; knowing someone actually uses it is.
+If it helped you settle something that had been hanging for a while, you can buy me a coffee.
 
 <img src="./docs/donate.jpg" alt="Donation QR code" width="300">
 
