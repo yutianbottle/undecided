@@ -2,7 +2,7 @@
 
 > 一个人做公司，没人跟你商量。
 
-**English: [README.en.md](./README.en.md)**
+**English: [README.en.md](./README.en.md)** ｜ **在线使用：<https://yutianbottle.github.io/undecided/>**
 
 一个不联网的决策账本。你把还没定的事写进去，落槌，封存，到期再打开，它把当时的预测和今天的结果并排放着。
 
@@ -165,7 +165,16 @@ npm run preview    # 本地预览
 
 用 `npm run dev` 意味着每次都要开终端。如果打算长期用，把它部署一次，之后点图标就能打开，不用碰命令。
 
-**三步：**
+**方式一：GitHub Pages（本仓库已配好）**
+
+推送到 `main` 就会自动构建并部署，配置文件在 `.github/workflows/deploy.yml`。
+
+1. 在你的仓库里打开 Settings → Pages
+2. Source 选 **GitHub Actions**
+3. 推一次 commit，或在 Actions 里手动运行「Deploy to GitHub Pages」
+4. 得到 `https://<你的用户名>.github.io/undecided/`
+
+**方式二：Vercel / Cloudflare Pages**
 
 1. 把项目推到一个 GitHub 仓库（公开私有都行）
 2. 打开 Vercel 或 Cloudflare Pages，用 GitHub 登录，选中这个仓库，直接部署——它们会自动认出这是 Vite 项目，不需要写任何配置

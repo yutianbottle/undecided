@@ -2,7 +2,7 @@
 
 > You run a company of one. There is no one to ask.
 
-**中文: [README.md](./README.md)**
+**中文: [README.md](./README.md)** ｜ **Live: <https://yutianbottle.github.io/undecided/>**
 
 A decision ledger that never goes online. You write down what is still undecided, make the call, seal it, and open it again when it is due — the prediction you wrote sits next to the result you got.
 
@@ -163,7 +163,16 @@ npm run preview    # local preview
 
 `npm run dev` means opening a terminal every time. If you plan to keep using this, deploy it once and then just click an icon.
 
-**Three steps:**
+**Option 1: GitHub Pages (already configured)**
+
+A push to `main` builds and deploys automatically; the workflow is in `.github/workflows/deploy.yml`.
+
+1. In your repository, go to Settings → Pages
+2. Set Source to **GitHub Actions**
+3. Push a commit, or run "Deploy to GitHub Pages" manually from the Actions tab
+4. You get `https://<your-username>.github.io/undecided/`
+
+**Option 2: Vercel / Cloudflare Pages**
 
 1. Push the project to a GitHub repository (public or private)
 2. Open Vercel or Cloudflare Pages, sign in with GitHub, pick the repo and deploy — both recognise a Vite project and need no configuration
