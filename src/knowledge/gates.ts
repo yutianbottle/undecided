@@ -15,7 +15,7 @@ export const GATES: Gate[] = [
     baseRate: null,
     baseRateNote: '这一行本该放「同类项目通常报多少」。目前没有可靠的公开数据。但你自己有：翻一遍过去 12 个月的报价和成交记录，中位数就是你的基准。',
     optionHints: ['按我算的价报', '降一档报', '不接'],
-    optionHintsEn: ['Quote what you calculated', 'Quote one tier lower', 'Decline'],
+    optionHintsEn: ['Quote as calculated', 'Quote one tier lower', 'Decline'],
     aiTakes: [
       '建议先评估客户的预算范围，再确定报价区间',
       '建议参考同行业的市场价格，保持竞争力',
@@ -36,7 +36,7 @@ export const GATES: Gate[] = [
     baseRate: null,
     baseRateNote: '本该放「这类客户的平均回款周期和返工率」。公开数据没有。你自己的历史最实：过去 10 单里，有几单拖过款、拖了多久。',
     optionHints: ['接', '不接', '接但要预付款'],
-    optionHintsEn: ['Take it', 'Decline', 'Take it with prepayment'],
+    optionHintsEn: ['Take it', 'Decline', 'Take with prepayment'],
     aiTakes: [
       '建议评估这个项目的投入产出比',
       '建议了解客户的付款能力和信用记录',
@@ -99,7 +99,7 @@ export const GATES: Gate[] = [
     baseRate: null,
     baseRateNote: '本该放「这类岗位的 90 天留存率」。招聘平台的公开数据多为平台口径，未必可信。你自己的情况更实：上一个外包或兼职，干了多久。',
     optionHints: ['招', '不招', '先外包 3 个月'],
-    optionHintsEn: ['Hire', 'Do not hire', 'Outsource for three months'],
+    optionHintsEn: ['Hire', 'Do not hire', 'Outsource 3 months'],
     aiTakes: [
       '建议先明确岗位职责和任职要求',
       '建议评估招聘成本和预期产出',
