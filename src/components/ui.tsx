@@ -8,7 +8,7 @@ export function Field({ value, onChange, max, placeholder, rows = 1, autoFocus, 
   const id = useId();
   const props = {
     id, className: 'field', value, maxLength: max, placeholder, autoFocus,
-    'aria-label': label ?? placeholder ?? '填写内容', 'aria-describedby': `${id}-count${error ? ` ${id}-error` : ''}`,
+    'aria-label': label ?? placeholder ?? '', 'aria-describedby': `${id}-count${error ? ` ${id}-error` : ''}`,
     'aria-invalid': !!error,
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value),
   };
@@ -22,7 +22,9 @@ export function Field({ value, onChange, max, placeholder, rows = 1, autoFocus, 
   );
 }
 export function StepBar({ step, total }: { step: number; total: number }) {
-  return <div className="progress" role="progressbar" aria-label="决策进度" aria-valuenow={step} aria-valuemin={0} aria-valuemax={total}>
+  const { lang } = useLang();
+  const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
+  return <div className="progress" role="progressbar" aria-label={L('决策进度', 'Decision progress')} aria-valuenow={step} aria-valuemin={0} aria-valuemax={total}>
     <i style={{ width: `${Math.min(100, step / total * 100)}%` }} />
   </div>;
 }
