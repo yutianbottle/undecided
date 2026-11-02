@@ -40,6 +40,38 @@
   --t-fast:160ms; --t-base:240ms; --t-slow:600ms;
 }
 
+/* 大屏：内容和字号一起长大。缺了这段，宽窗口里 680px 一条竖带，字显得很小。 */
+@media (min-width: 1100px){
+  :root{
+    --fs-q:34px; --fs-h1:38px; --fs-h2:25px; --fs-body:16px;
+    --fs-hint:14px; --fs-label:13px; --fs-micro:12px;
+    --w:760px;
+    --sp4:48px; --sp5:88px;
+  }
+}
+@media (min-width: 1500px){
+  :root{
+    --fs-q:40px; --fs-h1:46px; --fs-h2:30px; --fs-body:18px;
+    --fs-hint:15px; --fs-label:14px; --fs-micro:13px;
+    --w:900px;
+    --sp4:60px; --sp5:112px;
+  }
+}
+@media (min-width: 2000px){
+  :root{
+    --fs-q:44px; --fs-h1:50px; --fs-h2:32px; --fs-body:19px;
+    --fs-hint:16px; --fs-label:15px;
+    --w:960px;
+  }
+}
+/* 窄屏：缩小留白，字不缩（中文缩到 12px 以下会糊） */
+@media (max-width: 720px){
+  :root{
+    --fs-q:26px; --fs-h1:28px; --fs-h2:20px;
+    --sp4:32px; --sp5:56px;
+  }
+}
+
 /* 底噪：压住深灰的色阶带 */
 body::after{
   content:""; position:fixed; inset:0; pointer-events:none; z-index:60;

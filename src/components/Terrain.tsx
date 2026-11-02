@@ -83,7 +83,7 @@ export function Terrain(props: TerrainProps): JSX.Element {
 
   return (
     <div>
-    <div className="terrain-scroll" role="region" aria-label="关口地形图，可横向滚动" tabIndex={0}><svg
+    <div className="terrain-scroll" role="region" aria-label={L('关口地形图，可横向滚动', 'Gate map, scroll horizontally')} tabIndex={0}><svg
       viewBox={`0 0 ${W} ${H}`}
       width="100%"
       preserveAspectRatio="xMidYMid meet"

@@ -35,7 +35,7 @@ export default function Check() {
         <h1 className="h2" style={{ marginTop: 8 }}>
           {L('你现在是什么状态', 'What state are you in right now')}
         </h1>
-        <p className="hint" style={{ marginTop: 12, maxWidth: 560 }}>
+        <p className="hint" style={{ marginTop: 12, maxWidth: 620 }}>
           {L(
             '这一步不在七步里，在它前面。它不评价你，只是先确认一件事：现在是不是一个能做决定的时候。',
             'This is not one of the seven steps. It comes before them. It is not judging you — it only checks whether now is a time to decide at all.',
