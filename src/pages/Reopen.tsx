@@ -32,7 +32,7 @@ export default function Reopen({ id }: { id: string }) {
       <div className="card" style={{ marginTop: 24 }}>
         <div className="card-kicker">{L('当时的选择与预测 · 只读', 'The choice and prediction · read-only')}</div>
         <p className="card-d">{L('选了「', 'Chose "')}{c.chosen}{L('」', '"')}</p>
-        <p className="card-d">{c.prediction}（{c.predictedP}%）</p>
+        <p className="card-d">{c.prediction}{L(`（${c.predictedP}%）`, ` (${c.predictedP}%)`)}</p>
         <DecisionRecord c={c} />
       </div>
       {!ready ? <>

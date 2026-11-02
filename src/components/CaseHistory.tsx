@@ -41,7 +41,7 @@ export function CaseHistory({ cases }: { cases: DecisionCase[] }) {
     </div>
     <p className="hint" role="status">{L(`共 ${filtered.length} 件`, `${filtered.length} total`)}</p>
     {filtered.length ? <div className="caselist" style={{ marginTop: 12 }}>{filtered.slice(0, limit).map(c => <a className="caserow" key={c.id} href={caseLink(c)}>
-      <div className="case-main"><h3 className="caselow-q">{c.question}</h3><p className="hint">{gateName(c.gate)} · {statusLabel[c.status]}</p>
+      <div className="case-main"><h3 className="caselow-q">{c.question}</h3><p className="hint">{gateName(c.gate, lang)} · {SL[c.status]}</p>
         {c.result && <p className="card-d">{L('结果：', 'Result: ')}{c.result}</p>}
         {!c.result && c.prediction && <p className="card-d">{L('预测：', 'Predicted: ')}{c.prediction}</p>}
       </div>

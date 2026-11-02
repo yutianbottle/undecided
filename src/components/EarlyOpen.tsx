@@ -16,6 +16,6 @@ export function EarlyOpen({ c }: { c: DecisionCase }) {
         <button className="btn" onClick={() => { openEarly(c.id); window.location.hash = `#/case/${c.id}/reopen`; }}>{L('确认提前开封', 'Open it early')}</button>
         <button className="btn btn--text" onClick={() => setAsk(false)}>等到期再看</button>
       </div>
-    </> : <button className="btn btn--text" onClick={() => setAsk(true)}>已经有结果了，提前开封</button>}
+    </> : <button className="btn btn--text" onClick={() => setAsk(true)}>{L('已经有结果了，提前开封', 'Already have a result — open it early')}</button>}
   </div>;
 }

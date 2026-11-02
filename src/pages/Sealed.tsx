@@ -26,7 +26,7 @@ export default function Sealed({ id }: { id: string }) {
       {c.openedEarlyAt && <p className="hint">{L('提前开封：', 'Opened early: ')}{fmtDateTime(c.openedEarlyAt)}</p>}
     </div>
     <div className="card" style={{ marginTop: 32 }}><div className="card-kicker">{L('你当时写的', 'What you wrote')} · {gateName(c.gate, lang)}</div>
-      <h2 className="card-t">{c.question}</h2><p className="card-d">{L('选了：', 'Chose: ')}{c.chosen}<br />{L('预测：', 'Predicted: ')}{c.prediction}（{c.predictedP}%）</p>
+      <h2 className="card-t">{c.question}</h2><p className="card-d">{L('选了：', 'Chose: ')}{c.chosen}<br />{L('预测：', 'Predicted: ')}{c.prediction}{L(`（${c.predictedP}%）`, ` (${c.predictedP}%)`)}</p>
       <DecisionRecord c={c} />
     </div>
     {due || c.status === 'archived' ? <div className="inline-actions"><a className="btn btn--rule" href={`#/case/${id}/reopen`}>{c.status === 'archived' ? L('查看归档结果', 'View archived result') : L('现在就能回看', 'Review it now')}</a></div>
