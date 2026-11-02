@@ -115,57 +115,7 @@ If you write "this time is different", you have to name an observable signal, or
 
 ## Why it is dark, and why there is only one light
 
-Neither is a taste preference. Both follow from when this thing gets used.
-
-### The hour decides the colour
-
-These decisions are not made in meeting rooms. They are made at 21:40 on a Thursday when a client says they need a price by tomorrow; at 1am when you are still awake thinking about the product you have been building for eleven months; in bed, going over the message you did not dare answer.
-
-A tool opened at those three moments should not be a white screen asking you to work overtime. Pure black is worse — light text blooms, and dense CJK strokes smear. So the ground is a dark grey that is near black but not black (`#111318`), and the text is warm off-white (`#EDEBE6`) — paper, not screen.
-
-Same reason the corner radius is 2px. Most products use 12–24px soft corners; 2px puts this back on the paper side, rather than the "another app" side.
-
-### The light is the limit of what the product can do
-
-It does not offer judgement. It offers **visibility**. That difference becomes one element: light.
-
-There is exactly one light on the whole site, coming from above, a single radial point, never stacked blooms. Its strength follows the seven steps (CSS variable `--glow`):
-
-| Step | Intensity |
-|---|---|
-| Opening the case | .14 |
-| Laying out options | .20 |
-| Writing facts | .28 |
-| The third-person question | .22 |
-| **The light** | **.40 (brightest)** |
-| The call | .06 |
-| Sealed | .04 |
-
-Two things are worth noticing.
-
-**The "light" step is the brightest.** It is the only screen that puts what you should know in front of you — where people usually go wrong in this kind of decision, one move you can use now, whether any data exists. It does not tell you what to choose; it only gathers that in the light.
-
-**After the call the light nearly goes out.** .40 down to .06. Once the decision is made, the light should be put away. What remains is not thinking, it is waiting — and waiting should not be interrupted.
-
-The change of light is the only animation on the site allowed to exceed 300ms (1200ms ease-in), and it always comes from above, never sweeping sideways.
-
-### Why a single beam, not a lit room
-
-If this were a "decision advisor" it would hand you 45 cards, 12 frameworks, and a dashboard. That is lighting a room, not a desk.
-
-Here you get one thing at a time: **one caution, one move, one answer to "is there data".**
-
-Not for the sake of restraint. Put 45 suggestions in front of someone with one hanging decision and they will pick the one that feels most agreeable — and agreeable usually means "supports what I already wanted to do".
-
-So the 45 cards unfold by how many times you have decided in a given gate: the first time, you get one. Reading the rest before you have been burned in that situation is just words.
-
-### Remove those two things
-
-And it becomes another to-do list: white, neutral, benign, easy to close.
-
-The problem this thing solves was never "it was not written down". It was **written down and still not taken seriously**.
-
-The dark makes it a desk at night; the light makes it someone pushing the lamp towards your hand. Neither fixes a decision — they only make you willing to sit down.
+These decisions happen at night — a client messages you just before bed, you are still awake at 1am, you run through the message you did not dare answer. A white screen at those hours is asking you to work overtime, so it is a dark desk with warm paper on it. And there is one light on that desk, because the product offers no judgement, only visibility: it lights up one caution, one move, one answer to "is there data". A desk lamp, not a lit room.
 
 ---
 
