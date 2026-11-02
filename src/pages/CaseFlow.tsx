@@ -5,7 +5,7 @@ import { useStore } from '../state/store';
 import { lightUp } from '../knowledge/engine';
 import { useLang } from '../i18n';
 import { getGate, gateName } from '../knowledge/gates';
-import { LIMITS, canRule, needsFalsify, claimsSpecial, vagueHits, ABAND_REASONS, hasMarkedNonAction, stepIssues, completeIssues } from '../lib/validate';
+import { LIMITS, canRule, needsFalsify, claimsSpecial, vagueHits, ABAND_REASONS, stepIssues, completeIssues } from '../lib/validate';
 import { daysSince, fmtDate, futureInput, dateInputISO, todayInput } from '../lib/date';
 import { DecisionRecord } from '../components/DecisionRecord';
 import type { DecisionCase, LightCard, AbandReason } from '../state/types';
@@ -125,6 +125,7 @@ function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<Decis
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
   const [draft, setDraft] = useState('');
+  const [lengthErr, setLengthErr] = useState('');
   const gateDef = getGate(c.gate);
   const hintPool = lang === 'zh' ? gateDef.optionHints : (gateDef.optionHintsEn ?? gateDef.optionHints);
   const hints = hintPool.filter((h) => !c.options.includes(h));
@@ -134,13 +135,22 @@ function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<Decis
   function add(text: string) {
     const t = text.trim();
     if (!t || c.options.length >= 4 || c.options.includes(t)) return;
+    // 存储层硬校验 20 字符；超长会被静默丢弃，所以这里先拦住并说明
+    if (t.length > LIMITS.option) {
+      setLengthErr(L(`选项最多 ${LIMITS.option} 个字（这句 ${t.length} 个）。`, `Options are limited to ${LIMITS.option} characters (this one is ${t.length}).`));
+      return;
+    }
+    setLengthErr('');
     set({ options: [...c.options, t] });
     setDraft('');
   }
 
   return (
     <div>
-      <p className="hint" style={{ marginBottom: 6 }}>{L('摆上你的选项。必须有一张是「不做 / 不接 / 维持现状」。', 'Lay out your options. One must be "do nothing / decline / keep as is".')}</p>
+      <p className="hint" style={{ marginBottom: 6 }}>{L(
+            '摆上你的选项。其中一项必须是「不做」——不接这单、不上这个产品、维持现状。由你自己标出来：因为「不做」常常写得很像「做」（比如“先观望”），系统不去猜。',
+            'Lay out your options. One of them must be the do-nothing option — decline the job, do not ship it, keep things as they are. You mark it yourself, because "do nothing" often reads like "do something" (e.g. "wait and see"). The system will not guess.',
+          )}</p>
 
       <div className="opts">
         {c.options.map((o, i) => (
@@ -149,7 +159,7 @@ function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<Decis
             <span className="opt-txt">{o}</span>
             <button className="opt-mark" aria-pressed={c.nonActionOption === o}
               aria-label={L(`将「${o}」标记为非行动选项`, `Mark "${o}" as the do-nothing option`)} onClick={() => set({ nonActionOption: o })}>
-              {c.nonActionOption === o ? L('已标记 · 非行动', 'Marked · do nothing') : L('标为非行动', 'Mark as do nothing')}</button>
+              {c.nonActionOption === o ? L('已标记：不做', 'Marked: do nothing') : L('标为「不做」', 'Mark as do nothing')}</button>
             <button className="opt-lock" aria-label={L(`移除「${o}」`, `Remove "${o}"`)} onClick={() => set({ options: c.options.filter((_, j) => j !== i) })}>{L('移除', 'Remove')}</button>
           </div>
         ))}
@@ -164,15 +174,14 @@ function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<Decis
       {hints.length > 0 && c.options.length < 4 && (
         <div style={{ marginTop: 'var(--sp2)' }}>
           <span className="hint">{L('参考：', 'Suggestions: ')}</span>
+          {lengthErr && <p className="warn" style={{ marginTop: 8 }}>{lengthErr}</p>}
           {hints.map((h) => (
             <button key={h} className="btn" style={{ fontSize: 12, padding: '7px 12px', marginRight: 8, marginTop: 8 }} onClick={() => add(h)}>{h}</button>
           ))}
         </div>
       )}
 
-      {!hasMarkedNonAction(c) && <p className="hint" style={{ marginTop: 16 }}>
-        {L('请亲自标记一个「不做／不接／维持现状」的选项。系统不会仅凭“不”字判断。', 'Mark one option yourself as do-nothing / decline / keep as is. The system will not guess from the wording.')}
-      </p>}
+      
       <Miss items={issues} />
 
       <div className="row-actions">

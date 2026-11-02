@@ -38,7 +38,6 @@ export function Shell({ children, glow = 0.10 }: { children: ReactNode; glow?: n
     {!focus && <Navigation />}
     {!saveOK && <aside className="save-alert" role="alert"><span>{saveMessage}</span><a href="#/me/data">{t.shell.openData}</a>{!readIssue && <button onClick={retrySave}>{t.shell.retry}</button>}</aside>}
     {children}
-    {focus && route.name !== 'check' && <span className="proto" role="status">{saveOK ? t.shell.saved : t.shell.saveErr}</span>}
   </div>;
 }
 
