@@ -290,7 +290,7 @@ select option{background:var(--ink-2);color:var(--paper)}
 
 
 /* ── 开始前的状态确认 ─────────────────────────── */
-.check-list{display:flex;flex-direction:column;margin:28px 0 8px;max-width:560px}
+.check-list{display:flex;flex-direction:column;margin:28px 0 8px;max-width:620px}
 .check-list li{border-bottom:1px solid var(--line-2)}
 .check-row{display:grid;grid-template-columns:22px 1fr;column-gap:14px;row-gap:4px;padding:16px 4px;cursor:pointer;align-items:center}
 .check-row input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1px solid var(--paper-42);border-radius:2px;background:transparent;cursor:pointer;margin:0;display:grid;place-items:center}
@@ -299,7 +299,7 @@ select option{background:var(--ink-2);color:var(--paper)}
 .check-row input:focus-visible{outline:2px solid var(--fog);outline-offset:2px}
 .check-name{font-size:15px;color:var(--paper);line-height:1.4}
 .check-desc{grid-column:2;font-size:13px;color:var(--paper-66);line-height:1.6}
-.check-block{margin-top:24px;padding:20px;border:1px solid var(--line-2);border-left:2px solid var(--rust);background:var(--ink-2);max-width:560px}
+.check-block{margin-top:24px;padding:20px;border:1px solid var(--line-2);border-left:2px solid var(--rust);background:var(--ink-2);max-width:620px}
 .check-block-t{font-size:15px;color:var(--rust);margin-bottom:10px}
 .check-block-d{font-size:13px;color:var(--paper-78);line-height:1.8;margin-bottom:10px}
 .check-block-d:last-of-type{margin-bottom:0}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Shell, Foot } from '../components/Shell';
 import { useLang } from '../i18n';
 import { Field } from '../components/ui';
-import { GATES } from '../knowledge/gates';
+import { GATES, gateName } from '../knowledge/gates';
 import { useStore } from '../state/store';
 import { LIMITS } from '../lib/validate';
 import type { GateId, DecisionCase } from '../state/types';
@@ -74,7 +74,7 @@ export default function NewCase() {
           <div className="gates">
             {GATES.map((g) => (
               <button key={g.id} className={`gatebtn${gate === g.id ? ' on' : ''}`}
-                aria-pressed={gate === g.id} onClick={() => setGate(g.id)}>{g.name}</button>
+                aria-pressed={gate === g.id} onClick={() => setGate(g.id)}>{gateName(g.id, lang)}</button>
             ))}
             <button className={`gatebtn${gate === 'other' ? ' on' : ''}`}
               aria-pressed={gate === 'other'} onClick={() => setGate('other')}>{L('其他', 'Other')}</button>
