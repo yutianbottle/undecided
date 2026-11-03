@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 import { Shell, Foot } from '../components/Shell';
 import { useLang } from '../i18n';
-import { gateLedger } from '../knowledge/engine';
+import { gateLedger, calibration } from '../knowledge/engine';
 import { gateName, gateBaseRate, layerName } from '../knowledge/gates';
 import { floorResult, parseAmount } from '../knowledge/calc';
 import { href } from '../router';
@@ -151,6 +151,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
   const { gate: g, biases, methods, evidences } = gateLedger(gate, lang);
   const { cases } = useStore();
+  const cal = calibration(cases, gate);
 
   const mine = cases.filter((c) => c.gate === gate && c.status !== 'abandoned');
   const archived = mine
@@ -250,6 +251,39 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
             <div className="stat"><b>{mine.length - completed.length}</b><span>{L('草稿', 'drafts')}</span></div>
             <div className="stat"><b>{archived.length}</b><span>{L('已回看', 'reviewed')}</span></div>
           </div>
+          {cal && (
+            <div
+              style={{
+                marginTop: 'var(--sp3)',
+                padding: '12px 14px',
+                border: '1px solid var(--line-2)',
+                borderRadius: 'var(--radius)',
+              }}
+            >
+              <div className="card-kicker" style={{ marginBottom: 6 }}>
+                {L('你自己的预估偏差', 'Your own estimate bias')}
+              </div>
+              <p className="card-d" style={{ margin: 0 }}>
+                {L(
+                  `${cal.n} 次有记录的判断：你估平均 ${cal.avgExpected} 天，实际平均 ${cal.avgActual} 天。`,
+                  `${cal.n} logged calls: you expected ${cal.avgExpected} days on average, it took ${cal.avgActual}.`,
+                )}
+              </p>
+              <p className="card-more" style={{ marginTop: 6 }}>
+                {cal.ratio >= 0.9 && cal.ratio <= 1.1
+                  ? L('你的预估和实际基本吻合。', 'Your estimates land close to reality.')
+                  : cal.ratio > 1.1
+                    ? L(
+                        `你的预估一贯偏快——实际比你估的多 ${Math.round((cal.ratio - 1) * 100)}%。下次给天数，乘 ${cal.ratio}。`,
+                        `Your estimates run fast — things take ${Math.round((cal.ratio - 1) * 100)}% longer than you say. Next time, multiply by ${cal.ratio}.`,
+                      )
+                    : L(
+                        `你的预估偏慢——实际比你估的少 ${Math.round((1 - cal.ratio) * 100)}%。`,
+                        `Your estimates run slow — things take ${Math.round((1 - cal.ratio) * 100)}% less than you say.`,
+                      )}
+              </p>
+            </div>
+          )}
           {last ? (
             <div className="card" style={{ marginTop: 'var(--sp3)' }}>
               <div className="card-kicker">{L('最近回看', 'Last reviewed')} · {fmtDate(archivedTime(last))}</div>

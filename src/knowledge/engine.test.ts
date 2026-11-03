@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lightUp, gateLedger, terrainPoint } from './engine';
+import { lightUp, gateLedger, terrainPoint, calibration } from './engine';
 import { CONCEPTS } from './concepts';
 import { EDGES } from './edges';
 import type { GateId, LightCard } from '../state/types';
@@ -88,29 +88,34 @@ describe('lightUp', () => {
       expect(cards[1].concept.id).not.toBe(cards[0].concept.id);
     }
   })
-  it('轮换：同一个关口，第 n 次看到的是第 n 张偏差', () => {
-    const gates = ['quoting', 'pricing', 'accept', 'product', 'hiring', 'partner', 'channel', 'priceup'] as const;
-    for (const gate of gates) {
-      expect(biasId(lightUp(gate, 'zh', 0))).not.toBe(biasId(lightUp(gate, 'zh', 1)));
+  it('随机：不同案卷抽到的偏差不只一种', () => {
+    const seen = new Set<string>();
+    for (let i = 0; i < 40; i++) {
+      const id = biasId(lightUp('quoting', 'zh', `case-${i}`));
+      if (id) seen.add(id);
+    }
+    expect(seen.size).toBeGreaterThanOrEqual(2);
+  });
+
+  it('随机带种子：同一件案卷反复打开给同一张', () => {
+    for (const id of ['a1', 'b2', 'c3', '案例-7']) {
+      expect(biasId(lightUp('quoting', 'zh', id))).toBe(biasId(lightUp('quoting', 'zh', id)));
     }
   });
 
-  it('轮换是确定的：同一 round 反复打开给同一张', () => {
-    for (const round of [0, 1, 3, 6]) {
-      expect(biasId(lightUp('quoting', 'zh', round))).toBe(biasId(lightUp('quoting', 'zh', round)));
+  it('抽到哪张，方法就跟到哪张，不会缺', () => {
+    for (let i = 0; i < 30; i++) {
+      const cards = lightUp('quoting', 'zh', `s-${i}`);
+      const bias = cards.find((c) => c.kind === 'bias');
+      const method = cards.find((c) => c.kind === 'method');
+      expect(bias).toBeTruthy();
+      expect(method).toBeTruthy();
     }
   });
 
-  it('轮换会绕回来，不会算出空卡', () => {
-    expect(biasId(lightUp('quoting', 'zh', 7))).toBe(biasId(lightUp('quoting', 'zh', 0)));
-    expect(lightUp('quoting', 'zh', 99).length).toBeGreaterThan(0);
-  });
-
-  it('方法跟着偏差走：每一轮的偏差都有对应动作', () => {
-    for (let round = 0; round < 7; round++) {
-      const method = lightUp('quoting', 'zh', round).find((c) => c.kind === 'method');
-      expect(method && method.kind === 'method' ? method.concept.id : null).toBeTruthy();
-    }
+  it('数字种子与字符串种子都接受，负数不会崩', () => {
+    expect(lightUp('quoting', 'zh', -5).length).toBeGreaterThan(0);
+    expect(lightUp('quoting', 'zh', 0).length).toBeGreaterThan(0);
   });
 ;
 });
@@ -202,5 +207,56 @@ describe('terrainPoint', () => {
         expect(p.y).toBeLessThanOrEqual(1);
       }
     }
+  });
+});
+
+describe('calibration：你自己的预估偏差', () => {
+  function c(i: number, expected: number | null, actual: number | null, gate = 'quoting'): any {
+    return {
+      id: `c${i}`, gate, question: 'q', deadlineKind: 'date', deadlineAt: '2026-11-01T00:00:00.000Z',
+      options: ['a', 'b', 'c'], facts: [], aiPick: -1, aiGap: '', falsifySignal: '', distance: '',
+      chosen: 'a', prediction: 'p', predictedP: 50, expectedDays: expected, actualDays: actual,
+      sealedAt: '2026-10-01T00:00:00.000Z', sealHash: 'ABCD1234', openAt: '2026-11-01T00:00:00.000Z',
+      result: 'r', verdict: 'same', wrongJudgment: '', nextChange: '', abandReason: '',
+      status: 'archived', step: 7, skippedWait: false,
+      createdAt: '2026-10-01T00:00:00.000Z', updatedAt: '2026-10-01T00:00:00.000Z',
+      nonActionOption: 'c', furthestStep: 6, openedEarlyAt: null, archivedAt: '2026-11-01T00:00:00.000Z',
+    };
+  }
+
+  it('不足 3 对不给结论', () => {
+    expect(calibration([c(1, 10, 15), c(2, 12, 18)])).toBeNull();
+  });
+
+  it('3 对就算', () => {
+    const r = calibration([c(1, 10, 15), c(2, 8, 12), c(3, 12, 18)])!;
+    expect(r.n).toBe(3);
+    expect(r.avgExpected).toBe(10);
+    expect(r.avgActual).toBe(15);
+    expect(r.ratio).toBe(1.5);
+  });
+
+  it('没有天数的案卷不计入', () => {
+    const r = calibration([c(1, 10, 15), c(2, 8, 12), c(3, 12, 18), c(4, null, null), c(5, 10, null)])!;
+    expect(r.n).toBe(3);
+  });
+
+  it('按关口过滤：别的关口的案卷不算进来', () => {
+    const cases = [c(1, 10, 15), c(2, 8, 12), c(3, 12, 18, 'pricing')];
+    // quoting 只有 2 对，给不出结论
+    expect(calibration(cases, 'quoting')).toBeNull();
+    // 不按关口过滤则 3 对成立
+    expect(calibration(cases)!.n).toBe(3);
+  });
+
+  it('用总和比，不让一单的极端值主导', () => {
+    // 估 1 天用 10 天 + 估 100 天用 100 天 → 总和比 1.09，逐单比的均值会是 5.5
+    const r = calibration([c(1, 1, 10), c(2, 100, 100), c(3, 100, 100)])!;
+    expect(r.ratio).toBeCloseTo(210 / 201, 2);
+  });
+
+  it('实际比预估快时 ratio 小于 1', () => {
+    const r = calibration([c(1, 20, 10), c(2, 20, 10), c(3, 20, 10)])!;
+    expect(r.ratio).toBe(0.5);
   });
 });

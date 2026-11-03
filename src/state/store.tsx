@@ -15,9 +15,9 @@ export interface Store {
   create: (gate: GateId, question: string, deadlineKind: DecisionCase['deadlineKind'], deadlineAt: string | null) => string;
   patch: (id: string, patch: Partial<DecisionCase>) => void;
   abandon: (id: string, reason: AbandReason) => void;
-  seal: (id: string, choice: string, prediction: string, p: number, openAt: string, skipped: boolean) => void;
+  seal: (id: string, choice: string, prediction: string, p: number, openAt: string, skipped: boolean, expectedDays?: number | null) => void;
   saveReview: (id: string, draft: NonNullable<DecisionCase['reviewDraft']>) => void;
-  reopen: (id: string, result: string, verdict: string, wrong: string, next: string) => void;
+  reopen: (id: string, result: string, verdict: string, wrong: string, next: string, actualDays?: number | null) => void;
   openEarly: (id: string) => void;
   clearAll: () => void;
   importState: (s: AppState, mode: 'merge' | 'replace') => void;
@@ -62,9 +62,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     get: id => state.cases.find(c => c.id === id), create,
     patch: (id, patch) => dispatch({ type: 'case/patch', id, patch }),
     abandon: (id, reason) => dispatch({ type: 'case/abandon', id, reason }),
-    seal: (id, choice, prediction, p, openAt, skipped) => dispatch({ type: 'case/seal', id, choice, prediction, p, openAt, skipped }),
+    seal: (id, choice, prediction, p, openAt, skipped, expectedDays) => dispatch({ type: 'case/seal', id, choice, prediction, p, openAt, skipped, expectedDays }),
     saveReview: (id, draft) => dispatch({ type: 'case/review-draft', id, draft }),
-    reopen: (id, result, verdict, wrong, next) => dispatch({ type: 'case/reopen', id, result, verdict, wrong, next }),
+    reopen: (id, result, verdict, wrong, next, actualDays) => dispatch({ type: 'case/reopen', id, result, verdict, wrong, next, actualDays }),
     openEarly: id => dispatch({ type: 'case/open-early', id }),
     clearAll: () => { allowRecoveryWrite(); dispatch({ type: 'all/clear' }); },
     importState: (s, mode) => {
