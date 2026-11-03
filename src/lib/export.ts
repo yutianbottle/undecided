@@ -3,7 +3,7 @@ import { gateName } from '../knowledge/gates';
 import { downloadFile } from '../state/storage';
 import { fmtDate, fmtDateTime } from './date';
 import { sealDisplay } from './seal';
-import type { Lang } from '../i18n';
+import { abandonReasonLabel, type Lang } from '../i18n';
 
 const STATUS: Record<string, string> = {
   draft: '草稿',
@@ -138,7 +138,7 @@ export function toMarkdown(cases: DecisionCase[], exportedAt = new Date(), lang:
       }
 
       if (c.abandReason) {
-        L.push(`**${text('撤回原因', 'Withdrawal reason')}**: ${c.abandReason}`);
+        L.push(`**${text('撤回原因', 'Withdrawal reason')}**: ${abandonReasonLabel(c.abandReason, lang)}`);
         L.push('');
       }
 

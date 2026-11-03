@@ -149,6 +149,16 @@ describe('期限和回看日期', () => {
 
 
 describe('阅读版导出', () => {
+  it('英文导出翻译旧记录中的四种撤回原因', () => {
+    const reasons = ['不重要', '情况变了', '别人替我定了', '写下来发现不用选'] as const;
+    const md = toMarkdown(reasons.map((reason, i) => decision({ id: `withdrawn-${i}`,
+      question: 'Should I do it?', options: [], facts: [], distance: '', chosen: '', prediction: '',
+      status: 'abandoned', abandReason: reason,
+    })), instant, 'en');
+    expect(md).toContain('The situation changed');
+    expect(md).toContain('Someone else decided it');
+    expect(md).not.toMatch(/[\u3400-\u9fff]/);
+  });
   it('保留原计划时间、提前回看时间、反证条件与未归档的回访草稿', () => {
     const md = toMarkdown([decision({ openedEarlyAt: instant.toISOString(), falsifySignal: '3 天不回复就重新考虑',
       reviewDraft: { result: '接受报价', verdict: 'same', wrong: '范围判断成立', next: '确认账期' } })]);
