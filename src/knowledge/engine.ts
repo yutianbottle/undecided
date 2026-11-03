@@ -1,4 +1,4 @@
-import type { GateId, LightCard, Concept } from '../state/types';
+import type { Concept, DecisionCase, GateId, LightCard } from '../state/types';
 import { getGate, gateBaseRate } from './gates';
 import { CONCEPT_EN } from '../i18n/content.en';
 import { getConcept } from './concepts';
@@ -18,16 +18,27 @@ function loc(c: Concept | undefined, lang: LangCode): Concept | undefined {
  * 三张：本轮该看的偏差 → 它的可做动作 → 有没有数。
  * 拿不到就少给一张，宁可少，不许编。
  *
- * round 是这个关口已经落槌的次数（0 = 第一次）。一次只给一张偏差，
- * 所以第几次看，就翻到第几张——做过之后，同一关口看到的东西会换。
- * 不用随机：同一次机会重复打开必须给同一张，否则用户会以为页面坏了。
+ * 偏差从该关口的「易犯」边里随机抽，不挑最贴切的——挑最贴的，
+ * 第 5 次看到的还是第 1 次那张，卡就退化成背景噪音。
+ *
+ * 但随机是带种子的（seed 用案卷 id）：同一件案卷反复打开给同一张，
+ * 换个案卷换一张。否则页面上一个随机数每次重渲染都跳，像坏了。
  */
-export function lightUp(gate: GateId, lang: LangCode = 'zh', round = 0): LightCard[] {
-  const cards: LightCard[] = [];
+function hashSeed(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
 
-  // edgesFrom 已按 weight 降序：第一次给最可能栽的那条，之后依次往后翻
+export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | number = 0): LightCard[] {
+  const cards: LightCard[] = [];
+  const n = typeof seed === 'string' ? hashSeed(seed) : Math.abs(Math.trunc(seed));
+
   const pool = edgesFrom(gate, '易犯');
-  const biasEdge = pool.length ? pool[((round % pool.length) + pool.length) % pool.length] : undefined;
+  const biasEdge = pool.length ? pool[n % pool.length] : undefined;
   const bias: Concept | undefined = loc(biasEdge ? getConcept(biasEdge.to) : undefined, lang);
   if (bias) cards.push({ kind: 'bias', concept: bias });
 
@@ -102,4 +113,48 @@ export function terrainPoint(reversibility: number, feedbackDays: number) {
   const x = (reversibility - 1) / 4;
   const y = Math.min(1, Math.log10(Math.max(7, feedbackDays)) / Math.log10(365));
   return { x, y };
+}
+
+/** 你自己的校准数据：预估天数 vs 实际天数 */
+export interface Calibration {
+  /** 成对的样本数 */
+  n: number;
+  avgExpected: number;
+  avgActual: number;
+  /** 实际 ÷ 预估；1.2 表示实际比你预想的多两成 */
+  ratio: number;
+}
+
+/**
+ * 至少 3 对才算——一两单算不出"你这个人偏乐观"，
+ * 只会让用户拿一个噪音当结论。
+ */
+export const CALIBRATION_MIN = 3;
+
+export function calibration(cases: DecisionCase[], gate?: GateId): Calibration | null {
+  const pairs = cases.filter(
+    (c) =>
+      c.status === 'archived' &&
+      (gate === undefined || c.gate === gate) &&
+      typeof c.expectedDays === 'number' &&
+      typeof c.actualDays === 'number' &&
+      c.expectedDays > 0 &&
+      c.actualDays >= 0,
+  );
+  if (pairs.length < CALIBRATION_MIN) return null;
+
+  let se = 0;
+  let sa = 0;
+  for (const c of pairs) {
+    se += c.expectedDays as number;
+    sa += c.actualDays as number;
+  }
+  // 用总和比，而不是逐单比值的平均：一单估 1 天用了 10 天，不该把结论拉到十倍
+  const ratio = se > 0 ? sa / se : 1;
+  return {
+    n: pairs.length,
+    avgExpected: Math.round((se / pairs.length) * 10) / 10,
+    avgActual: Math.round((sa / pairs.length) * 10) / 10,
+    ratio: Math.round(ratio * 100) / 100,
+  };
 }

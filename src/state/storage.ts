@@ -51,6 +51,11 @@ export function parseState(value: unknown): AppState {
     for (const key of ['openedEarlyAt', 'archivedAt']) {
       if (raw[key] !== undefined && !maybeDate(raw[key])) return fail();
     }
+    for (const key of ['expectedDays', 'actualDays']) {
+      const v = raw[key];
+      if (v !== undefined && v !== null
+        && (typeof v !== 'number' || !Number.isFinite(v) || v < 0 || v > 100000)) return fail();
+    }
     if (raw.furthestStep !== undefined && (!Number.isInteger(raw.furthestStep)
       || (raw.furthestStep as number) < 2 || (raw.furthestStep as number) > 6)) return fail();
     if (raw.nonActionOption !== undefined && (!text(raw.nonActionOption, 20)

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Shell } from '../components/Shell';
 import { useLang } from '../i18n';
 import { Field } from '../components/ui';
@@ -21,6 +22,7 @@ export default function Reopen({ id }: { id: string }) {
   const archived = c.status === 'archived';
   const ready = archived || reviewAvailable(c);
   const draft = c.reviewDraft ?? { result: '', verdict: '' as const, wrong: '', next: '' };
+  const [actualDays, setActualDays] = useState('');
   const update = (p: Partial<typeof draft>) => saveReview(id, { ...draft, ...p });
   return <Shell>
     <main className="wrap">
@@ -51,6 +53,29 @@ export default function Reopen({ id }: { id: string }) {
         <h2 className="h2">{L('现在结果如何？', 'How did it turn out?')}</h2>
         <p className="hint">{L('回访草稿自动保存在本机。只需填写结果，其余可选。', 'The draft saves on this device. Only the result is required.')}</p>
         <Field label={L('结果（必填）', 'Result (required)')} value={draft.result} onChange={result => update({ result })} max={LIMITS.result} rows={2} placeholder={L('例：客户接受了，但砍到 2.9 万', 'e.g. Accepted, negotiated to 29k')} />
+
+        {typeof c.expectedDays === 'number' && (
+          <div style={{ marginTop: 12 }}>
+            <label className="hint" htmlFor="actual-days">
+              {L(`实际用了多少天？（当时你估的是 ${c.expectedDays} 天）`, `How many days did it actually take? (you expected ${c.expectedDays})`)}
+            </label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+              <input
+                id="actual-days"
+                className="field"
+                inputMode="numeric"
+                style={{ width: 88 }}
+                value={actualDays}
+                onChange={(e) => setActualDays(e.target.value.replace(/[^0-9]/g, ''))}
+                placeholder={L('例：21', 'e.g. 21')}
+              />
+              <span className="hint">{L('天', 'days')}</span>
+            </div>
+            <p className="hint" style={{ marginTop: 6 }}>
+              {L('可选。填了才能累出「你自己的预估偏差」。', 'Optional. Only filled ones count towards your own estimate bias.')}
+            </p>
+          </div>
+        )}
         <fieldset className="form-group"><legend className="hint">{L('和你当时想的一样吗（可选）', 'Is it what you expected (optional)')}</legend>
           <div className="seg">{VERDICTS.map(v => <button key={v.key} className={draft.verdict === v.key ? 'on' : ''}
             aria-pressed={draft.verdict === v.key} onClick={() => update({ verdict: draft.verdict === v.key ? '' : v.key })}>{(lang === 'zh' ? v.zh : v.en)}</button>)}</div>
@@ -59,7 +84,7 @@ export default function Reopen({ id }: { id: string }) {
         <Field label={L('下次改哪一条（可选）', 'What to change next time (optional)')} value={draft.next} onChange={next => update({ next })} max={LIMITS.next} rows={2} placeholder={L('例：报三档，把让步空间预先放进去', 'e.g. Quote three tiers with room built in')} />
         {!draft.result.trim() && <p className="hint">{L('填写实际结果后即可归档。', 'Fill in the result to archive.')}</p>}
         <div className="row-actions"><button className="btn btn--rule" disabled={!draft.result.trim()} onClick={() => {
-          reopen(id, draft.result.trim(), draft.verdict, draft.wrong.trim(), draft.next.trim());
+          reopen(id, draft.result.trim(), draft.verdict, draft.wrong.trim(), draft.next.trim(), actualDays === '' ? null : Number(actualDays));
         }}>{L('归档', 'Archive')}</button></div>
         <p className="hint" style={{ marginTop: 16 }}>{L('归档后进入预测记录，内容只读。系统不会打分或排名。', 'Archived records join your prediction log and become read-only. No scores, no rankings.')}</p>
       </section>}
