@@ -82,6 +82,8 @@ export interface Concept {
   source: string;
   /** 展开"怎么做"时的 3–5 步 */
   howTo?: string[];
+  /** 指向 src/knowledge/calc.ts 里的一个可算项；只有账本页会渲染算格 */
+  calcId?: 'cost-floor';
 }
 
 export interface Edge {

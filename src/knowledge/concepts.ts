@@ -281,8 +281,8 @@ export const CONCEPTS: Concept[] = [
     howTo: ['选那个你最不想选的选项', '写三条支持它的理由', '看有没有一条让你动摇'],
   },
   {
-    id: 'cost-floor', kind: 'method', name: '成本底价', minutes: 10, evidence: 'B',
-    oneLine: '先算出这单低于多少钱就是白干，再谈别的。',
+    id: 'cost-floor', kind: 'method', name: '成本底价', minutes: 10, evidence: 'B', calcId: 'cost-floor',
+    oneLine: '低于这个价，这单达不到你要的毛利。',
     whenToUse: '任何报价、接单、定价之前。',
     whenNot: '你已经有稳定的成本模型和毛利线。',
     source: '管理会计基础；无行为科学证据，但能直接对冲损失厌恶。',

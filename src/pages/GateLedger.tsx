@@ -4,6 +4,7 @@ import { Shell, Foot } from '../components/Shell';
 import { useLang } from '../i18n';
 import { gateLedger } from '../knowledge/engine';
 import { gateName, gateBaseRate, layerName } from '../knowledge/gates';
+import { floorResult, parseAmount } from '../knowledge/calc';
 import { href } from '../router';
 import { useStore } from '../state/store';
 import { Evidence } from '../components/ui';
@@ -30,6 +31,89 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 /** 折叠的步骤：自己画 +/−，避免依赖全局 CSS 改 summary 的默认三角 */
+/** 成本底价算格：默认收起；只给数，不给建议；始终并列一个边界值。 */
+function CostFloorCalc() {
+  const { lang } = useLang();
+  const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
+  const [open, setOpen] = useState(false);
+  const [cost, setCost] = useState('');
+  const [margin, setMargin] = useState('40');
+
+  const r = floorResult(parseAmount(cost), Number(margin));
+  const fmt = (n: number) => n.toLocaleString(lang === 'zh' ? 'zh-CN' : 'en-US');
+
+  return (
+    <details style={{ marginTop: 6 }} onToggle={(e) => setOpen(e.currentTarget.open)}>
+      <summary
+        style={{
+          cursor: 'pointer',
+          fontSize: 12,
+          letterSpacing: '.04em',
+          color: open ? 'var(--paper-78)' : 'var(--paper-56)',
+          listStyle: 'none',
+        }}
+      >
+        <span style={{ display: 'inline-block', width: 14, color: 'var(--fog)' }}>{open ? '−' : '+'}</span>
+        {L('算一下（2 个输入）', 'Work it out (2 inputs)')}
+      </summary>
+
+      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12, color: 'var(--paper-66)' }}>
+          {L('这单的直接成本', 'Direct cost of this job')}
+          <input
+            className="field"
+            inputMode="numeric"
+            value={cost}
+            onChange={(e) => setCost(e.target.value)}
+            placeholder={L('例：8000', 'e.g. 8000')}
+            style={{ width: 140, fontSize: 13 }}
+          />
+        </label>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12, color: 'var(--paper-66)' }}>
+          {L('想赚多少毛利', 'Margin you want')}
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <input
+              className="field"
+              inputMode="numeric"
+              value={margin}
+              onChange={(e) => setMargin(e.target.value)}
+              style={{ width: 72, fontSize: 13 }}
+            />
+            <span style={{ fontSize: 13 }}>%</span>
+          </span>
+        </label>
+      </div>
+
+      {r ? (
+        <div style={{ marginTop: 14, borderTop: '1px solid var(--line-2)', paddingTop: 12 }}>
+          <p style={{ fontSize: 13, color: 'var(--paper-78)' }}>
+            {L('保本价', 'Floor price')}
+            <b style={{ fontFamily: 'var(--mono)', fontSize: 18, fontWeight: 400, color: 'var(--lamp)', marginLeft: 10 }}>
+              {fmt(r.floor)}
+            </b>
+          </p>
+          <p style={{ marginTop: 6, fontSize: 12, color: 'var(--paper-56)' }}>
+            {L(
+              `毛利若降到 ${r.lowerMargin}% → ${fmt(r.lower)}（差 ${fmt(r.floor - r.lower)}）`,
+              `If margin drops to ${r.lowerMargin}% → ${fmt(r.lower)} (${fmt(r.floor - r.lower)} lower)`,
+            )}
+          </p>
+          <p style={{ marginTop: 8, fontSize: 12, lineHeight: 1.8, color: 'var(--paper-56)' }}>
+            {L(
+              '这单低于这个价，达不到你要的毛利。报多少由你定。',
+              'Below this the job does not reach the margin you set. What to quote is yours to decide.',
+            )}
+          </p>
+        </div>
+      ) : (
+        <p style={{ marginTop: 12, fontSize: 12, color: 'var(--paper-56)' }}>
+          {L('填两个数，这里出保本价。', 'Fill in both numbers and the floor price appears here.')}
+        </p>
+      )}
+    </details>
+  );
+}
+
 function HowTo({ steps }: { steps: string[] }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
@@ -224,6 +308,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
                   </div>
                   <p className="card-d" style={{ marginTop: 4 }}>{c.oneLine}</p><Evidence grade={c.evidence} />
                   {c.howTo && c.howTo.length > 0 && <HowTo steps={c.howTo} />}
+                  {c.calcId === 'cost-floor' && <CostFloorCalc />}
                 </li>
               ))}
             </ul>

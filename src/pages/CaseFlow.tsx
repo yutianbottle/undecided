@@ -377,7 +377,7 @@ function LightCardView({ card }: { card: LightCard }) {
       <div className="card">
         <div className="card-kicker">{L('有没有数', 'Any numbers')}</div>
         <div className="card-d">{card.baseRate}</div>
-        <div className="card-more">{card.note}</div>
+        <div className="card-more" style={{ whiteSpace: 'pre-line' }}>{card.note}</div>
       </div>
     );
   }
@@ -386,7 +386,7 @@ function LightCardView({ card }: { card: LightCard }) {
       <div className="card card-dim">
         <div className="card-kicker">{L('有没有数', 'Any numbers')}</div>
         <div className="card-t">{L('暂无基准', 'No base rate')}</div>
-        <div className="card-d">{card.note}</div>
+        <div className="card-d" style={{ whiteSpace: 'pre-line' }}>{card.note}</div>
       </div>
     );
   }
