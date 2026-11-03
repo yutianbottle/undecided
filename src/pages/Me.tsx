@@ -1,5 +1,5 @@
 import { Shell, Foot } from '../components/Shell';
-import { useLang } from '../i18n';
+import { abandonReasonLabel, useLang } from '../i18n';
 import { Section } from '../components/ui';
 import { CaseHistory, archivedTime, caseLink } from '../components/CaseHistory';
 import { DataPanel } from '../components/DataPanel';
@@ -74,7 +74,9 @@ export default function Me({ initialTab }: { initialTab?: keyof typeof TABS }) {
       <p className="hint" style={{ marginTop: 16 }}>{L(`共 ${archived.length} 件已回看，${marked.length} 件已自标。自标不是对决定好坏的评分。`, `${archived.length} reviewed, ${marked.length} marked. A mark is not a grade of the decision.`)}</p>
       <Section title={L('按当时的确信度对照', 'By the confidence you had')}><p className="card-d">{L(`70% 及以上的 ${high.length} 件中，${high.filter(c => c.verdict === 'same').length} 件被你标为“基本一样”；50% 及以下的 ${low.length} 件中，${low.filter(c => c.verdict === 'same').length} 件被标为“基本一样”。`, `Of the ${high.length} marked 70%+, ${high.filter(c => c.verdict === 'same').length} came out roughly yes. Of the ${low.length} marked 50% or below, ${low.filter(c => c.verdict === 'same').length} did.`)}</p><p className="hint" style={{ marginTop: 12 }}>{L('这是现有记录的描述。样本数量、事件难度和自标标准都会影响结果，不能据此判断概率是否校准。', 'A description of what you have recorded. Sample size, difficulty and your own marking standard all affect it — it cannot prove your probabilities are calibrated.')}</p></Section>
       <Section title={L('过程记录', 'Process record')}><div className="stats"><div className="stat"><b>{abandoned.length}</b><span>{L('撤回', 'withdrawn')}</span></div><div className="stat"><b>{cases.filter(c => c.skippedWait).length}</b><span>{L('跳过静止', 'waits skipped')}</span></div><div className="stat"><b>{cases.filter(c => c.status === 'sealed' && reviewAvailable(c)).length}</b><span>{L('可回看未归档', 'due, unarchived')}</span></div></div>
-        {abandoned.length > 0 && <p className="hint" style={{ marginTop: 16 }}>{[...new Set(abandoned.map(c => c.abandReason))].map(r => L(`${r} ${abandoned.filter(c => c.abandReason === r).length} 件`, `${r} × ${abandoned.filter(c => c.abandReason === r).length}`)).join(' · ')}</p>}
+        {abandoned.length > 0 && <p className="hint" style={{ marginTop: 16 }}>{[...new Set(abandoned.map(c => c.abandReason))].map(r => lang === 'zh'
+          ? `${abandonReasonLabel(r, lang)} ${abandoned.filter(c => c.abandReason === r).length} 件`
+          : `${abandonReasonLabel(r, lang)} × ${abandoned.filter(c => c.abandReason === r).length}`).join(' · ')}</p>}
       </Section>
     </section>}
     {tab === 'history' && <CaseHistory cases={cases} />}

@@ -3,7 +3,7 @@ import { Shell } from '../components/Shell';
 import { Field, StepBar, Miss, Evidence } from '../components/ui';
 import { useStore } from '../state/store';
 import { lightUp } from '../knowledge/engine';
-import { useLang } from '../i18n';
+import { abandonReasonLabel, useLang } from '../i18n';
 import { getGate, gateName } from '../knowledge/gates';
 import { LIMITS, canRule, needsFalsify, claimsSpecial, vagueHits, ABAND_REASONS, stepIssues, completeIssues } from '../lib/validate';
 import { daysSince, fmtDate, futureInput, dateInputISO, todayInput } from '../lib/date';
@@ -39,7 +39,7 @@ export default function CaseFlow({ id }: { id: string }) {
 
   if (c.status === 'abandoned') return <Shell><main className="wrap">
     <a className="btn btn--text back-link" href="#/me/history">{L('← 全部案卷', '← All cases')}</a>
-    <h1 className="h2">{c.question}</h1><p className="hint">{L('已撤回', 'Withdrawn')} · {c.abandReason}</p>
+    <h1 className="h2">{c.question}</h1><p className="hint">{L('已撤回', 'Withdrawn')} · {abandonReasonLabel(c.abandReason, lang)}</p>
     <DecisionRecord c={c} />
   </main></Shell>;
 
@@ -84,7 +84,7 @@ function Body({
   const next = () => set({ step: Math.min(6, step + 1) });
   const back = () => set({ step: Math.max(2, step - 1) });
 
-  const glow = [0, 0, 0.20, 0.28, 0.22, 0.40, 0.06][step] ?? 0.14;
+  const glow = [0, 0, 0.20, 0.28, 0.22, 0.52, 0.06][step] ?? 0.14;
 
   return (
     <Shell glow={glow}>
@@ -663,7 +663,7 @@ function Abandon({ id, onAbandon }: { id: string; onAbandon: (id: string, r: Aba
             onAbandon(id, r);
             window.location.hash = '#/';
           }}>
-            <span className="opt-txt" style={{ fontSize: 14 }}>{r}</span>
+            <span className="opt-txt" style={{ fontSize: 14 }}>{abandonReasonLabel(r, lang)}</span>
           </button>
         ))}
       </div>

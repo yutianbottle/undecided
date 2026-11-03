@@ -1,8 +1,20 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { zh, type Dict } from './zh';
 import { en } from './en';
+import type { AbandReason } from '../state/types';
 
 export type Lang = 'zh' | 'en';
+
+const ABANDON_REASON_EN: Record<AbandReason, string> = {
+  '不重要': 'It is no longer important',
+  '情况变了': 'The situation changed',
+  '别人替我定了': 'Someone else decided it',
+  '写下来发现不用选': 'Writing it down showed there was no choice to make',
+};
+
+export function abandonReasonLabel(reason: AbandReason | '', lang: Lang): string {
+  return lang === 'en' && reason ? ABANDON_REASON_EN[reason] : reason;
+}
 
 /** 将存储层和创建流程抛出的稳定错误翻译成当前界面语言。 */
 export function localizeError(message: string, lang: Lang): string {

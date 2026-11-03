@@ -6,7 +6,10 @@ import CaseFlow from './CaseFlow';
 import Reopen from './Reopen';
 
 const view = vi.hoisted(() => ({ lang: 'zh' as 'zh' | 'en', c: null as DecisionCase | null }));
-vi.mock('../i18n', () => ({ useLang: () => ({ lang: view.lang }) }));
+vi.mock('../i18n', async (importOriginal) => ({
+  ...await importOriginal<typeof import('../i18n')>(),
+  useLang: () => ({ lang: view.lang }),
+}));
 vi.mock('../components/Shell', () => ({ Shell: ({ children }: { children: ReactNode }) => <main>{children}</main> }));
 vi.mock('../state/store', () => ({ useStore: () => ({
   get: () => view.c, cases: view.c ? [view.c] : [],
@@ -41,6 +44,18 @@ describe.each(['zh', 'en'] as const)('Other flow (%s)', (lang) => {
     expect(call).toContain('id="expected-num"');
     expect(call).toContain('id="review-date"');
     expect(call).toContain(lang === 'zh' ? '落槌' : 'Make the call');
+  });
+
+  it('renders all withdrawal reasons in the selected language', () => {
+    view.lang = lang;
+    const reasons = lang === 'zh'
+      ? ['不重要', '情况变了', '别人替我定了', '写下来发现不用选']
+      : ['It is no longer important', 'The situation changed', 'Someone else decided it', 'Writing it down showed there was no choice to make'];
+    const source = ['不重要', '情况变了', '别人替我定了', '写下来发现不用选'] as const;
+    for (const [i, reason] of source.entries()) {
+      view.c = { ...decision(), status: 'abandoned', abandReason: reason };
+      expect(renderToStaticMarkup(<CaseFlow id={view.c.id} />)).toContain(reasons[i]);
+    }
   });
 
   it('renders actual days on review and keeps both values visible after archiving', () => {
