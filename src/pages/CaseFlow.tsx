@@ -70,7 +70,7 @@ function Body({
   c: DecisionCase;
   patch: (id: string, p: Partial<DecisionCase>) => void;
   abandon: (id: string, r: AbandReason) => void;
-  seal: (id: string, choice: string, prediction: string, p: number, openAt: string, skipped: boolean, expectedDays?: number | null) => void;
+  seal: (id: string, choice: string, prediction: string, p: number, openAt: string, skipped: boolean, expectedNum?: number | null) => void;
   echo?: DecisionCase;
 }) {
   const { lang } = useLang();
@@ -450,7 +450,7 @@ function StepRule({
 }: {
   c: DecisionCase;
   set: (p: Partial<DecisionCase>) => void;
-  seal: (id: string, choice: string, prediction: string, p: number, openAt: string, skipped: boolean, expectedDays?: number | null) => void;
+  seal: (id: string, choice: string, prediction: string, p: number, openAt: string, skipped: boolean, expectedNum?: number | null) => void;
   back: () => void;
   onAbandon: (id: string, r: AbandReason) => void;
   echo?: DecisionCase;
@@ -499,7 +499,7 @@ function StepRule({
 
   function doSeal() {
     if (!check.ok || !openAt) return;
-    seal(c.id, c.chosen, c.prediction.trim(), c.predictedP, openAt, skipped, c.expectedDays ?? null);
+    seal(c.id, c.chosen, c.prediction.trim(), c.predictedP, openAt, skipped, c.expectedNum ?? null);
     window.location.hash = `#/case/${c.id}/sealed`;
   }
 
@@ -567,28 +567,34 @@ function StepRule({
         <Field label={L('一句话预测（必填，要有数字或时间）', 'One-line prediction (required, needs a number or date)')} value={c.prediction} onChange={(v) => set({ prediction: v })} max={LIMITS.prediction}
           placeholder={L('例：客户会在 3 天内接受，价格 3.2 万', 'e.g. Client accepts at 32k within 3 days')} />
         <div style={{ marginTop: 'var(--sp3)' }}>
-          <label className="hint" htmlFor="expected-days">
-            {L('这件事你估计要多少天（可选）', 'How many days do you expect this to take? (optional)')}
+          <label className="hint" htmlFor="expected-num">
+            {L(`${gate.measure.expected}（可选）`, `${gate.measure.expectedEn} (optional)`)}
           </label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
             <input
-              id="expected-days"
+              id="expected-num"
               className="field"
               inputMode="numeric"
-              style={{ width: 88 }}
-              value={c.expectedDays ?? ''}
+              style={{ width: 110 }}
+              value={c.expectedNum ?? ''}
               onChange={(e) => {
                 const v = e.target.value.replace(/[^0-9]/g, '');
-                set({ expectedDays: v === '' ? null : Math.min(100000, Number(v)) });
+                set({ expectedNum: v === '' ? null : Math.min(1000000, Number(v)) });
               }}
-              placeholder={L('例：14', 'e.g. 14')}
+              placeholder={L(gate.measure.unit === 'money' ? '例：38000' : '例：14',
+                             gate.measure.unit === 'money' ? 'e.g. 38000' : 'e.g. 14')}
             />
-            <span className="hint">{L('天', 'days')}</span>
+            <span className="hint">{L(gate.measure.unit === 'money' ? '元' : '天',
+                                       gate.measure.unit === 'money' ? 'CNY' : 'days')}</span>
           </div>
           <p className="hint" style={{ marginTop: 6 }}>
             {L(
-              '填了它，回看时再填一次实际天数，几次之后这里会告诉你：你的预估一贯偏快还是偏慢。不填也能封存。',
-              'Fill it in, then fill in the actual number at review. After a few, this tells you whether your estimates run fast or slow. Optional — you can seal without it.',
+              gate.measure.unit === 'money'
+                ? '填了它，回看时再填一次实际数字，几次之后这里会告诉你：你一贯报高还是报低。不填也能封存。'
+                : '填了它，回看时再填一次实际天数，几次之后这里会告诉你：你的预估一贯偏快还是偏慢。不填也能封存。',
+              gate.measure.unit === 'money'
+                ? 'Fill it in, then fill in the actual figure at review. After a few, this tells you whether you tend to over- or under-price. Optional.'
+                : 'Fill it in, then fill in the actual number of days at review. After a few, this tells you whether your estimates run fast or slow. Optional.',
             )}
           </p>
         </div>

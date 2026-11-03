@@ -3,6 +3,11 @@ import type { Gate, GateId } from '../state/types';
 export const GATES: Gate[] = [
   {
     id: 'quoting', name: '报价', layer: '钱', reversibility: 2, feedbackDays: 30,
+    measure: {
+      unit: 'money',
+      expected: '这单你打算报多少', actual: '实际成交多少',
+      expectedEn: 'What will you quote?', actualEn: 'What did it close at?',
+    },
     outcomeVars: ['是否成交', '成交价', '实际毛利'],
     entryQuestions: [
       '这单你必须什么时候回价',
@@ -24,6 +29,11 @@ export const GATES: Gate[] = [
   },
   {
     id: 'accept', name: '接单', layer: '钱', reversibility: 3, feedbackDays: 30,
+    measure: {
+      unit: 'days',
+      expected: '这单你预计多少天交付', actual: '实际用了多少天',
+      expectedEn: 'How many days to deliver?', actualEn: 'How many days did it take?',
+    },
     outcomeVars: ['是否接', '实际投入时间', '回款周期'],
     entryQuestions: [
       '金额和账期分别是什么',
@@ -45,6 +55,11 @@ export const GATES: Gate[] = [
   },
   {
     id: 'pricing', name: '定价', layer: '钱', reversibility: 3, feedbackDays: 60,
+    measure: {
+      unit: 'money',
+      expected: '你把价格定在多少', actual: '实际成交价平均多少',
+      expectedEn: 'What price will you set?', actualEn: 'What did it sell at on average?',
+    },
     outcomeVars: ['付费转化率', '客单价', '退款率'],
     entryQuestions: [
       '现在的价格是多少',
@@ -66,6 +81,11 @@ export const GATES: Gate[] = [
   },
   {
     id: 'product', name: '取舍', layer: '货', reversibility: 4, feedbackDays: 90,
+    measure: {
+      unit: 'days',
+      expected: '你预计多久能上线', actual: '实际上线用了多久',
+      expectedEn: 'How long until it ships?', actualEn: 'How long did it actually take?',
+    },
     outcomeVars: ['付费用户数', '投入工时', '机会成本'],
     entryQuestions: [
       '已经投入了多少时间和钱',
@@ -87,6 +107,11 @@ export const GATES: Gate[] = [
   },
   {
     id: 'hiring', name: '招人', layer: '人', reversibility: 4, feedbackDays: 90,
+    measure: {
+      unit: 'days',
+      expected: '你预计多久招到人', actual: '实际用了多久',
+      expectedEn: 'How long to fill the role?', actualEn: 'How long did it actually take?',
+    },
     outcomeVars: ['人效', '90 天留存', '现金消耗'],
     entryQuestions: [
       '你现在真正缺的是什么能力',
@@ -108,6 +133,11 @@ export const GATES: Gate[] = [
   },
   {
     id: 'partner', name: '合伙', layer: '人', reversibility: 5, feedbackDays: 180,
+    measure: {
+      unit: 'days',
+      expected: '你预计多久能谈成', actual: '实际用了多久',
+      expectedEn: 'How long to close the deal?', actualEn: 'How long did it actually take?',
+    },
     outcomeVars: ['股权结构', '决策效率', '退出成本'],
     entryQuestions: [
       '对方投入的是钱、时间，还是资源',
@@ -129,6 +159,11 @@ export const GATES: Gate[] = [
   },
   {
     id: 'channel', name: '渠道', layer: '市', reversibility: 3, feedbackDays: 50,
+    measure: {
+      unit: 'money',
+      expected: '这条渠道首月你预计带来多少', actual: '首月实际带来多少',
+      expectedEn: 'First-month revenue you expect?', actualEn: 'First-month revenue it actually brought?',
+    },
     outcomeVars: ['单个获客成本', '询盘数', '成交转化'],
     entryQuestions: [
       '你的客户平时在哪出现',
@@ -150,6 +185,11 @@ export const GATES: Gate[] = [
   },
   {
     id: 'priceup', name: '涨价', layer: '钱', reversibility: 3, feedbackDays: 38,
+    measure: {
+      unit: 'money',
+      expected: '涨价后你预计月收入多少', actual: '涨价后实际月收入多少',
+      expectedEn: 'Monthly revenue you expect after the raise?', actualEn: 'Monthly revenue it actually brought?',
+    },
     outcomeVars: ['续约率', '客单价', '流失客户数'],
     entryQuestions: [
       '准备涨多少',

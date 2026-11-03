@@ -30,9 +30,9 @@ export interface DecisionCase {
   prediction: string;
   predictedP: number;
   /** 落槌时可选填：这件决定你估计要多少天完成 */
-  expectedDays?: number | null;
+  expectedNum?: number | null;
   /** 回看时可选填：实际用了多少天 */
-  actualDays?: number | null;
+  actualNum?: number | null;
   sealedAt: string | null;
   sealHash: string | null;
   openAt: string | null;
@@ -54,6 +54,17 @@ export interface DecisionCase {
 
 export type GateLayer = '人' | '钱' | '货' | '市' | '己';
 
+/** 一个关口的可比数：单位 + 两次提问的措辞 */
+export interface MeasureSpec {
+  unit: 'money' | 'days';
+  /** 落槌时的问法 */
+  expected: string;
+  /** 回看时的问法 */
+  actual: string;
+  expectedEn: string;
+  actualEn: string;
+}
+
 export interface Gate {
   id: GateId;
   name: string;
@@ -67,6 +78,11 @@ export interface Gate {
   /** 预置的「如果去问 AI，大概会得到这三句」——静态文案，不接模型 */
   aiTakes: string[];
   aiTakesEn?: string[];
+  /**
+   * 这个关口的"可比数"：落槌时估一个、回看时填实际。
+   * 钱类关口收金额，人/货类收天数——单位跟关口走，不能跨关口混算。
+   */
+  measure: MeasureSpec;
   /** 该关口最常用的三个选项骨架，含"不做" */
   optionHints: string[];
   optionHintsEn?: string[];

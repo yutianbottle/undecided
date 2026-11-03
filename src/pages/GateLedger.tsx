@@ -5,6 +5,7 @@ import { useLang } from '../i18n';
 import { gateLedger, calibration } from '../knowledge/engine';
 import { gateName, gateBaseRate, layerName } from '../knowledge/gates';
 import { floorResult, parseAmount } from '../knowledge/calc';
+import { fmtMeasure } from '../lib/format';
 import { href } from '../router';
 import { useStore } from '../state/store';
 import { Evidence } from '../components/ui';
@@ -261,26 +262,36 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
               }}
             >
               <div className="card-kicker" style={{ marginBottom: 6 }}>
-                {L('你自己的预估偏差', 'Your own estimate bias')}
+                {L(cal.unit === 'money' ? '你自己的报价偏差' : '你自己的预估偏差', cal.unit === 'money' ? 'Your own pricing bias' : 'Your own estimate bias')}
               </div>
               <p className="card-d" style={{ margin: 0 }}>
                 {L(
-                  `${cal.n} 次有记录的判断：你估平均 ${cal.avgExpected} 天，实际平均 ${cal.avgActual} 天。`,
-                  `${cal.n} logged calls: you expected ${cal.avgExpected} days on average, it took ${cal.avgActual}.`,
+                  `${cal.n} 次有记录的判断：你估平均 ${fmtMeasure(cal.avgExpected, cal.unit, 'zh')}，实际 ${fmtMeasure(cal.avgActual, cal.unit, 'zh')}。`,
+                  `${cal.n} logged calls: you expected ${fmtMeasure(cal.avgExpected, cal.unit, 'en')} on average, it was ${fmtMeasure(cal.avgActual, cal.unit, 'en')}.`,
                 )}
               </p>
               <p className="card-more" style={{ marginTop: 6 }}>
                 {cal.ratio >= 0.9 && cal.ratio <= 1.1
-                  ? L('你的预估和实际基本吻合。', 'Your estimates land close to reality.')
-                  : cal.ratio > 1.1
-                    ? L(
-                        `你的预估一贯偏快——实际比你估的多 ${Math.round((cal.ratio - 1) * 100)}%。下次给天数，乘 ${cal.ratio}。`,
-                        `Your estimates run fast — things take ${Math.round((cal.ratio - 1) * 100)}% longer than you say. Next time, multiply by ${cal.ratio}.`,
-                      )
-                    : L(
-                        `你的预估偏慢——实际比你估的少 ${Math.round((1 - cal.ratio) * 100)}%。`,
-                        `Your estimates run slow — things take ${Math.round((1 - cal.ratio) * 100)}% less than you say.`,
-                      )}
+                  ? L('你的估计和实际基本吻合。', 'Your estimates land close to reality.')
+                  : cal.unit === 'money'
+                    ? cal.ratio < 1
+                      ? L(
+                          `你一贯报高——实际比你估的低 ${Math.round((1 - cal.ratio) * 100)}%。下次给价，先把估的数乘 ${cal.ratio}。`,
+                          `You tend to price high — it lands ${Math.round((1 - cal.ratio) * 100)}% below what you said. Next time, multiply by ${cal.ratio}.`,
+                        )
+                      : L(
+                          `你一贯报低——实际比你估的高 ${Math.round((cal.ratio - 1) * 100)}%。下次给价，先把估的数乘 ${cal.ratio}。`,
+                          `You tend to price low — it lands ${Math.round((cal.ratio - 1) * 100)}% above what you said. Next time, multiply by ${cal.ratio}.`,
+                        )
+                    : cal.ratio > 1
+                      ? L(
+                          `你的预估一贯偏快——实际比你估的多 ${Math.round((cal.ratio - 1) * 100)}%。下次给天数，乘 ${cal.ratio}。`,
+                          `Your estimates run fast — things take ${Math.round((cal.ratio - 1) * 100)}% longer. Next time, multiply by ${cal.ratio}.`,
+                        )
+                      : L(
+                          `你的预估偏慢——实际比你估的少 ${Math.round((1 - cal.ratio) * 100)}%。`,
+                          `Your estimates run slow — things take ${Math.round((1 - cal.ratio) * 100)}% less than you said.`,
+                        )}
               </p>
             </div>
           )}
