@@ -161,3 +161,16 @@ export function calibration(cases: DecisionCase[], gate: GateId): Calibration | 
     unit: getGate(gate).measure.unit,
   };
 }
+
+/** 某个关口已经填了几对（落槌估了、回看也填了） */
+export function calibrationFilled(cases: DecisionCase[], gate: GateId): number {
+  return cases.filter(
+    (c) =>
+      c.gate === gate &&
+      c.status === 'archived' &&
+      typeof c.expectedNum === 'number' &&
+      typeof c.actualNum === 'number' &&
+      c.expectedNum > 0 &&
+      c.actualNum >= 0,
+  ).length;
+}

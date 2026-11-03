@@ -5,7 +5,9 @@ import { CaseHistory, archivedTime, caseLink } from '../components/CaseHistory';
 import { DataPanel } from '../components/DataPanel';
 import { useStore } from '../state/store';
 import { fmtDate, reviewAvailable } from '../lib/date';
-import { gateName } from '../knowledge/gates';
+import { GATES, gateName } from '../knowledge/gates';
+import { calibrationFilled } from '../knowledge/engine';
+import { CalibrationBlock } from '../components/CalibrationBlock';
 
 const TABS = {
   predictions: { zh: '预测记录', en: 'Predictions' },
@@ -26,8 +28,27 @@ export default function Me({ initialTab }: { initialTab?: keyof typeof TABS }) {
   const groups = [...new Set(ps.map(c => c.predictedP))].sort((a, b) => a - b).map(p => ({ p, cases: ps.filter(c => c.predictedP === p) }));
   const high = marked.filter(c => c.predictedP >= 70);
   const low = marked.filter(c => c.predictedP <= 50);
+  /** 只列出真的填过数的关口，避免八条空行 */
+  const measured = GATES.map(g => ({ g, filled: calibrationFilled(cases, g.id) })).filter(x => x.filled > 0);
   return <Shell><main className="wrap">
     <h1 className="h1">{L('我', 'Me')}</h1><p className="hint">{L('留下记录，回看自己的处境与判断。', 'Keep a record. Look back at your situation and your calls.')}</p>
+
+    {measured.length > 0 && (
+      <Section title={L('你的基准线', 'Your baseline')}>
+        <p className="hint" style={{ marginBottom: 'var(--sp3)' }}>
+          {L('落槌时你估的数，和回看时实际的数，逐次对上。凑满三次才会给结论。',
+             'What you expected at the call against what actually happened, gate by gate. Three pairs before it says anything.')}
+        </p>
+        {measured.map(({ g, filled }) => (
+          <div key={g.id} style={{ padding: '12px 14px', marginBottom: 10, border: '1px solid var(--line-2)', borderRadius: 'var(--radius)' }}>
+            <div className="card-kicker" style={{ marginBottom: 6 }}>
+              {gateName(g.id, lang)} · <a href={`#/ledger/${g.id}`} style={{ color: 'var(--fog)' }}>{filled} {L('次', 'calls')}</a>
+            </div>
+            <CalibrationBlock cases={cases} gate={g.id} />
+          </div>
+        ))}
+      </Section>
+    )}
     <nav className="page-tabs" aria-label={L('个人记录分类', 'Record sections')}>{Object.entries(TABS).map(([id, label]) => <button key={id}
       aria-current={tab === id ? 'page' : undefined} onClick={() => setTab(id as keyof typeof TABS)}>{lang === 'zh' ? label.zh : label.en}</button>)}</nav>
     {tab === 'predictions' && <section>
