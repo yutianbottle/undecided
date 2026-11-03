@@ -29,9 +29,9 @@ export interface DecisionCase {
   chosen: string;
   prediction: string;
   predictedP: number;
-  /** 落槌时可选填：这件决定你估计要多少天完成 */
+  /** 落槌时可选填：按关口记录预估金额或完成天数 */
   expectedNum?: number | null;
-  /** 回看时可选填：实际用了多少天 */
+  /** 回看时可选填：同单位的实际金额或天数 */
   actualNum?: number | null;
   sealedAt: string | null;
   sealHash: string | null;

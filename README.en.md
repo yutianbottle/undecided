@@ -80,6 +80,8 @@ Slower to know ↑
 
 Eight kinds: quoting, taking a client, pricing, keep or kill, hiring, partnership, channel, raising prices.
 
+Choose **Other** for decisions outside these eight kinds. You can still seal and review them. The lighting step offers general cautions and moves, with no category-specific base rate. Optionally record expected and actual days to completion for each case; unrelated decisions are not pooled into a bias calculation.
+
 ---
 
 ## Before you start: check your state

@@ -33,18 +33,26 @@ function hashSeed(s: string): number {
   return h >>> 0;
 }
 
+/** “其他”只提供不依赖行业的基础提醒，方法必须与抽到的偏差对应。 */
+const GENERAL_LIGHT_PAIRS = [
+  { bias: 'confirmation', method: 'reverse-assumption' },
+  { bias: 'status-quo', method: 'reversibility' },
+  { bias: 'planning-fallacy', method: 'range-not-point' },
+] as const;
+
 export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | number = 0): LightCard[] {
   const cards: LightCard[] = [];
   const n = typeof seed === 'string' ? hashSeed(seed) : Math.abs(Math.trunc(seed));
+  const general = gate === 'other' ? GENERAL_LIGHT_PAIRS[n % GENERAL_LIGHT_PAIRS.length] : undefined;
 
   const pool = edgesFrom(gate, '易犯');
   const biasEdge = pool.length ? pool[n % pool.length] : undefined;
-  const bias: Concept | undefined = loc(biasEdge ? getConcept(biasEdge.to) : undefined, lang);
+  const bias: Concept | undefined = loc(getConcept(general?.bias ?? biasEdge?.to ?? ''), lang);
   if (bias) cards.push({ kind: 'bias', concept: bias });
 
-  let method: Concept | undefined;
+  let method: Concept | undefined = general ? loc(getConcept(general.method), lang) : undefined;
   // 先给「这个偏差」的解法，而不是关口通用的那个——药要跟着病走
-  if (bias) {
+  if (!method && bias) {
     const mEdge = edgesFrom(bias.id, '可解')[0];
     if (mEdge) method = loc(getConcept(mEdge.to), lang);
   }
@@ -134,6 +142,7 @@ export interface Calibration {
 export const CALIBRATION_MIN = 3;
 
 export function calibration(cases: DecisionCase[], gate: GateId): Calibration | null {
+  if (gate === 'other') return null;
   const pairs = cases.filter(
     (c) =>
       c.status === 'archived' &&

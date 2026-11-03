@@ -46,6 +46,10 @@ export default function Reopen({ id }: { id: string }) {
         <h2 className="h2">{L('实际结果', 'The result')}</h2>
         <dl className="record-grid">
           <dt>{L('结果', 'Result')}</dt><dd>{c.result}</dd>
+          {typeof c.expectedNum === 'number' && <>
+            <dt>{L('当时预估', 'Expected')}</dt><dd>{fmtMeasure(c.expectedNum, getGate(c.gate).measure.unit, lang)}</dd>
+            <dt>{L('实际数值', 'Actual')}</dt><dd>{typeof c.actualNum === 'number' ? fmtMeasure(c.actualNum, getGate(c.gate).measure.unit, lang) : L('未填写', 'not filled')}</dd>
+          </>}
           <dt>{L('与预测相比', 'Versus prediction')}</dt><dd>{(() => { const v = VERDICTS.find(x => x.key === c.verdict); return v ? (lang === 'zh' ? v.zh : v.en) : L('未自标', 'not marked'); })()}</dd>
           <dt>{L('成立与需修正的判断', 'What held, what needs fixing')}</dt><dd>{c.wrongJudgment || L('未填写', 'not filled')}</dd>
           <dt>{L('下次调整', 'Next adjustment')}</dt><dd>{c.nextChange || L('未填写', 'not filled')}</dd>
