@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../state/store';
-import { useLang } from '../i18n';
+import { localizeError, useLang } from '../i18n';
 import { exportJSON, parseState, exportRaw, lastExportAt, STATE_VERSION } from '../state/storage';
 import { downloadMarkdown } from '../lib/export';
 import { fmtDateTime } from '../lib/date';
@@ -28,7 +28,7 @@ export function DataPanel() {
     reader.onerror = () => setError(L('文件读取失败，请重新选择。', 'Could not read the file. Choose it again.'));
     reader.onload = () => {
       try { setPending(parseState(JSON.parse(String(reader.result)))); setMode(readIssue ? 'replace' : 'merge'); }
-      catch (err) { setError(err instanceof Error ? err.message : L('导入文件格式不正确。', 'That file is not a valid backup.')); }
+      catch (err) { setError(err instanceof Error ? localizeError(err.message, lang) : L('导入文件格式不正确。', 'That file is not a valid backup.')); }
     };
     reader.readAsText(file);
   }
@@ -37,17 +37,17 @@ export function DataPanel() {
     <p className="hint">{L('全部内容仅存在当前设备、当前浏览器。不上传，不训练，不共享。', 'Everything lives in this browser on this device. Nothing is uploaded, trained on, or shared.')}</p>
     <div className="card" style={{ marginTop: 24 }}>
       <h3 className="card-t">{L('本机保存与备份', 'Storage and backup')}</h3>
-      <p className={saveOK ? 'hint' : 'warn'} role="status">{saveOK ? L('已保存到本机', 'Saved on this device') : saveMessage}</p>
+      <p className={saveOK ? 'hint' : 'warn'} role="status">{saveOK ? L('已保存到本机', 'Saved on this device') : localizeError(saveMessage, lang)}</p>
       {!saveOK && !readIssue && <button className="btn" onClick={retrySave}>{L('重试保存', 'Retry saving')}</button>}
       <p className="hint">{L('上次 JSON 导出操作：', 'Last JSON export: ')}{last ? fmtDateTime(last) : L('还没有导出记录', 'none yet')}{L('。请自行确认下载文件已保存。', '. Make sure the file was actually saved.')}</p>
       <div className="inline-actions">
         <button className="btn" onClick={backup}>{L('导出 JSON 备份', 'Export JSON backup')}</button>
-        <button className="btn" onClick={() => downloadMarkdown(cases)}>{L('导出 Markdown 阅读版', 'Export Markdown')}</button>
+        <button className="btn" onClick={() => downloadMarkdown(cases, lang)}>{L('导出 Markdown 阅读版', 'Export Markdown')}</button>
         <button className="btn" onClick={() => fileRef.current?.click()}>{L('选择备份导入', 'Import a backup')}</button>
         <input aria-label={L('选择 JSON 备份', 'Choose a JSON backup')} ref={fileRef} type="file" accept="application/json,.json" hidden onChange={onImport} />
       </div>
       {readIssue && <div style={{ marginTop: 16 }}><p className="warn">{L('请先保存原始数据，再尝试恢复。', 'Save the raw data first, then try to recover.')}</p><button className="btn" onClick={() => {
-        try { exportRaw(); } catch (err) { setError(err instanceof Error ? err.message : L('原始数据导出失败。', 'Raw export failed.')); }
+      try { exportRaw(); } catch (err) { setError(err instanceof Error ? localizeError(err.message, lang) : L('原始数据导出失败。', 'Raw export failed.')); }
       }}>{L('导出原始数据', 'Export raw data')}</button></div>}
     </div>
     {pending && <div className="card" style={{ marginTop: 24 }}>
@@ -62,7 +62,7 @@ export function DataPanel() {
         : L(`将新增 ${pending.cases.length - duplicates} 件，相同 ID 的 ${duplicates} 件保留本机版本。`, `${pending.cases.length - duplicates} will be added; ${duplicates} overlapping IDs keep the local version.`)}</p>
       <div className="inline-actions"><button className="btn" onClick={() => {
         try { importState(pending, mode); setPending(null); setMessage(L('导入完成。', 'Import complete.')); }
-        catch (err) { setError(err instanceof Error ? err.message : L('导入失败。', 'Import failed.')); }
+        catch (err) { setError(err instanceof Error ? localizeError(err.message, lang) : L('导入失败。', 'Import failed.')); }
       }}>{mode === 'replace' ? L('确认替换全部记录', 'Replace all records') : L('确认合并导入', 'Merge in')}</button><button className="btn btn--text" onClick={() => setPending(null)}>{L('取消', 'Cancel')}</button></div>
     </div>}
     {error && <p className="warn" role="alert">{error}</p>}{message && <p className="hint" role="status">{message}</p>}

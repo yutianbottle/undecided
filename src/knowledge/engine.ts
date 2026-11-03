@@ -55,7 +55,7 @@ export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | numb
   if (!method) {
     // 「适用」边存成 概念 → 关口，所以从关口往回找
     const alt = edgesTo(gate, '适用')[0];
-    if (alt) method = getConcept(alt.from);
+    if (alt) method = loc(getConcept(alt.from), lang);
   }
   if (method) cards.push({ kind: 'method', concept: method });
 

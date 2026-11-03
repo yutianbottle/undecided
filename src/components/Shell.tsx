@@ -1,7 +1,7 @@
 import { useEffect, type CSSProperties, type ReactNode } from 'react';
 import { useRoute } from '../router';
 import { useStore } from '../state/store';
-import { useT, LangSwitch } from '../i18n';
+import { useT, useLang, localizeError, LangSwitch } from '../i18n';
 
 function Navigation() {
   const route = useRoute();
@@ -24,6 +24,7 @@ function Navigation() {
 export function Shell({ children, glow = 0.10 }: { children: ReactNode; glow?: number }) {
   const route = useRoute();
   const t = useT();
+  const { lang } = useLang();
   const { saveMessage, saveOK, readIssue, retrySave } = useStore();
   const focus = ['case', 'new', 'check', 'sealed', 'reopen'].includes(route.name);
   useEffect(() => {
@@ -36,7 +37,7 @@ export function Shell({ children, glow = 0.10 }: { children: ReactNode; glow?: n
   return <div className={`stage${focus ? ' stage--focus' : ''}`} style={{ '--glow': glow } as CSSProperties}>
     <div className="glow" aria-hidden="true" />
     {!focus && <Navigation />}
-    {!saveOK && <aside className="save-alert" role="alert"><span>{saveMessage}</span><a href="#/me/data">{t.shell.openData}</a>{!readIssue && <button onClick={retrySave}>{t.shell.retry}</button>}</aside>}
+    {!saveOK && <aside className="save-alert" role="alert"><span>{localizeError(saveMessage, lang)}</span><a href="#/me/data">{t.shell.openData}</a>{!readIssue && <button onClick={retrySave}>{t.shell.retry}</button>}</aside>}
     {children}
   </div>;
 }

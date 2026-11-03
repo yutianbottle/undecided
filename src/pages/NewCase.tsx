@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Shell, Foot } from '../components/Shell';
-import { useLang } from '../i18n';
+import { localizeError, useLang } from '../i18n';
 import { Field } from '../components/ui';
 import { GATES, gateName } from '../knowledge/gates';
 import { useStore } from '../state/store';
@@ -53,7 +53,7 @@ export default function NewCase() {
     try {
       const id = create(gate, question.trim(), kind, deadlineAt);
       window.location.hash = `#/case/${id}`;
-    } catch (e) { setError(e instanceof Error ? e.message : L('暂时无法创建案卷', 'Could not create the case')); }
+    } catch (e) { setError(e instanceof Error ? localizeError(e.message, lang) : L('暂时无法创建案卷', 'Could not create the case')); }
   }
 
   return (
