@@ -5,10 +5,10 @@ import { useLang } from '../i18n';
 import { gateLedger, calibration } from '../knowledge/engine';
 import { gateName, gateBaseRate, layerName } from '../knowledge/gates';
 import { floorResult, parseAmount } from '../knowledge/calc';
-import { fmtMeasure } from '../lib/format';
 import { href } from '../router';
 import { useStore } from '../state/store';
 import { Evidence } from '../components/ui';
+import { CalibrationBlock } from '../components/CalibrationBlock';
 import { archivedTime } from '../components/CaseHistory';
 import { fmtDate } from '../lib/date';
 import type { GateId } from '../state/types';
@@ -252,47 +252,16 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
             <div className="stat"><b>{mine.length - completed.length}</b><span>{L('草稿', 'drafts')}</span></div>
             <div className="stat"><b>{archived.length}</b><span>{L('已回看', 'reviewed')}</span></div>
           </div>
-          {cal && (
-            <div
-              style={{
-                marginTop: 'var(--sp3)',
-                padding: '12px 14px',
-                border: '1px solid var(--line-2)',
-                borderRadius: 'var(--radius)',
-              }}
-            >
+          {cal ? (
+            <div style={{ marginTop: 'var(--sp3)', padding: '12px 14px', border: '1px solid var(--line-2)', borderRadius: 'var(--radius)' }}>
               <div className="card-kicker" style={{ marginBottom: 6 }}>
                 {L(cal.unit === 'money' ? '你自己的报价偏差' : '你自己的预估偏差', cal.unit === 'money' ? 'Your own pricing bias' : 'Your own estimate bias')}
               </div>
-              <p className="card-d" style={{ margin: 0 }}>
-                {L(
-                  `${cal.n} 次有记录的判断：你估平均 ${fmtMeasure(cal.avgExpected, cal.unit, 'zh')}，实际 ${fmtMeasure(cal.avgActual, cal.unit, 'zh')}。`,
-                  `${cal.n} logged calls: you expected ${fmtMeasure(cal.avgExpected, cal.unit, 'en')} on average, it was ${fmtMeasure(cal.avgActual, cal.unit, 'en')}.`,
-                )}
-              </p>
-              <p className="card-more" style={{ marginTop: 6 }}>
-                {cal.ratio >= 0.9 && cal.ratio <= 1.1
-                  ? L('你的估计和实际基本吻合。', 'Your estimates land close to reality.')
-                  : cal.unit === 'money'
-                    ? cal.ratio < 1
-                      ? L(
-                          `你一贯报高——实际比你估的低 ${Math.round((1 - cal.ratio) * 100)}%。下次给价，先把估的数乘 ${cal.ratio}。`,
-                          `You tend to price high — it lands ${Math.round((1 - cal.ratio) * 100)}% below what you said. Next time, multiply by ${cal.ratio}.`,
-                        )
-                      : L(
-                          `你一贯报低——实际比你估的高 ${Math.round((cal.ratio - 1) * 100)}%。下次给价，先把估的数乘 ${cal.ratio}。`,
-                          `You tend to price low — it lands ${Math.round((cal.ratio - 1) * 100)}% above what you said. Next time, multiply by ${cal.ratio}.`,
-                        )
-                    : cal.ratio > 1
-                      ? L(
-                          `你的预估一贯偏快——实际比你估的多 ${Math.round((cal.ratio - 1) * 100)}%。下次给天数，乘 ${cal.ratio}。`,
-                          `Your estimates run fast — things take ${Math.round((cal.ratio - 1) * 100)}% longer. Next time, multiply by ${cal.ratio}.`,
-                        )
-                      : L(
-                          `你的预估偏慢——实际比你估的少 ${Math.round((1 - cal.ratio) * 100)}%。`,
-                          `Your estimates run slow — things take ${Math.round((1 - cal.ratio) * 100)}% less than you said.`,
-                        )}
-              </p>
+              <CalibrationBlock cases={cases} gate={gate} />
+            </div>
+          ) : (
+            <div style={{ marginTop: 'var(--sp3)' }}>
+              <CalibrationBlock cases={cases} gate={gate} />
             </div>
           )}
           {last ? (

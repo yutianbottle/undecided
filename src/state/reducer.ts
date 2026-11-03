@@ -40,7 +40,7 @@ export function reducer(state: AppState, a: Action): AppState {
         if (!editable(c)) return c;
         // 只接受草稿字段，封存记录和身份字段不能通过通用 patch 修改。
         const keys = ['options', 'facts', 'nonActionOption', 'aiPick', 'aiGap', 'falsifySignal', 'distance',
-          'chosen', 'prediction', 'predictedP', 'openAt'] as const;
+          'chosen', 'prediction', 'predictedP', 'openAt', 'expectedNum'] as const;
         const p = Object.fromEntries(keys.filter(k => k in a.patch).map(k => [k, a.patch[k]]));
         let next = { ...c, ...p } as DecisionCase;
         if (next.nonActionOption && !next.options.includes(next.nonActionOption)) next.nonActionOption = '';

@@ -1,7 +1,7 @@
 import type { Concept } from '../state/types';
 
-/** 卡片英文字段。只翻面向用户的叙述；source 保留原文，文献本来就是英文。 */
-type CEN = Pick<Concept, 'name' | 'oneLine' | 'whenToUse' | 'whenNot'> & { howTo?: string[] };
+/** 卡片英文字段：叙述与出处都翻成英文，书名保留原出版语言，便于按原名查证。 */
+type CEN = Pick<Concept, 'name' | 'oneLine' | 'whenToUse' | 'whenNot'> & { howTo?: string[]; source?: string };
 
 export const CONCEPT_EN: Record<string, CEN> = {
   /* ── 偏差 ── */
@@ -10,114 +10,133 @@ export const CONCEPT_EN: Record<string, CEN> = {
     oneLine: 'You take the first number you see as the baseline, then adjust too little.',
     whenToUse: 'First quote to a client; the other side named a number first; estimating work you have never done.',
     whenNot: 'You already have a hard cost floor that is high enough; talking to a repeat client, where the anchor is on your side.',
+    source: 'Kahneman & Tversky (1974); 《思考，快与慢》 ch. 11. Robust in the lab; it shrinks in real negotiation.',
   },
   'sunk-cost': {
     name: 'Sunk cost',
     oneLine: 'Time and money already spent become the reason to keep spending.',
     whenToUse: 'Deciding whether to stop something old; renewing a tool you do not use; keeping a relationship that produces nothing.',
     whenNot: 'The past spend bought something irreplaceable (client relationships, a patent). Then it is not just a cost.',
+    source: 'Arkes & Blumer (1985); standard behavioural-economics result. Robust — though in business, what you have already spent is sometimes genuine information, so separate the two.',
   },
   'availability': {
     name: 'Availability',
     oneLine: 'What comes to mind easily feels more common than it is.',
     whenToUse: 'Judging a trend from one competitor; judging a market from your last three clients.',
     whenNot: 'You have a complete sample of your own — twenty quotes, ten jobs, real records.',
+    source: 'Tversky & Kahneman (1973).',
   },
   'confirmation': {
     name: 'Confirmation bias',
     oneLine: 'You look for information that supports your read, and remember it better.',
     whenToUse: 'You already lean one way and are now collecting "evidence".',
     whenNot: 'You have no leaning yet — still in the gathering stage.',
+    source: 'Wason (1960); a large follow-up literature. The direction is clear; the size varies a lot by situation.',
   },
   'single-option': {
     name: 'Single option',
     oneLine: 'When you can only think of one plan, you are deciding "whether", not "which".',
     whenToUse: 'Your list is just do / don\'t; only one plan is circling in your head.',
     whenNot: 'A hard deadline with minutes left — inventing a third option then does harm.',
+    source: 'The frame from Heath & Heath 《决断力》; more practice observation than experimental evidence.',
   },
   'intention-gap': {
     name: 'Intention–behaviour gap',
     oneLine: 'Saying they like it and paying for it are different events.',
     whenToUse: 'Using interviews, likes or verbal yes to judge demand; using "they said they would buy" to set a price.',
     whenNot: 'There is real payment history, even from five people.',
+    source: 'Sheeran (2002) meta-analysis: intention explains only part of the variance in behaviour.',
   },
   'planning-fallacy': {
     name: 'Planning fallacy',
     oneLine: 'Your estimates of time, cost and revenue all run optimistic, and you cannot feel it.',
     whenToUse: 'Any "about three months"; any "we should sell X this month".',
     whenNot: 'You have done this exact work five times and kept records.',
+    source: 'Buehler, Griffin & Ross (1994); Kahneman & Tversky (1979).',
   },
   'loss-aversion': {
     name: 'Loss aversion',
     oneLine: 'Losing hurts more than winning pleases — so you avoid small losses and keep bigger risks.',
     whenToUse: 'Afraid to raise prices and lose a client; afraid to fire someone; afraid to stop a project and admit it.',
     whenNot: 'The other side genuinely has alternatives and switching is cheap. Then the fear is correct.',
+    source: 'Kahneman & Tversky (1979), prospect theory.',
   },
   'overconfidence': {
     name: 'Overconfidence',
     oneLine: 'You rate your own accuracy higher than it is.',
     whenToUse: 'Every "I think" and "I estimate" — especially in fields you know well.',
     whenNot: 'You have been wrong three times in this kind of thing and wrote it down.',
+    source: 'Moore & Healy (2008) meta-analysis; robust, and often stronger among professionals.',
   },
   'status-quo': {
     name: 'Status quo bias',
     oneLine: 'Doing nothing gets treated as the safe option.',
     whenToUse: 'When one of your options is "keep things as they are" or "wait and see".',
     whenNot: 'The status quo is already deteriorating (clients leaving, costs rising). Then "no change" is not caution, it is surrender.',
+    source: 'Samuelson & Zeckhauser (1988); a large follow-up literature.',
   },
   'endowment': {
     name: 'Endowment effect',
     oneLine: 'You overvalue what you already own.',
     whenToUse: 'Pricing your own product; deciding whether to kill a feature you built.',
     whenNot: 'You never invested in it — inherited work, someone else\'s product.',
+    source: 'Thaler (1980); Kahneman, Knetsch & Thaler (1990).',
   },
   'framing': {
     name: 'Framing',
     oneLine: 'Same fact, different wording, different choice.',
     whenToUse: 'When you write an option as "70% success" versus "30% failure".',
     whenNot: 'Both options are described in the same frame, so comparability is intact.',
+    source: 'Tversky & Kahneman (1981), the Asian disease problem; a very robust effect.',
   },
   'escalation': {
     name: 'Escalation of commitment',
     oneLine: 'Once you have said publicly that you will make it work, stopping gets harder.',
     whenToUse: 'You have announced it — to clients, on social, to investors.',
     whenNot: 'You never announced anything; it is still private.',
+    source: 'Staw (1976); same root as sunk cost, plus a layer of face.',
   },
   'hindsight': {
     name: 'Hindsight bias',
     oneLine: 'After the result, it feels like you always knew.',
     whenToUse: 'During review — especially when you think "I saw that coming".',
     whenNot: 'You actually wrote it down at the time. Then it is not hindsight.',
+    source: 'Fischhoff (1975); Loftus on memory reconstruction.',
   },
   'mental-accounting': {
     name: 'Mental accounting',
     oneLine: 'Money that arrived easily gets spent easily.',
     whenToUse: 'Deciding with windfall money — a subsidy, refund or bonus.',
     whenNot: 'All cash sits in one pool with a written allocation rule.',
+    source: 'Thaler (1985); a standard behavioural-economics concept, though the causal mechanism is still debated.',
   },
   'hyperbolic': {
     name: 'Hyperbolic discounting',
     oneLine: 'Small immediate gains beat larger later ones, and the closer the gain, the stronger the pull.',
     whenToUse: 'Take a job that pays now, or build the thing that pays in six months.',
     whenNot: 'Both payoffs land at roughly the same time.',
+    source: 'A simplification of multi-criteria decision analysis (MCDA); its usefulness in structured decisions has support.',
   },
   'reciprocity': {
     name: 'Reciprocity',
     oneLine: 'Someone who did you a favour gets repaid more than it was worth — and sooner than you expect.',
     whenToUse: 'The client came through a friend; they helped you once; you owe something.',
     whenNot: 'A pure price comparison with no history between you.',
+    source: 'Cialdini’s principle of reciprocity; strong experimental evidence, but the specific shape of 人情 debt in Chinese business has not been quantified.',
   },
   'guanxi-loss': {
     name: 'Relationship loss',
     oneLine: 'In a referral network, saying no costs more than the deal — it costs future introductions.',
     whenToUse: 'Your work comes from referrals; this client sits in the same circle as you.',
     whenNot: 'A one-off transaction, platform traffic, no shared network. Note: this card is also a convenient excuse for avoiding an awkward conversation.',
+    source: 'Practice observation, no controlled study. §5 of the research: 65% of Chinese solo-firm orders come through referrals — the only quantifiable background available.',
   },
   'unsettled-debt': {
     name: 'Unsettled favour',
     oneLine: 'Favours have no ledger, so you pay an unclear debt with "giving a little on this one".',
     whenToUse: 'They helped you and you never repaid it; or you helped them and feel owed.',
     whenNot: 'The account was settled, or you never exchanged anything.',
+    source: 'Practice observation, no research support. It is in the product because it can be observed, not because it has been proven.',
   },
 
   /* ── 方法 ── */
@@ -132,6 +151,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'The top tier must be justified, not just marked up',
       'Lead with the middle one; let them choose between tiers',
     ],
+    source: 'Common negotiation practice; no controlled study — an experienced method, not a proven one.',
   },
   'reference-class': {
     name: 'Reference class',
@@ -144,6 +164,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Compare your estimate against it',
       'If you are far off, explain why you are different before trusting yourself',
     ],
+    source: 'Flyvbjerg’s reference-class forecasting; the UK Department for Transport uses it to correct optimism bias on large projects. The hardest evidence of any intervention here.',
   },
   'premortem': {
     name: 'Premortem',
@@ -156,6 +177,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Pick the most likely one',
       'Give it an early signal you could actually observe',
     ],
+    source: 'Gary Klein’s premortem; experiments show it raises the share of risks people identify, but transfer to real business settings is untested.',
   },
   'self-distancing': {
     name: 'Self-distancing',
@@ -167,6 +189,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Use your name, or "this person"',
       'Write the first sentence you would say to them',
     ],
+    source: 'Kross et al. on self-distancing; works in the lab, effect size in real founder decisions unverified.',
   },
   'reversibility': {
     name: 'Reversibility check',
@@ -178,6 +201,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Reversible and cheap → do it now, no meeting',
       'Irreversible or expensive → run the full pass',
     ],
+    source: 'Bezos’ one-way / two-way door frame; a practice frame, no controlled study.',
   },
   'kill-criteria': {
     name: 'Kill criteria',
@@ -189,6 +213,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Write that you will reopen the case unconditionally on that date',
       'Put it inside the sealed record',
     ],
+    source: 'Standard in investment and project management; no controlled study, but it hedges against sunk cost.',
   },
   'client-quadrant': {
     name: 'Client quadrant',
@@ -200,6 +225,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Place the candidate in a box',
       'Low money, high trouble → raise the price or decline',
     ],
+    source: 'A services practice tool; no research support — an experience frame.',
   },
   'ninety-day': {
     name: '90-day review',
@@ -211,6 +237,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Write that you reopen on the date regardless of how you feel',
       'Set the open date 90 days out',
     ],
+    source: 'Management practice; no controlled study.',
   },
   'staged-price-increase': {
     name: 'Staged price increase',
@@ -222,6 +249,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Existing clients get 30 days written notice',
       'Give a deadline, never a permanent discount',
     ],
+    source: 'Pricing practice; no controlled study, but consistent with the mechanism of price anchoring.',
   },
   'single-channel': {
     name: 'One channel at a time',
@@ -233,6 +261,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Define "working" in numbers (e.g. 20 enquiries in 30 days)',
       'If it misses, switch — do not double the spend',
     ],
+    source: 'Growth practice; no controlled study.',
   },
   'decision-matrix': {
     name: 'Weighted decision matrix',
@@ -252,6 +281,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
     whenToUse: 'When short-term feeling is driving: fear of losing the deal, of offending, of missing out.',
     whenNot: 'When a reply is needed in the next minute.',
     howTo: ['In ten minutes I will think…', 'In ten months, will it still matter?', 'In ten years, will I remember it?'],
+    source: 'A frame proposed by Suzy Welch; no controlled study — a structured self-question.',
   },
   'prediction-log': {
     name: 'Prediction log',
@@ -259,6 +289,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
     whenToUse: 'Any time you say "I think it will…".',
     whenNot: 'The prediction cannot be checked ("this industry will get harder").',
     howTo: ['Event, time window, number', 'A probability', 'On the date: record facts only, no verdict'],
+    source: 'Calibration-training research; Tetlock’s Good Judgment Project.',
   },
   'reverse-assumption': {
     name: 'Reverse the assumption',
@@ -266,6 +297,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
     whenToUse: 'When you are clearly leaning one way.',
     whenNot: 'Before you have a leaning — still gathering.',
     howTo: ['Pick the option you least want', 'Write three reasons for it', 'Notice if any of them moves you'],
+    source: 'Same root as training against confirmation bias; works in practice, lacking large field experiments.',
   },
   'cost-floor': {
     name: 'Cost floor',
@@ -277,6 +309,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Add hidden costs: communication, rework, payment terms',
       'That is the floor. Below it, decline',
     ],
+    source: 'Management accounting basics; no behavioural-science evidence, but it directly hedges loss aversion.',
   },
   'five-questions': {
     name: 'Five client questions',
@@ -290,6 +323,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'What happens if it stays unsolved',
       'Are you already paying for something here',
     ],
+    source: 'Customer-interview methods like The Mom Test; consistent with the intention–behaviour gap literature.',
   },
   'precommitment': {
     name: 'Precommitment',
@@ -301,6 +335,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Write "this kind of client always pays 30% up front"',
       'Put it into the sealed record and check against it on the date',
     ],
+    source: 'Ariely & Wertenbroch (2002) on self-binding; a moderate effect.',
   },
   'base-rate-check': {
     name: 'Base-rate check',
@@ -312,6 +347,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Find the distribution: denominator, median, failure rate',
       'Explain why you are not in it',
     ],
+    source: 'Same root as reference-class forecasting; Kahneman & Tversky on base-rate neglect.',
   },
   'relation-cap': {
     name: 'Relationship discount cap',
@@ -324,6 +360,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Write the cap: past it, decline or say it out loud',
       'Put those four lines into "facts" — they are observable',
     ],
+    source: 'No controlled study. An attempt to make 人情 computable, not a standard answer.',
   },
 
   /* ── 原则 ── */
@@ -332,30 +369,35 @@ export const CONCEPT_EN: Record<string, CEN> = {
     oneLine: 'A percentage without a denominator says nothing.',
     whenToUse: 'Any "80% success rate", "most people do…".',
     whenNot: 'The other side gave you the sample and the sampling method.',
+    source: 'Statistical common sense; same root as base-rate neglect.',
   },
   'single-point-curse': {
     name: 'No single-point predictions',
     oneLine: '"Three months" is not a prediction, it is a wish.',
     whenToUse: 'All estimates of time, cost and revenue.',
     whenNot: 'When you must commit to one delivery date externally (keep the range internally).',
+    source: 'Interval estimation and calibration research; the overconfidence literature.',
   },
   'marginal-only': {
     name: 'Marginal only',
     oneLine: 'Look at what one more unit costs and earns — not at what you already spent.',
     whenToUse: 'Any decision involving "we have already invested a lot".',
     whenNot: 'Exit costs are real (penalties, trust). Then they are part of the marginal cost.',
+    source: 'Economics basics; same root as sunk cost.',
   },
   'range-not-point': {
     name: 'Ranges, not points',
     oneLine: '"About three months" is worse than "two at the fastest, five at the slowest".',
     whenToUse: 'Every estimate of time, cost, revenue.',
     whenNot: 'When you must publish a single date (keep the range for yourself).',
+    source: 'Calibration and forecasting research; interval estimates measurably reduce overconfidence.',
   },
   'record-over-memory': {
     name: 'Records beat memory',
     oneLine: 'Your memory of what you judged three months ago gets rewritten by the result.',
     whenToUse: 'Every "I knew it all along".',
     whenNot: '—',
+    source: 'Memory-reconstruction research (Loftus et al.); hindsight bias is a robust effect.',
   },
 
   /* ── 证据 ── */
@@ -364,11 +406,13 @@ export const CONCEPT_EN: Record<string, CEN> = {
     oneLine: 'Running out of cash is the final cause, not the root cause — "no market need" ranks first.',
     whenToUse: 'Judging whether a product should continue, or start.',
     whenNot: 'This is a distribution of failure causes, not a success rate. It cannot compute your odds.',
+    source: 'CB Insights 2026 review of 431 companies shut down after 2023: 43% named inadequate PMF as the primary cause.',
   },
   'ev-optimism-bias': {
     name: 'Optimism bias, corrected at policy level',
     oneLine: 'The UK Department for Transport requires large projects to add a fixed uplift based on historical overrun — reference-class forecasting in practice.',
     whenToUse: 'Estimating a large project you have never done.',
     whenNot: 'Small, repetitive work where the historical spread is narrow.',
+    source: 'UK Department for Transport, Optimism Bias method; related Flyvbjerg research.',
   },
 };
