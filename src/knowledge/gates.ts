@@ -83,8 +83,8 @@ export const GATES: Gate[] = [
     id: 'product', name: '取舍', layer: '货', reversibility: 4, feedbackDays: 90,
     measure: {
       unit: 'days',
-      expected: '你预计多久能上线', actual: '实际上线用了多久',
-      expectedEn: 'How long until it ships?', actualEn: 'How long did it actually take?',
+      expected: '你预计多少天完成', actual: '实际完成用了多少天',
+      expectedEn: 'How many days to complete it?', actualEn: 'How many days did it actually take to complete?',
     },
     outcomeVars: ['付费用户数', '投入工时', '机会成本'],
     entryQuestions: [
@@ -211,15 +211,23 @@ export const GATES: Gate[] = [
   },
 ];
 
-export const GATE_MAP: Record<string, Gate> = Object.fromEntries(GATES.map((g) => [g.id, g]));
+export const GATE_MAP: Partial<Record<GateId, Gate>> = Object.fromEntries(GATES.map((g) => [g.id, g]));
+
+/** 不属于八个关口的决定仍可走完封存、回看，但不假设它们属于同一类。 */
+const OTHER_GATE: Gate = {
+  id: 'other', name: '其他', layer: '己', reversibility: 3, feedbackDays: 45,
+  measure: {
+    unit: 'days',
+    expected: '你预计多少天完成', actual: '实际完成用了多少天',
+    expectedEn: 'How many days to complete it?', actualEn: 'How many days did it actually take to complete?',
+  },
+  outcomeVars: [], entryQuestions: [], baseRate: null,
+  baseRateNote: '这件事没有对应的分类基准。请写下本次可验证的预测，到回看时与实际结果对照。',
+  optionHints: [], optionHintsEn: [], aiTakes: [], aiTakesEn: [],
+};
 
 export function getGate(id: GateId): Gate {
-  return GATE_MAP[id] ?? {
-    id: 'other', name: '其他', layer: '己', reversibility: 3, feedbackDays: 45,
-    outcomeVars: [], entryQuestions: [], baseRate: null,
-    baseRateNote: '这个关口还没有整理基准数据。', optionHints: [], aiTakes: [],
-    optionHintsEn: [],
-  };
+  return GATE_MAP[id] ?? OTHER_GATE;
 }
 
 export function gateName(id: GateId, lang: 'zh' | 'en' = 'zh'): string {
@@ -229,6 +237,10 @@ export function gateName(id: GateId, lang: 'zh' | 'en' = 'zh'): string {
 
 /** 英文侧重名。baseRateNote 也要译——它常常是整段最有信息量的话。 */
 export const GATE_EN: Record<string, { name: string; baseRateNote: string; baseRate?: string }> = {
+  other: {
+    name: 'Other',
+    baseRateNote: 'There is no category-specific base rate for this decision. Write a checkable prediction and compare it with the actual result at review.',
+  },
   quoting: {
     name: 'Quoting',
     baseRateNote: 'This line should hold "what similar work usually costs". No reliable public data exists. But you have your own: go through the last 12 months of quotes and wins — the median is your base rate.',
@@ -266,11 +278,11 @@ export const GATE_EN: Record<string, { name: string; baseRateNote: string; baseR
 
 export function gateLabel(id: string, lang: 'zh' | 'en'): string {
   if (lang === 'en') return GATE_EN[id]?.name ?? (id === 'other' ? 'Other' : id);
-  return id === 'other' ? '其他' : (GATE_MAP[id]?.name ?? '其他');
+  return id === 'other' ? '其他' : (GATE_MAP[id as GateId]?.name ?? '其他');
 }
 
 export function gateBaseRate(id: string, lang: 'zh' | 'en'): { baseRate: string | null; note: string } {
-  const zh = GATE_MAP[id];
+  const zh = id === 'other' ? OTHER_GATE : GATE_MAP[id as GateId];
   if (lang === 'en') {
     const e = GATE_EN[id];
     return { baseRate: e?.baseRate ?? null, note: e?.baseRateNote ?? '' };

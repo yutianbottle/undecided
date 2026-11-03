@@ -45,7 +45,7 @@ export default function CaseFlow({ id }: { id: string }) {
 
   // 同一个关口的上一份案卷：优先已归档（有结果），其次已封存
   const past = cases
-    .filter((x) => x.id !== c.id && x.gate === c.gate && (x.status === 'archived' || x.status === 'sealed'))
+    .filter((x) => c.gate !== 'other' && x.id !== c.id && x.gate === c.gate && (x.status === 'archived' || x.status === 'sealed'))
     .sort((a, b) => {
       const rank = (x: DecisionCase) => (x.status === 'archived' ? 1 : 0);
       const d = rank(b) - rank(a);
@@ -372,7 +372,9 @@ function StepLight({ c, next, back, seed }: { c: DecisionCase; next: () => void;
   const cards = lightUp(c.gate, lang, seed);
   return (
     <div>
-      <p className="hint" style={{ marginBottom: 6 }}>{L('一条提醒，一个动作，以及可用的依据。按需展开，再回到你的决定。', 'One caution, one move, and whatever evidence exists. Open what you need, then return to the decision.')}</p>
+      <p className="hint" style={{ marginBottom: 6 }}>{c.gate === 'other'
+        ? L('这里给你一组通用提醒与动作。它们不针对特定行业，请结合本次事实判断是否适用。', 'Here is a general caution and a move you can use. They are not industry-specific; check whether they fit the facts of this case.')
+        : L('一条提醒，一个动作，以及可用的依据。按需展开，再回到你的决定。', 'One caution, one move, and whatever evidence exists. Open what you need, then return to the decision.')}</p>
       <div className="cards">
         {cards.map((card, i) => <LightCardView key={i} card={card} />)}
       </div>
@@ -548,7 +550,9 @@ function StepRule({
         </div>
       ) : (
         <p className="hint" style={{ marginBottom: 'var(--sp3)' }}>
-          {L(`这是你第一次在「${gateName(c.gate, lang)}」上做决定。没有上一次可以对照。`, `This is your first decision in "${gateName(c.gate, lang)}". No previous one to compare.`)}
+          {c.gate === 'other'
+            ? L('“其他”中的决定可能互不相关，这里不拿上一件作为同类对照。请根据本次的事实写下预测。', 'Decisions in Other may be unrelated, so the previous one is not used as a comparison. Base your prediction on the facts of this case.')
+            : L(`这是你第一次在「${gateName(c.gate, lang)}」上做决定。没有上一次可以对照。`, `This is your first decision in "${gateName(c.gate, lang)}". No previous one to compare.`)}
         </p>
       )}
 
@@ -589,10 +593,14 @@ function StepRule({
           </div>
           <p className="hint" style={{ marginTop: 6 }}>
             {L(
-              gate.measure.unit === 'money'
+              c.gate === 'other'
+                ? '可选。回看时可以填写实际天数，与这次预估对照。“其他”中的不同决定不合并计算偏差。'
+                : gate.measure.unit === 'money'
                 ? '填了它，回看时再填一次实际数字，几次之后这里会告诉你：你一贯报高还是报低。不填也能封存。'
                 : '填了它，回看时再填一次实际天数，几次之后这里会告诉你：你的预估一贯偏快还是偏慢。不填也能封存。',
-              gate.measure.unit === 'money'
+              c.gate === 'other'
+                ? 'Optional. At review, record the actual days to compare with this estimate. Different decisions in Other are not pooled into a bias calculation.'
+                : gate.measure.unit === 'money'
                 ? 'Fill it in, then fill in the actual figure at review. After a few, this tells you whether you tend to over- or under-price. Optional.'
                 : 'Fill it in, then fill in the actual number of days at review. After a few, this tells you whether your estimates run fast or slow. Optional.',
             )}
@@ -616,7 +624,9 @@ function StepRule({
         <label className="hint" htmlFor="review-date">{L('回看日期 · 什么时候检验这条预测', 'Review date · when you check this prediction')}</label>
         <input id="review-date" className="field" type="date" min={todayInput()} value={reviewDate}
           onChange={e => { setReviewDate(e.target.value); set({ openAt: dateInputISO(e.target.value) }); }} />
-        <p className="hint">{L(`按这类决定预填约 ${gate.feedbackDays} 天后。请结合预测的时间窗口确认。`, `Prefilled at about ${gate.feedbackDays} days for this kind of decision. Adjust to your prediction's time window.`)}</p>
+        <p className="hint">{c.gate === 'other'
+          ? L('默认预填 45 天后。请按本次预测能验证的时间修改。', 'Defaults to 45 days from now. Adjust it to when this prediction can be checked.')
+          : L(`按这类决定预填约 ${gate.feedbackDays} 天后。请结合预测的时间窗口确认。`, `Prefilled at about ${gate.feedbackDays} days for this kind of decision. Adjust to your prediction's time window.`)}</p>
       </div>
       <Miss items={check.miss} />
 

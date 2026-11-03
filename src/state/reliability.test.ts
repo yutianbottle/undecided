@@ -23,6 +23,29 @@ beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(instant); });
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 describe('完整决策与状态约束', () => {
+  it('其他可从摆选项走完照明、落槌、提前回看和归档，并保留预估与实际天数', () => {
+    let s = state(decision({ gate: 'other', step: 2, furthestStep: 2,
+      options: [], nonActionOption: '', facts: [], distance: '', chosen: '', prediction: '' }));
+    const patch = (p: Partial<DecisionCase>) => { s = reducer(s, { type: 'case/patch', id: 'one', patch: p }); };
+    patch({ options: ['完成这件事', '不做'], nonActionOption: '不做', step: 3 });
+    expect(s.cases[0].step).toBe(3);
+    patch({ facts: ['我有 14 天空闲'], step: 4 });
+    expect(s.cases[0].step).toBe(4);
+    patch({ distance: '先试一个小步骤', step: 5 });
+    expect(s.cases[0].step).toBe(5);
+    patch({ step: 6 });
+    expect(s.cases[0].step).toBe(6);
+    s = reducer(s, { type: 'case/seal', id: 'one', choice: '完成这件事', prediction: '14 天内完成',
+      p: 70, openAt: iso(6), skipped: false, expectedNum: 14 });
+    expect(s.cases[0].status).toBe('sealed');
+    s = parseState(JSON.parse(JSON.stringify(s)));
+    s = reducer(s, { type: 'case/open-early', id: 'one' });
+    s = reducer(s, { type: 'case/reopen', id: 'one', result: '21 天完成', verdict: 'partial',
+      wrong: '', next: '', actualNum: 21 });
+    expect(parseState(JSON.parse(JSON.stringify(s))).cases[0]).toMatchObject({
+      gate: 'other', status: 'archived', expectedNum: 14, actualNum: 21, openAt: iso(6),
+    });
+  });
   it('两个行动选项或未明确标记时不能推进，也不能直接落槌', () => {
     const s = state(decision({ step: 2, furthestStep: 2, nonActionOption: '' }));
     expect(reducer(s, { type: 'case/patch', id: 'one', patch: { step: 3 } }).cases[0].step).toBe(2);

@@ -31,6 +31,26 @@ function biasId(cards: ReturnType<typeof lightUp>): string | undefined {
 }
 
 describe('lightUp', () => {
+  it.each(['zh', 'en'] as const)('other：%s 通用提醒与动作成对，明确没有分类基准', (lang) => {
+    const expectedPairs = [
+      ['confirmation', 'reverse-assumption'],
+      ['status-quo', 'reversibility'],
+      ['planning-fallacy', 'range-not-point'],
+    ];
+    for (let seed = 0; seed < 3; seed++) {
+      const cards = lightUp('other', lang, seed);
+      expect(cards.map((c) => c.kind)).toEqual(['bias', 'method', 'none']);
+      expect(cards.slice(0, 2).map(conceptIdOf)).toEqual(expectedPairs[seed]);
+      if (cards[2].kind === 'none') expect(cards[2].note).toBeTruthy();
+      if (lang === 'en') expect(JSON.stringify(cards)).not.toMatch(/[\u3400-\u9fff]/);
+    }
+  });
+
+  it('other：同案卷的中英文卡片组合一致，重复打开不跳卡', () => {
+    const first = lightUp('other', 'zh', 'general-case');
+    expect(lightUp('other', 'zh', 'general-case')).toEqual(first);
+    expect(lightUp('other', 'en', 'general-case').map(conceptIdOf)).toEqual(first.map(conceptIdOf));
+  });
   it.each(GATE_IDS)('%s 关口：返回 2–3 张卡，首张偏差、次张方法', (gate) => {
     const cards = lightUp(gate);
     expect(cards.length).toBeGreaterThanOrEqual(2);
@@ -251,6 +271,10 @@ describe('calibration：你自己的预估偏差', () => {
     expect(calibration([c(1, 10, 15), c(2, 12, 18)], 'quoting')).toBeNull();
   });
 
+  it('other 中的不同决定不合并推断偏差', () => {
+    expect(calibration([c(1, 10, 15, 'other'), c(2, 8, 12, 'other'), c(3, 12, 18, 'other')], 'other')).toBeNull();
+  });
+
   it('3 对就算', () => {
     const r = calibration([c(1, 10, 15), c(2, 8, 12), c(3, 12, 18)], 'quoting')!;
     expect(r.n).toBe(3);
@@ -295,6 +319,23 @@ describe('关口的可比数：钱类收金额，人货类收天数', () => {
     for (const [id, unit] of Object.entries(EXPECTED)) {
       expect(getGate(id as any).measure.unit).toBe(unit);
     }
+  });
+
+  it('other 默认关口也具有完整的中英文预估和回看问法', () => {
+    const m = getGate('other').measure;
+    expect(m.unit).toBe('days');
+    expect(m.expected).toBe('你预计多少天完成');
+    expect(m.actual).toBe('实际完成用了多少天');
+    expect(m.expectedEn).toContain('complete');
+    expect(m.actualEn).toContain('complete');
+  });
+
+  it('取舍的中英文问法对照完成时间', () => {
+    const m = getGate('product').measure;
+    expect(m.expected).toBe('你预计多少天完成');
+    expect(m.actual).toBe('实际完成用了多少天');
+    expect(m.expectedEn).toBe('How many days to complete it?');
+    expect(m.actualEn).toContain('complete');
   });
 
   it('每个关口都有自己的落槌问法和回看问法，不共用一句', () => {
