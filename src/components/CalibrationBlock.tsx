@@ -5,8 +5,8 @@ import { fmtMeasure } from '../lib/format';
 import type { DecisionCase, GateId } from '../state/types';
 
 /**
- * 你自己的规律：某个关口里「落槌时估的数」和「回看时实际数」的对照。
- * 不足三次只报进度，不给结论——一两次算不出一个人的倾向。
+ * 校准数据：比较某个关口在落槌时的预估值与回看时的实际值。
+ * 样本少于三次时仅显示进度，不输出倾向结论。
  */
 export function CalibrationBlock({ cases, gate }: { cases: DecisionCase[]; gate: GateId }) {
   const { lang } = useLang();

@@ -6,7 +6,7 @@ export type CaseStatus = 'draft' | 'framed' | 'sealed' | 'archived' | 'abandoned
 
 export type AbandReason = '不重要' | '情况变了' | '别人替我定了' | '写下来发现不用选';
 
-/** 结果和你当时的预测比，像不像。由用户自己标，系统不判。 */
+/** 用户对结果与预测相似度的标记，系统不自动判定。 */
 export type Verdict = 'same' | 'partial' | 'different';
 
 export interface DecisionCase {
@@ -20,9 +20,9 @@ export interface DecisionCase {
   /** 用户明确标记的非行动选项；旧备份迁移时补齐。 */
   nonActionOption?: string;
   furthestStep?: number;
-  /** 从 aiTakes 里挑出的"对我不适用"那条：-1 未选，0..n 索引，99 = 都适用 */
+  /** 从 aiTakes 中选择的“不适用”条目：-1 未选，0..n 索引，99 表示全部适用。 */
   aiPick: number;
-  /** 它不知道的是……（≤60 字） */
+  /** 用户补充的模型未知信息（≤60 字）。 */
   aiGap: string;
   falsifySignal: string;
   distance: string;
@@ -40,7 +40,7 @@ export interface DecisionCase {
   archivedAt?: string | null;
   reviewDraft?: { result: string; verdict: Verdict | ''; wrong: string; next: string };
   result: string;
-  /** 用户自标：结果和预测像不像。空 = 没标（不强制） */
+  /** 用户标记结果与预测的相似度；空值表示未标记。 */
   verdict: Verdict | '';
   wrongJudgment: string;
   nextChange: string;
@@ -75,7 +75,7 @@ export interface Gate {
   entryQuestions: string[];
   baseRate: string | null;
   baseRateNote: string;
-  /** 预置的「如果去问 AI，大概会得到这三句」——静态文案，不接模型 */
+  /** 预置的静态 AI 参考文案，不调用模型。 */
   aiTakes: string[];
   aiTakesEn?: string[];
   /**

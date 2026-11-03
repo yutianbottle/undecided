@@ -5,7 +5,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/ui.css';
 
-/** 新版本就绪时，在页面底部放一条提示：让用户自己决定什么时候刷新 */
+/** 新版本就绪时显示刷新提示，由用户触发页面更新。 */
 function showUpdateBar(reg: ServiceWorkerRegistration) {
   if (document.getElementById('sw-update-bar')) return;
   const zh = (document.documentElement.lang || 'zh').startsWith('zh');
@@ -42,13 +42,13 @@ function showUpdateBar(reg: ServiceWorkerRegistration) {
   document.body.appendChild(bar);
 }
 
-// 只在生产构建里注册 Service Worker：开发模式下它会干扰热更新
+// 仅在生产构建中注册 Service Worker，避免影响开发环境的热更新。
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register(`./sw.js?v=${__BUILD_ID__}`)
       .then((reg) => {
-        // 已经有旧版本在控制页面，且新版本装好了 → 提示刷新
+        // 页面由旧版本控制且新版本已安装时提示刷新。
         if (reg.waiting && navigator.serviceWorker.controller) showUpdateBar(reg);
 
         reg.addEventListener('updatefound', () => {
@@ -62,7 +62,7 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
         });
       })
       .catch(() => {
-        /* 注册失败不影响使用，只是没法离线打开 */
+        /* 注册失败不影响在线使用。 */
       });
   });
 }

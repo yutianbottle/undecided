@@ -27,7 +27,7 @@ const Ctx = createContext<Store | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, loadState);
   const [clock, setClock] = useState(0);
-  // 申请持久化：让浏览器别在磁盘紧张时把这份账本当成可回收缓存
+  // 请求持久化存储，降低浏览器自动清理本地记录的概率。
   useEffect(() => { void requestPersistentStorage(); }, []);
 
   useEffect(() => {

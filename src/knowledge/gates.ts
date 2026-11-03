@@ -235,7 +235,7 @@ export function gateName(id: GateId, lang: 'zh' | 'en' = 'zh'): string {
 }
 
 
-/** 英文侧重名。baseRateNote 也要译——它常常是整段最有信息量的话。 */
+/** 英文侧重名；baseRateNote 同步提供英文说明。 */
 export const GATE_EN: Record<string, { name: string; baseRateNote: string; baseRate?: string }> = {
   other: {
     name: 'Other',

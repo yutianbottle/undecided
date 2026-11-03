@@ -24,7 +24,7 @@ const AXIS = 'rgba(237,235,230,.12)';
 const CONTOUR2 = 'rgba(237,235,230,.42)';
 const FONT = 'var(--sans)';
 
-/** 三条手绘等高线：不规则、不闭合，避免同心椭圆的机械感 */
+/** 三条不规则且不闭合的等高线，用于区分不同区域。 */
 const CONTOURS = [
   'M -30 258 C 34 240 74 264 132 254 C 192 243 216 210 280 218 C 344 226 370 254 430 244 C 490 234 534 210 630 222',
   'M -30 190 C 40 174 86 194 146 180 C 206 166 236 134 302 144 C 368 154 398 182 458 170 C 514 159 562 138 630 148',
@@ -32,9 +32,8 @@ const CONTOURS = [
 ];
 
 /**
- * 取舍与招人的可逆性、反馈周期完全一致（4, 90），坐标必然落在同一点；
- * 各错开 6–9 像素，保证两个点都点得到。偏移小于一个字符高度，不改变读图结论。
- * 其余关口一律按 terrainPoint 的真实坐标落点，不做任何挪动。
+ * 取舍与招人的坐标相同，因此分别偏移 6–9 像素以保持点位可辨识；
+ * 偏移小于一个字符高度，不改变读图结论。其余关口使用 terrainPoint 的真实坐标。
  */
 const NUDGE: Partial<Record<GateId, { dx: number; dy: number }>> = {
   product: { dx: -9, dy: -6 },
@@ -42,9 +41,8 @@ const NUDGE: Partial<Record<GateId, { dx: number; dy: number }>> = {
 };
 
 /**
- * 标签位置手调（相对圆点，像素）。
- * 可逆性 3 的四个关口（接单/定价/渠道/涨价）落在 x≈300 的一条竖线上，间距只有 7–11px：
- * 定价朝上、渠道朝左、涨价朝右、接单朝下，四个方向各占一边，标签不互相压住。
+ * 标签相对圆点的像素偏移。可逆性为 3 的四个关口位于同一竖线，
+ * 通过分配不同方向避免标签重叠。
  */
 const LABELS: Partial<Record<GateId, { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' }>> = {
   quoting: { dx: -12, dy: 4, anchor: 'end' },
@@ -78,7 +76,7 @@ export function Terrain(props: TerrainProps): JSX.Element {
   const [hover, setHover] = useState<GateId | null>(null);
   const hg = hover ? GATES.find((g) => g.id === hover) : undefined;
 
-  // 悬停的关口最后画，金点才不会被相邻的灰点压住
+  // 最后绘制悬停关口，使高亮点位于相邻点之上。
   const ordered = hover ? [...GATES.filter((g) => g.id !== hover), ...GATES.filter((g) => g.id === hover)] : GATES;
 
   return (
@@ -144,7 +142,7 @@ export function Terrain(props: TerrainProps): JSX.Element {
             style={{ cursor: onPick ? 'pointer' : 'default' }}
           >
             <title>{L(`${g.name} · 可逆性 ${g.reversibility}/5 · 反馈约 ${g.feedbackDays} 天`, `${gateName(g.id, lang)} · reversibility ${g.reversibility}/5 · ~${g.feedbackDays} days`)}</title>
-            {/* 图上的密集点仅作辅助入口，完整触控入口在下方关口列表。 */}
+            {/* 地图点提供辅助入口，完整触控入口位于下方关口列表。 */}
             <circle cx={x} cy={y} r={8} fill="transparent" />
             <circle
               cx={x}
@@ -168,12 +166,12 @@ export function Terrain(props: TerrainProps): JSX.Element {
         );
       })}
 
-      {/* 用户自己的案卷：按传入的归一化坐标落点，画在关口点之上才看得见；不加任何连线 */}
+      {/* 用户案卷按归一化坐标绘制为独立标记，不与关口连线。 */}
       <g pointerEvents="none">
         {userPoints.map((p, i) => {
           const c = toXY(p.x, p.y);
           const n = p.gate ? NUDGE[p.gate] : undefined;
-          // 空心金环：落在关口点外围，表示"这个关口你碰过"
+          // 空心金环表示该关口存在用户案卷。
           return (
             <circle key={i} cx={c.x + (n?.dx ?? 0)} cy={c.y + (n?.dy ?? 0)} r={7.5} fill="none"
               stroke="rgba(198,161,91,.5)" strokeWidth={1} />

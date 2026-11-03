@@ -1,6 +1,5 @@
 :root{
-  /* 底色用深灰而不是纯黑：纯黑底上的浅字会出现 halation（笔画周围发雾），
-     中文小字尤其糊。深灰把"硬对比"换成"软对比"。 */
+  /* 深灰底色可减少浅色文字在纯黑背景上的光晕。 */
   --ink:#111318;
   --ink-2:#1A1E25;
   --ink-3:#22272F;
@@ -27,7 +26,7 @@
   --sans:"PingFang SC","Noto Sans SC",-apple-system,BlinkMacSystemFont,sans-serif;
   --mono:"SF Mono","JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
 
-  /* 中文最小 12px：11px 的汉字笔画会连在一起，加对比度也救不回来 */
+  /* 中文最小字号设为 12px，避免小字号笔画粘连。 */
   --fs-q:30px; --fs-h1:34px; --fs-h2:22px; --fs-body:15px;
   --fs-hint:13px; --fs-label:12px; --fs-micro:12px;
   --lh:1.9; --lh-tight:1.5;
@@ -40,7 +39,7 @@
   --t-fast:160ms; --t-base:240ms; --t-slow:600ms;
 }
 
-/* 大屏：内容和字号一起长大。缺了这段，宽窗口里 680px 一条竖带，字显得很小。 */
+/* 大屏布局同步扩大内容区域和字号。 */
 @media (min-width: 1100px){
   :root{
     --fs-q:34px; --fs-h1:38px; --fs-h2:25px; --fs-body:16px;
@@ -64,7 +63,7 @@
     --w:960px;
   }
 }
-/* 窄屏：缩小留白，字不缩（中文缩到 12px 以下会糊） */
+/* 窄屏布局减少留白，保持中文字号不低于 12px。 */
 @media (max-width: 720px){
   :root{
     --fs-q:26px; --fs-h1:28px; --fs-h2:20px;
@@ -72,14 +71,14 @@
   }
 }
 
-/* 底噪：压住深灰的色阶带 */
+  /* 底噪：抑制深灰背景的色阶带。 */
 body::after{
   content:""; position:fixed; inset:0; pointer-events:none; z-index:60;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   opacity:.035;
 }
 
-/* 光：四段色标，避免椭圆硬边 */
+/* 光晕：使用四段色标，平滑过渡边缘。 */
 .glow{
   position:fixed; inset:0; pointer-events:none; z-index:0;
   background:

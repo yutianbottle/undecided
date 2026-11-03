@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Shell, Foot } from '../components/Shell';
 import { useLang } from '../i18n';
 
-/** 四类已知的坏时机。不是诊断，只是提醒。 */
+/** 四类需要暂缓决策的状态提示，不构成诊断。 */
 const STATES = [
   { id: 'tired', zh: '困', en: 'Tired', zhD: '没睡够，或者已经撑了很久', enD: 'Short on sleep, or running on empty' },
   { id: 'hungry', zh: '饿', en: 'Hungry', zhD: '今天还没好好吃一顿', enD: 'You have not eaten properly today' },
@@ -19,7 +19,7 @@ export default function Check() {
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
 
   function proceed() {
-    try { sessionStorage.setItem('weijue.statechecked', String(Date.now())); } catch { /* 不可用时 NewCase 会放行 */ }
+    try { sessionStorage.setItem('weijue.statechecked', String(Date.now())); } catch { /* 存储不可用时由新建页继续处理。 */ }
     window.location.hash = '#/new';
   }
 

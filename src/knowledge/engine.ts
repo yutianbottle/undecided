@@ -16,13 +16,13 @@ function loc(c: Concept | undefined, lang: LangCode): Concept | undefined {
 /**
  * 照明：规则匹配，无 LLM。
  * 三张：本轮该看的偏差 → 它的可做动作 → 有没有数。
- * 拿不到就少给一张，宁可少，不许编。
+ * 仅返回能够由规则和知识库确定的卡片，不生成缺失内容。
  *
- * 偏差从该关口的「易犯」边里随机抽，不挑最贴切的——挑最贴的，
- * 第 5 次看到的还是第 1 次那张，卡就退化成背景噪音。
+ * 偏差从该关口的「易犯」关系中随机抽取，而不是固定选择权重最高项，
+ * 以保持多次使用时的内容变化。
  *
  * 但随机是带种子的（seed 用案卷 id）：同一件案卷反复打开给同一张，
- * 换个案卷换一张。否则页面上一个随机数每次重渲染都跳，像坏了。
+ * 换个案卷换一张，避免重渲染时结果变化。
  */
 function hashSeed(s: string): number {
   let h = 2166136261;
@@ -51,7 +51,7 @@ export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | numb
   if (bias) cards.push({ kind: 'bias', concept: bias });
 
   let method: Concept | undefined = general ? loc(getConcept(general.method), lang) : undefined;
-  // 先给「这个偏差」的解法，而不是关口通用的那个——药要跟着病走
+  // 优先返回与当前偏差关联的方法，再回退到关口通用方法。
   if (!method && bias) {
     const mEdge = edgesFrom(bias.id, '可解')[0];
     if (mEdge) method = loc(getConcept(mEdge.to), lang);
@@ -61,7 +61,7 @@ export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | numb
     if (primary) method = loc(getConcept(primary), lang);
   }
   if (!method) {
-    // 「适用」边存成 概念 → 关口，所以从关口往回找
+    // 「适用」关系存储为概念 → 关口，因此从关口反向检索。
     const alt = edgesTo(gate, '适用')[0];
     if (alt) method = loc(getConcept(alt.from), lang);
   }
@@ -73,7 +73,7 @@ export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | numb
   } else {
     /**
      * 报价与定价这两类，账本页有一张能算完的卡（成本底价）。
-     * 照明本身仍然只读——这里只提示存在一个可算的数，不把输入框搬进卡片。
+     * 照明卡保持只读；此处仅提示可计算项，输入仍在账本页完成。
      */
     const calculable = gate === 'quoting' || gate === 'pricing';
     const hint = calculable
@@ -108,7 +108,7 @@ export function gateLedger(gate: GateId, lang: LangCode = 'zh') {
     if (c) methods.set(c.id, c);
   }
 
-  // 同样：「佐证」边是 证据 → 关口
+  // 「佐证」关系存储为证据 → 关口。
   const evidences = edgesTo(gate, '佐证')
     .map((e) => loc(getConcept(e.from), lang))
     .filter((c): c is Concept => Boolean(c));
@@ -136,8 +136,7 @@ export interface Calibration {
 }
 
 /**
- * 至少 3 对才算——一两单算不出"你这个人偏乐观"，
- * 只会让用户拿一个噪音当结论。
+ * 至少需要 3 对样本，避免用少量数据推断个体倾向。
  */
 export const CALIBRATION_MIN = 3;
 
@@ -160,7 +159,7 @@ export function calibration(cases: DecisionCase[], gate: GateId): Calibration | 
     se += c.expectedNum as number;
     sa += c.actualNum as number;
   }
-  // 用总和比，而不是逐单比值的平均：一单估 1 天用了 10 天，不该把结论拉到十倍
+  // 使用总和比，避免单个极端样本主导整体比例。
   const ratio = se > 0 ? sa / se : 1;
   return {
     n: pairs.length,
@@ -171,7 +170,7 @@ export function calibration(cases: DecisionCase[], gate: GateId): Calibration | 
   };
 }
 
-/** 某个关口已经填了几对（落槌估了、回看也填了） */
+/** 返回某个关口已完成预估与回看填写的样本数。 */
 export function calibrationFilled(cases: DecisionCase[], gate: GateId): number {
   return cases.filter(
     (c) =>

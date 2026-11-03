@@ -49,7 +49,7 @@ function initial(): Lang {
   try {
     const v = localStorage.getItem(KEY);
     if (v === 'zh' || v === 'en') return v;
-  } catch { /* 忽略隐私模式 */ }
+  } catch { /* 隐私模式下无法读取本地语言设置。 */ }
   return navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
 }
 
@@ -61,7 +61,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     document.title = lang === 'zh'
       ? '未决 · 一个人做公司的决策台'
       : 'Undecided · a decision desk for one';
-    try { localStorage.setItem(KEY, lang); } catch { /* 忽略 */ }
+    try { localStorage.setItem(KEY, lang); } catch { /* 无法持久化语言设置时继续使用当前语言。 */ }
   }, [lang]);
 
   return <Ctx.Provider value={{ lang, t: DICTS[lang], setLang }}>{children}</Ctx.Provider>;
@@ -70,7 +70,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
 export function useLang(): LangCtx { return useContext(Ctx); }
 export function useT(): Dict { return useContext(Ctx).t; }
 
-/** 中英切换：两个字符，不占地方 */
+/** 中英文界面切换控件。 */
 export function LangSwitch() {
   const { lang, setLang, t } = useLang();
   return (

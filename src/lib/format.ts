@@ -1,4 +1,4 @@
-/** 关口可比数的显示：金额用「万」压短，天数直接给 */
+/** 格式化关口可比数：金额以「万」为单位，天数直接显示。 */
 export type MeasureUnit = 'money' | 'days';
 
 export function fmtMeasure(v: number, unit: MeasureUnit, lang: 'zh' | 'en'): string {
@@ -6,7 +6,7 @@ export function fmtMeasure(v: number, unit: MeasureUnit, lang: 'zh' | 'en'): str
     return lang === 'zh' ? `${v} 天` : `${v} days`;
   }
   if (lang === 'zh') {
-    // 一万以上用「万」，否则带千分位——中文里「4.1 万」比「41,000 元」好读
+    // 一万以上使用「万」单位，其余金额保留千分位。
     if (v >= 10000) {
       const w = v / 10000;
       const s = w >= 100 ? Math.round(w).toString() : w.toFixed(1).replace(/\.0$/, '');

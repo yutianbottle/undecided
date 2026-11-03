@@ -7,8 +7,7 @@ body{
   font-family:var(--sans);
   font-size:var(--fs-body);
   line-height:var(--lh);
-  /* 不设 -webkit-font-smoothing:antialiased ——深色底上它会让浅色文字变细、发虚，
-     中文小字尤其明显。用系统默认的 subpixel 渲染。 */
+  /* 使用系统默认字体平滑，避免深色背景上的浅色小字变细。 */
   text-rendering:optimizeLegibility;
 }
 #root{min-height:100%}

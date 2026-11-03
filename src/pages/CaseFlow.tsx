@@ -10,7 +10,7 @@ import { daysSince, fmtDate, futureInput, dateInputISO, todayInput } from '../li
 import { DecisionRecord } from '../components/DecisionRecord';
 import type { DecisionCase, LightCard, AbandReason } from '../state/types';
 
-/** 这几类决定里，"人情"往往是真变量，值得给一句提示 */
+/** 需要提示关系因素的关口。 */
 const RELATIONAL_GATES: string[] = ['accept', 'quoting', 'partner'];
 
 export default function CaseFlow({ id }: { id: string }) {
@@ -43,7 +43,7 @@ export default function CaseFlow({ id }: { id: string }) {
     <DecisionRecord c={c} />
   </main></Shell>;
 
-  // 同一个关口的上一份案卷：优先已归档（有结果），其次已封存
+  // 选择同一关口最近的历史案卷，已归档记录优先。
   const past = cases
     .filter((x) => c.gate !== 'other' && x.id !== c.id && x.gate === c.gate && (x.status === 'archived' || x.status === 'sealed'))
     .sort((a, b) => {
@@ -136,7 +136,7 @@ function Body({
   );
 }
 
-/* ───────── 第 2 步：摆牌 ───────── */
+/* ───────── 第 2 步：选项 ───────── */
 function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<DecisionCase>) => void; next: () => void }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
@@ -151,7 +151,7 @@ function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<Decis
   function add(text: string) {
     const t = text.trim();
     if (!t || c.options.length >= 4 || c.options.includes(t)) return;
-    // 存储层硬校验 20 字符；超长会被静默丢弃，所以这里先拦住并说明
+    // 在写入前执行长度校验，并向用户显示错误信息。
     if (t.length > LIMITS.option) {
       setLengthErr(L(`选项最多 ${LIMITS.option} 个字（这句 ${t.length} 个）。`, `Options are limited to ${LIMITS.option} characters (this one is ${t.length}).`));
       return;
@@ -207,7 +207,7 @@ function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<Decis
   );
 }
 
-/* ───────── 第 3 步：照面 ───────── */
+/* ───────── 第 3 步：事实 ───────── */
 function StepFacts({ c, set, next, back }: { c: DecisionCase; set: (p: Partial<DecisionCase>) => void; next: () => void; back: () => void }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
@@ -342,7 +342,7 @@ function StepFacts({ c, set, next, back }: { c: DecisionCase; set: (p: Partial<D
   );
 }
 
-/* ───────── 第 4 步：设距 ───────── */
+/* ───────── 第 4 步：换位自问 ───────── */
 function StepDistance({ c, set, next, back }: { c: DecisionCase; set: (p: Partial<DecisionCase>) => void; next: () => void; back: () => void }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
@@ -365,7 +365,7 @@ function StepDistance({ c, set, next, back }: { c: DecisionCase; set: (p: Partia
   );
 }
 
-/* ───────── 第 5 步：照明 ───────── */
+/* ───────── 第 5 步：决策照明 ───────── */
 function StepLight({ c, next, back, seed }: { c: DecisionCase; next: () => void; back: () => void; seed: string }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);

@@ -1,5 +1,5 @@
 /**
- * 原型用的封条：FNV-1a 变体，非密码学安全，只做"不可随手改"的仪式。
+ * 原型用的封条：FNV-1a 变体，不具备密码学安全性，仅用于检测内容改动。
  * 输出 8 位大写 hex，展示为 XXXX·XXXX。
  */
 export function sealHash(input: string): string {

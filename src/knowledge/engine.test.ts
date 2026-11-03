@@ -124,7 +124,7 @@ describe('lightUp', () => {
     }
   });
 
-  it('抽到哪张，方法就跟到哪张，不会缺', () => {
+  it('每张偏差卡都有对应的方法卡', () => {
     for (let i = 0; i < 30; i++) {
       const cards = lightUp('quoting', 'zh', `s-${i}`);
       const bias = cards.find((c) => c.kind === 'bias');
@@ -134,7 +134,7 @@ describe('lightUp', () => {
     }
   });
 
-  it('数字种子与字符串种子都接受，负数不会崩', () => {
+  it('支持数字和字符串种子，并处理负数', () => {
     expect(lightUp('quoting', 'zh', -5).length).toBeGreaterThan(0);
     expect(lightUp('quoting', 'zh', 0).length).toBeGreaterThan(0);
   });
@@ -159,8 +159,7 @@ describe('gateLedger', () => {
   });
 
   it('product 关口：佐证边能取到（方向是 概念 → 关口）', () => {
-    // 「佐证」「适用」边在 EDGES 里存成 概念 → 关口，所以 engine 必须用 edgesTo 回溯。
-    // 早先误用 edgesFrom 时这里恒为空，而界面上看不出来——这条断言就是为了盯住它。
+    // 「佐证」「适用」关系在 EDGES 中存为概念 → 关口，验证 engine 的反向检索。
     const ledger = gateLedger('product');
     expect(ledger.evidences.length).toBeGreaterThan(0);
     expect(ledger.evidences.map((c) => c.id)).toContain('ev-cbinsights');
@@ -291,14 +290,14 @@ describe('calibration：你自己的预估偏差', () => {
 
   it('按关口过滤：别的关口的案卷不算进来', () => {
     const cases = [c(1, 10, 15), c(2, 8, 12), c(3, 12, 18, 'pricing')];
-    // quoting 只有 2 对，给不出结论
+    // quoting 仅有 2 对样本，不应生成校准结论。
     expect(calibration(cases, 'quoting')).toBeNull();
-    // pricing 那一条自己也不足 3 对
+    // pricing 样本数同样少于最小阈值。
     expect(calibration(cases, 'pricing')).toBeNull();
   });
 
   it('用总和比，不让一单的极端值主导', () => {
-    // 估 1 天用 10 天 + 估 100 天用 100 天 → 总和比 1.09，逐单比的均值会是 5.5
+    // 总和比为 1.09；逐单比值的平均值会是 5.5。
     const r = calibration([c(1, 1, 10), c(2, 100, 100), c(3, 100, 100)], 'quoting')!;
     expect(r.ratio).toBeCloseTo(210 / 201, 2);
   });
