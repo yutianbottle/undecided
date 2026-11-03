@@ -22,6 +22,13 @@ function conceptIdOf(card: LightCard): string | null {
   return card.kind === 'bias' || card.kind === 'method' ? card.concept.id : null;
 }
 
+
+/** 从三张卡里取偏差卡的 id；取不到返回 undefined */
+function biasId(cards: ReturnType<typeof lightUp>): string | undefined {
+  const b = cards.find((c) => c.kind === 'bias');
+  return b && b.kind === 'bias' ? b.concept.id : undefined;
+}
+
 describe('lightUp', () => {
   it.each(GATE_IDS)('%s 关口：返回 2–3 张卡，首张偏差、次张方法', (gate) => {
     const cards = lightUp(gate);
@@ -80,7 +87,32 @@ describe('lightUp', () => {
       if (cards[0].kind !== 'bias' || cards[1].kind !== 'method') continue;
       expect(cards[1].concept.id).not.toBe(cards[0].concept.id);
     }
+  })
+  it('轮换：同一个关口，第 n 次看到的是第 n 张偏差', () => {
+    const gates = ['quoting', 'pricing', 'accept', 'product', 'hiring', 'partner', 'channel', 'priceup'] as const;
+    for (const gate of gates) {
+      expect(biasId(lightUp(gate, 'zh', 0))).not.toBe(biasId(lightUp(gate, 'zh', 1)));
+    }
   });
+
+  it('轮换是确定的：同一 round 反复打开给同一张', () => {
+    for (const round of [0, 1, 3, 6]) {
+      expect(biasId(lightUp('quoting', 'zh', round))).toBe(biasId(lightUp('quoting', 'zh', round)));
+    }
+  });
+
+  it('轮换会绕回来，不会算出空卡', () => {
+    expect(biasId(lightUp('quoting', 'zh', 7))).toBe(biasId(lightUp('quoting', 'zh', 0)));
+    expect(lightUp('quoting', 'zh', 99).length).toBeGreaterThan(0);
+  });
+
+  it('方法跟着偏差走：每一轮的偏差都有对应动作', () => {
+    for (let round = 0; round < 7; round++) {
+      const method = lightUp('quoting', 'zh', round).find((c) => c.kind === 'method');
+      expect(method && method.kind === 'method' ? method.concept.id : null).toBeTruthy();
+    }
+  });
+;
 });
 
 describe('gateLedger', () => {

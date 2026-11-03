@@ -52,17 +52,28 @@ export default function CaseFlow({ id }: { id: string }) {
       return d !== 0 ? d : new Date(b.sealedAt ?? 0).getTime() - new Date(a.sealedAt ?? 0).getTime();
     });
 
-  return <Body key={c.id} c={c} patch={patch} abandon={abandon} seal={seal} echo={past[0]} />;
+  return (
+    <Body
+      key={c.id}
+      c={c}
+      patch={patch}
+      abandon={abandon}
+      seal={seal}
+      echo={past[0]}
+      round={cases.filter((x) => x.gate === c.gate && (x.status === 'sealed' || x.status === 'archived')).length}
+    />
+  );
 }
 
 function Body({
-  c, patch, abandon, seal, echo,
+  c, patch, abandon, seal, echo, round,
 }: {
   c: DecisionCase;
   patch: (id: string, p: Partial<DecisionCase>) => void;
   abandon: (id: string, r: AbandReason) => void;
   seal: (id: string, choice: string, prediction: string, p: number, openAt: string, skipped: boolean) => void;
   echo?: DecisionCase;
+  round: number;
 }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
@@ -106,7 +117,14 @@ function Body({
           {step === 2 && <StepOptions c={c} set={set} next={next} />}
           {step === 3 && <StepFacts c={c} set={set} next={next} back={back} />}
           {step === 4 && <StepDistance c={c} set={set} next={next} back={back} />}
-          {step === 5 && <StepLight c={c} next={next} back={back} />}
+          {step === 5 && (
+            <StepLight
+              c={c}
+              next={next}
+              back={back}
+              round={round}
+            />
+          )}
           {step === 6 && <StepRule c={c} set={set} seal={seal} back={back} onAbandon={abandon} echo={echo} onPhaseChange={setLocked} />}
         </div>
 
@@ -350,10 +368,10 @@ function StepDistance({ c, set, next, back }: { c: DecisionCase; set: (p: Partia
 }
 
 /* ───────── 第 5 步：照明 ───────── */
-function StepLight({ c, next, back }: { c: DecisionCase; next: () => void; back: () => void }) {
+function StepLight({ c, next, back, round }: { c: DecisionCase; next: () => void; back: () => void; round: number }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
-  const cards = lightUp(c.gate, lang);
+  const cards = lightUp(c.gate, lang, round);
   return (
     <div>
       <p className="hint" style={{ marginBottom: 6 }}>{L('一条提醒，一个动作，以及可用的依据。按需展开，再回到你的决定。', 'One caution, one move, and whatever evidence exists. Open what you need, then return to the decision.')}</p>

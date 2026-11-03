@@ -15,23 +15,31 @@ function loc(c: Concept | undefined, lang: LangCode): Concept | undefined {
 
 /**
  * 照明：规则匹配，无 LLM。
- * 固定三张：最可能栽的偏差 → 对应的可做动作 → 有没有数。
+ * 三张：本轮该看的偏差 → 它的可做动作 → 有没有数。
  * 拿不到就少给一张，宁可少，不许编。
+ *
+ * round 是这个关口已经落槌的次数（0 = 第一次）。一次只给一张偏差，
+ * 所以第几次看，就翻到第几张——做过之后，同一关口看到的东西会换。
+ * 不用随机：同一次机会重复打开必须给同一张，否则用户会以为页面坏了。
  */
-export function lightUp(gate: GateId, lang: LangCode = 'zh'): LightCard[] {
+export function lightUp(gate: GateId, lang: LangCode = 'zh', round = 0): LightCard[] {
   const cards: LightCard[] = [];
 
-  const biasEdge = edgesFrom(gate, '易犯')[0];
+  // edgesFrom 已按 weight 降序：第一次给最可能栽的那条，之后依次往后翻
+  const pool = edgesFrom(gate, '易犯');
+  const biasEdge = pool.length ? pool[((round % pool.length) + pool.length) % pool.length] : undefined;
   const bias: Concept | undefined = loc(biasEdge ? getConcept(biasEdge.to) : undefined, lang);
   if (bias) cards.push({ kind: 'bias', concept: bias });
 
   let method: Concept | undefined;
-  // 先看这个关口指定的首选方法，再退回到「偏差 → 解法」
-  const primary = primaryMethod(gate);
-  if (primary) method = loc(getConcept(primary), lang);
-  if (!method && bias) {
+  // 先给「这个偏差」的解法，而不是关口通用的那个——药要跟着病走
+  if (bias) {
     const mEdge = edgesFrom(bias.id, '可解')[0];
     if (mEdge) method = loc(getConcept(mEdge.to), lang);
+  }
+  if (!method) {
+    const primary = primaryMethod(gate);
+    if (primary) method = loc(getConcept(primary), lang);
   }
   if (!method) {
     // 「适用」边存成 概念 → 关口，所以从关口往回找
