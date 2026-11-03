@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { lightUp, gateLedger, terrainPoint, calibration } from './engine';
-import { getGate } from './gates';
+import { getGate, gateBaseRate } from './gates';
 import { CONCEPTS } from './concepts';
 import { EDGES } from './edges';
 import type { GateId, LightCard } from '../state/types';
@@ -164,6 +164,28 @@ describe('gateLedger', () => {
     expect(ledger.gate.id).toBe('other');
     expect(ledger.biases).toEqual([]);
     expect(ledger.methods).toEqual([]);
+  });
+
+  it('英文账本中的卡片字段不回落为中文', () => {
+    const cjk = /[\u3400-\u9fff]/;
+    for (const gate of GATE_IDS) {
+      const ledger = gateLedger(gate, 'en');
+      for (const card of [...ledger.biases.map((x) => x.concept), ...ledger.methods, ...ledger.evidences]) {
+        expect(card.name, `${gate}/${card.id} name`).not.toMatch(cjk);
+        expect(card.oneLine, `${gate}/${card.id} oneLine`).not.toMatch(cjk);
+        expect(card.whenToUse, `${gate}/${card.id} whenToUse`).not.toMatch(cjk);
+        expect(card.whenNot, `${gate}/${card.id} whenNot`).not.toMatch(cjk);
+        for (const step of card.howTo ?? []) expect(step, `${gate}/${card.id} howTo`).not.toMatch(cjk);
+      }
+    }
+  });
+
+  it('英文产品基准率使用英文文案', () => {
+    const rate = gateBaseRate('product', 'en');
+    expect(rate.baseRate).toContain('market need');
+    expect(rate.note).toContain('failure causes');
+    expect(rate.baseRate).not.toMatch(/[\u3400-\u9fff]/);
+    expect(rate.note).not.toMatch(/[\u3400-\u9fff]/);
   });
 });
 

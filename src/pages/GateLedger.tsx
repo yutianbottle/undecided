@@ -151,6 +151,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
   const { gate: g, biases, methods, evidences } = gateLedger(gate, lang);
+  const localizedRate = gateBaseRate(gate, lang);
   const { cases } = useStore();
   const cal = calibration(cases, gate);
 
@@ -336,13 +337,13 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
         )}
 
         <Section title={L('有没有数', 'Any numbers')}>
-          {g.baseRate ? (
+          {localizedRate.baseRate ? (
             <>
               <p className="card-d" style={{ marginTop: 'var(--sp2)' }}>
-                {g.baseRate}
+                {localizedRate.baseRate}
               </p>
               <p className="warn" style={{ marginTop: 'var(--sp1)' }}>
-                {g.baseRateNote}
+                {localizedRate.note}
               </p>
             </>
           ) : (

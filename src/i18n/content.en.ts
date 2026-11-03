@@ -122,7 +122,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
     oneLine: 'Someone who did you a favour gets repaid more than it was worth — and sooner than you expect.',
     whenToUse: 'The client came through a friend; they helped you once; you owe something.',
     whenNot: 'A pure price comparison with no history between you.',
-    source: 'Cialdini’s principle of reciprocity; strong experimental evidence, but the specific shape of 人情 debt in Chinese business has not been quantified.',
+    source: 'Cialdini’s principle of reciprocity; strong experimental evidence, but the specific shape of relationship debt in Chinese business has not been quantified.',
   },
   'guanxi-loss': {
     name: 'Relationship loss',
@@ -360,7 +360,7 @@ export const CONCEPT_EN: Record<string, CEN> = {
       'Write the cap: past it, decline or say it out loud',
       'Put those four lines into "facts" — they are observable',
     ],
-    source: 'No controlled study. An attempt to make 人情 computable, not a standard answer.',
+    source: 'No controlled study. An attempt to make relationship debt computable, not a standard answer.',
   },
 
   /* ── 原则 ── */

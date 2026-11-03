@@ -133,4 +133,16 @@ describe('阅读版导出', () => {
     expect(md).toContain('3 天不回复就重新考虑'); expect(md).toContain('回访草稿（未归档）');
     expect(md).toContain('确认账期');
   });
+
+  it('英文导出使用英文标题和状态文案', () => {
+    const md = toMarkdown([decision({
+      question: 'What should I quote?', options: ['Quote 30k', 'Decline'], nonActionOption: 'Decline',
+      facts: ['Repeat client'], distance: 'Ask for the scope first', chosen: 'Quote 30k',
+      prediction: 'They accept in 3 days', result: 'Accepted', verdict: 'same', status: 'archived',
+    })], instant, 'en');
+    expect(md).toContain('# My decision ledger');
+    expect(md).toContain('Reviewed');
+    expect(md).toContain('Did it match what you expected');
+    expect(md).not.toMatch(/[\u3400-\u9fff]/);
+  });
 });

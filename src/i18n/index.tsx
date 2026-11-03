@@ -4,6 +4,24 @@ import { en } from './en';
 
 export type Lang = 'zh' | 'en';
 
+/** 将存储层和创建流程抛出的稳定错误翻译成当前界面语言。 */
+export function localizeError(message: string, lang: Lang): string {
+  if (lang === 'zh') return message;
+  const exact: Record<string, string> = {
+    '请先在数据管理中恢复本机记录。': 'Recover your local records in Data first.',
+    '请检查问题和决定期限。': 'Check the question and deadline.',
+    '备份版本不支持，或缺少案卷数组。': 'This backup version is unsupported or has no case list.',
+    '浏览器中没有可导出的原始记录。': 'There is no raw record to export in this browser.',
+    '保存失败，当前内容仍在页面中。请立即导出备份，再重试保存。': 'Saving failed. The current content is still on this page. Export a backup now, then try again.',
+    '本机记录暂时无法读取。原始数据已保留，自动保存已暂停；请先导出原始数据，再导入有效备份恢复。': 'Local records could not be read. The raw data is still kept and auto-save is paused. Export it first, then restore a valid backup.',
+    'useStore 必须在 StoreProvider 内使用': 'useStore must be used inside StoreProvider',
+  };
+  if (exact[message]) return exact[message];
+  const malformed = message.match(/^第 (\d+) 个案卷的数据不完整或格式不正确。$/);
+  if (malformed) return `Case ${malformed[1]} is incomplete or has an invalid format.`;
+  return message;
+}
+
 const DICTS: Record<Lang, Dict> = { zh, en };
 const KEY = 'weijue.lang';
 
