@@ -44,7 +44,17 @@ export function lightUp(gate: GateId, lang: LangCode = 'zh'): LightCard[] {
   if (baseRate) {
     cards.push({ kind: 'rate', baseRate, note });
   } else {
-    cards.push({ kind: 'none', note });
+    /**
+     * 报价与定价这两类，账本页有一张能算完的卡（成本底价）。
+     * 照明本身仍然只读——这里只提示存在一个可算的数，不把输入框搬进卡片。
+     */
+    const calculable = gate === 'quoting' || gate === 'pricing';
+    const hint = calculable
+      ? lang === 'zh'
+        ? '\n\n这单有一个能算的数：成本底价。翻到账本的「成本底价」卡，填两个数就有了。'
+        : '\n\nThere is one number you can work out here: the floor price. On the ledger page, under the cost-floor card, fill in two values.'
+      : '';
+    cards.push({ kind: 'none', note: note + hint });
   }
   return cards;
 }
