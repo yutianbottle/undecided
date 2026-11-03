@@ -16,7 +16,7 @@ const text = (v: unknown, max: number): v is string => typeof v === 'string' && 
 const date = (v: unknown): v is string => typeof v === 'string' && Number.isFinite(Date.parse(v));
 const maybeDate = (v: unknown) => v === null || date(v);
 
-/** 严格检查导入内容，再补齐旧版新增字段；不截断、不默默丢弃案卷。 */
+/** 严格校验导入内容并补齐旧版字段，保留完整案卷数据。 */
 /** 旧版本把「天数」当通用单位；只有这几个关口的旧数据还成立 */
 const LEGACY_DAYS_GATES = new Set(['accept', 'product', 'hiring', 'partner']);
 
@@ -138,7 +138,7 @@ export function lastExportAt(): string | null {
   try { return localStorage.getItem(EXPORT_KEY); } catch { return null; }
 }
 
-/** 合并时保留本机相同 ID 的案卷，尤其不覆盖已封存记录。 */
+/** 合并时保留本机相同 ID 的案卷，已封存记录不被覆盖。 */
 export function mergeStates(current: AppState, incoming: AppState): AppState {
   const ids = new Set(current.cases.map(c => c.id));
   return { version: STATE_VERSION, cases: [...current.cases, ...incoming.cases.filter(c => !ids.has(c.id))] };
@@ -147,8 +147,8 @@ export function mergeStates(current: AppState, incoming: AppState): AppState {
 
 /**
  * 向浏览器申请「持久存储」。
- * 默认情况下，浏览器在磁盘紧张时可能清掉不常用站点的 localStorage；
- * 申请成功后这个 origin 会被标记为 persistent，不会被自动清理。
+ * 浏览器可能在存储空间不足时清理不常用站点的 localStorage；
+ * 申请成功后当前 origin 会标记为 persistent，降低自动清理风险。
  * Chrome / Edge 支持，Safari 部分支持，失败时静默返回 false，不影响使用。
  */
 export async function requestPersistentStorage(): Promise<boolean> {

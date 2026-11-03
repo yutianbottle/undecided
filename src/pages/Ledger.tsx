@@ -21,7 +21,7 @@ export default function Ledger(): JSX.Element {
       .filter((c) => c.status === 'archived' || c.status === 'sealed')
       .sort((a, b) => new Date(b.sealedAt ?? 0).getTime() - new Date(a.sealedAt ?? 0).getTime())[0];
 
-  // 每个碰过的关口只画一个环（同一关口多个案卷不叠环）
+  // 每个有历史记录的关口只绘制一个环，避免同一关口重复叠加。
   const userPoints = GATES
     .filter((g) => byGate(g.id).length > 0)
     .map((g) => ({ ...terrainPoint(g.reversibility, g.feedbackDays), gate: g.id }));

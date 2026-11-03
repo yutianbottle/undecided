@@ -163,11 +163,11 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
   const completed = mine.filter(c => c.status === 'sealed' || c.status === 'archived');
   const unlocked = completed.length > 0;
   const begin = () => {
-    try { sessionStorage.setItem('weijue.prefill', JSON.stringify({ gate })); } catch { /* 手动选择仍可继续 */ }
+    try { sessionStorage.setItem('weijue.prefill', JSON.stringify({ gate })); } catch { /* 预填充失败时继续打开新建页面。 */ }
     window.location.hash = '#/check';
   };
 
-  // 按你在这个场景做过几次，逐步展开。不是加密，是"没做过看了也记不住"
+  // 根据该关口的历史使用次数逐步展开内容。
   const n = completed.length;
   const capB = n >= 5 ? 99 : n >= 3 ? 6 : 3;
   const capM = n >= 5 ? 99 : n >= 3 ? 5 : 2;
@@ -178,7 +178,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
   const hidden = hiddenB + hiddenM;
   const nextAt = n >= 5 ? null : n >= 3 ? 5 : 3;
 
-  // 没碰过这个关口：只给一句话 + 一条最关键的失效，其余留白
+  // 没有历史记录时仅显示摘要和一条关键失效信息。
   if (!unlocked) {
     const top = biases[0];
     return (
@@ -224,7 +224,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
       </Shell>
     );
   }
-  // 有些 note 本身以「暂无基准。」开头，上面已经写了结论，这里去掉重复的那半句
+  // 去除 note 中与已显示结论重复的前缀。
   const noBaseNote = gateBaseRate(gate, lang).note.replace(/^暂无基准。\s*|^No base rate\.\s*/, '');
 
   return (

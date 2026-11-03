@@ -1,8 +1,8 @@
 /**
  * 成本底价：保本价 = 直接成本 ÷ (1 − 目标毛利率)
  *
- * 只用用户当场就知道的两个数：这单的直接成本、这单想赚多少毛利。
- * 不需要任何外部参数（税率、社保、平台佣金），所以在不联网的产品里不会腐烂。
+ * 仅使用用户当场可提供的两个数：直接成本和目标毛利。
+ * 不依赖税率、社保或平台佣金等外部参数，适用于离线环境。
  */
 
 export interface FloorResult {
@@ -14,7 +14,7 @@ export interface FloorResult {
   lowerMargin: number;
 }
 
-/** 成本或毛利不合法时返回 null，不猜 */
+/** 成本或毛利不合法时返回 null。 */
 export function floorPrice(cost: number, marginPct: number): number | null {
   if (!Number.isFinite(cost) || cost <= 0) return null;
   if (!Number.isFinite(marginPct) || marginPct < 0 || marginPct >= 100) return null;

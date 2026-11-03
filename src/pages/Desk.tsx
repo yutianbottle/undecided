@@ -6,7 +6,7 @@ import { useT, useLang } from '../i18n';
 import type { DecisionCase, GateId } from '../state/types';
 
 function start(gate: GateId, question: string) {
-  try { sessionStorage.setItem('weijue.prefill', JSON.stringify({ gate, question })); } catch { /* 仍可手动新建 */ }
+  try { sessionStorage.setItem('weijue.prefill', JSON.stringify({ gate, question })); } catch { /* 预填充失败时仍可手动新建。 */ }
   window.location.hash = '#/check';
 }
 

@@ -29,16 +29,16 @@ export default function NewCase() {
   const [kind, setKind] = useState<DecisionCase['deadlineKind']>('date');
   const [date, setDate] = useState(futureInput(7));
 
-  // 状态确认守卫：没过 #/check 就直接进来（手输地址、旧书签），送回确认页
+  // 要求先完成状态确认，直接访问新建页时返回确认页。
   useEffect(() => {
     let ok = true;
     try {
-      // 只认 10 秒内的确认：够走完这一次跳转，又不能让「新建」在窗口期外绕过
+      // 仅接受最近 10 秒内的确认，限制确认状态的有效期。
       const at = Number(sessionStorage.getItem('weijue.statechecked') || 0);
       ok = Date.now() - at < 10_000;
     } catch { ok = true; }
     if (!ok) { window.location.hash = '#/check'; return; }
-    try { sessionStorage.removeItem('weijue.prefill'); } catch { /* 不影响手动建案卷 */ }
+    try { sessionStorage.removeItem('weijue.prefill'); } catch { /* 清理预填充失败不影响建案卷。 */ }
   }, []);
 
   const validDate = kind !== 'date' || (!!dateInputISO(date) && date >= todayInput());

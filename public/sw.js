@@ -1,7 +1,5 @@
-/* 未决 · 离线缓存
-   页面本身可以被缓存，**你的账本不在缓存里**——它在 localStorage，
-   删掉 Service Worker 也不会动它，反过来清缓存才会。 */
-/* 缓存名跟着构建走：注册时带 ?v=<构建号>，换构建就换缓存，旧 JS 不会再被钉住 */
+/* 未决离线缓存：页面资源可缓存，用户记录保存在 localStorage。 */
+/* 缓存名包含构建版本，更新构建时创建新缓存并淘汰旧资源。 */
 const BUILD = new URL(self.location.href).searchParams.get('v') || 'dev';
 const CACHE = 'weijue-' + BUILD;
 
@@ -18,7 +16,7 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-/* 页面提示「刷新」时，让等待中的新版本立刻接管 */
+/* 页面提示刷新时，让等待中的新版本立即接管。 */
 self.addEventListener('message', (e) => {
   if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
@@ -30,7 +28,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
 
-  // 导航请求：先走网络，断网时回落到缓存里的 index.html
+  // 导航请求优先使用网络，离线时回退到缓存中的 index.html。
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req)
@@ -44,7 +42,7 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // 静态资源：缓存优先（文件名带 hash，可以长期缓存）
+  // 静态资源优先使用缓存；带 hash 的文件可长期缓存。
   e.respondWith(
     caches.match(req).then((hit) => {
       if (hit) return hit;

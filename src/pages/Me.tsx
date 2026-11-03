@@ -28,7 +28,7 @@ export default function Me({ initialTab }: { initialTab?: keyof typeof TABS }) {
   const groups = [...new Set(ps.map(c => c.predictedP))].sort((a, b) => a - b).map(p => ({ p, cases: ps.filter(c => c.predictedP === p) }));
   const high = marked.filter(c => c.predictedP >= 70);
   const low = marked.filter(c => c.predictedP <= 50);
-  /** 只列出真的填过数的关口，避免八条空行 */
+  /** 仅显示存在校准数据的关口。 */
   const measured = GATES.map(g => ({ g, filled: calibrationFilled(cases, g.id) })).filter(x => x.filled > 0);
   return <Shell><main className="wrap">
     <h1 className="h1">{L('我', 'Me')}</h1><p className="hint">{L('留下记录，回看自己的处境与判断。', 'Keep a record. Look back at your situation and your calls.')}</p>

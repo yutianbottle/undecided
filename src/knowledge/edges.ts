@@ -157,9 +157,8 @@ export const EDGES: Edge[] = [
 ];
 
 /**
- * 首推：这个关口最该用的那一个方法。
- * 不靠 bias → method 推导——同一个偏差在不同关口需要的解法不同，
- * 通用解法排在前面会在"招人"给出"用区间不用点"这种错药。
+ * 首选方法：为每个关口指定优先使用的方法。
+ * 不从 bias → method 关系推导，因为同一偏差在不同关口可能需要不同方法。
  */
 export const PRIMARY: { from: string; to: string; relation: '首推'; weight: number }[] = [
   { from: 'quoting', to: 'three-tier-quote', relation: '首推', weight: 1 },
