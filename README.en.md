@@ -124,13 +124,13 @@ These decisions happen at night — a client messages you just before bed, you a
 - **Before the call**, if you have decided in the same gate before, your previous choice, prediction, result and review are placed in front of you before you sign.
 - **The ledger** counts how many times you have decided in each gate. An untouched gate shows one line; the knowledge unfolds only after you have decided there — reading it before you have been burned in that situation is just words.
 - **The lighting cards are random per case.** Two quotes in the same gate do not show the same bias card; the seed is the case id, so reopening one case shows the same card — it must not jump while you read it.
-- **Your own bias.** At the call you can optionally enter one figure; at review you enter the actual one. After three pairs the gate page states the pattern in your own numbers. The unit follows the gate — money gates take an amount, people/product gates take days:
+- **Your own bias.** At the call you can optionally enter one figure; at review you enter the actual one. After three pairs both that gate's page and the Me page state the pattern in your own numbers. The unit follows the gate — money gates take an amount, people/product gates take days:
 
   > Quoting: you expected ¥44,250 on average, it closed at ¥37,500. You tend to price high by 15% — next time multiply by 0.85.
   > Hiring: you expected 31.7 days, it took 44.3. Your estimates run fast by 40% — multiply by 1.4.
 
   This is the only number on the site computed from your own data, and it needs no ledger backfill to start.
-- **The Me page** holds your prediction distribution, your reviewed results, and every case, searchable by keyword and filterable by gate and status.
+- **The Me page** holds your prediction distribution, your reviewed results, and every case, searchable by keyword and filterable by gate and status. The "Your baseline" section at the top puts every gate's logged figures side by side; gates short of three pairs show "2 / 3" rather than a verdict.
 - **Open early**: if the outcome is already clear, you can review before the due date. Both the scheduled date and the actual opening time are kept.
 
 None of this is shown to anyone. It is only for you.
