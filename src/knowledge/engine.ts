@@ -123,6 +123,8 @@ export interface Calibration {
   avgActual: number;
   /** 实际 ÷ 预估；1.2 表示实际比你预想的多两成 */
   ratio: number;
+  /** 数字的单位，由关口决定 */
+  unit: 'money' | 'days';
 }
 
 /**
@@ -131,23 +133,23 @@ export interface Calibration {
  */
 export const CALIBRATION_MIN = 3;
 
-export function calibration(cases: DecisionCase[], gate?: GateId): Calibration | null {
+export function calibration(cases: DecisionCase[], gate: GateId): Calibration | null {
   const pairs = cases.filter(
     (c) =>
       c.status === 'archived' &&
-      (gate === undefined || c.gate === gate) &&
-      typeof c.expectedDays === 'number' &&
-      typeof c.actualDays === 'number' &&
-      c.expectedDays > 0 &&
-      c.actualDays >= 0,
+      c.gate === gate &&
+      typeof c.expectedNum === 'number' &&
+      typeof c.actualNum === 'number' &&
+      c.expectedNum > 0 &&
+      c.actualNum >= 0,
   );
   if (pairs.length < CALIBRATION_MIN) return null;
 
   let se = 0;
   let sa = 0;
   for (const c of pairs) {
-    se += c.expectedDays as number;
-    sa += c.actualDays as number;
+    se += c.expectedNum as number;
+    sa += c.actualNum as number;
   }
   // 用总和比，而不是逐单比值的平均：一单估 1 天用了 10 天，不该把结论拉到十倍
   const ratio = se > 0 ? sa / se : 1;
@@ -156,5 +158,6 @@ export function calibration(cases: DecisionCase[], gate?: GateId): Calibration |
     avgExpected: Math.round((se / pairs.length) * 10) / 10,
     avgActual: Math.round((sa / pairs.length) * 10) / 10,
     ratio: Math.round(ratio * 100) / 100,
+    unit: getGate(gate).measure.unit,
   };
 }

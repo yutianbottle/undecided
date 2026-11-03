@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { lightUp, gateLedger, terrainPoint, calibration } from './engine';
+import { getGate } from './gates';
 import { CONCEPTS } from './concepts';
 import { EDGES } from './edges';
 import type { GateId, LightCard } from '../state/types';
@@ -215,7 +216,7 @@ describe('calibration：你自己的预估偏差', () => {
     return {
       id: `c${i}`, gate, question: 'q', deadlineKind: 'date', deadlineAt: '2026-11-01T00:00:00.000Z',
       options: ['a', 'b', 'c'], facts: [], aiPick: -1, aiGap: '', falsifySignal: '', distance: '',
-      chosen: 'a', prediction: 'p', predictedP: 50, expectedDays: expected, actualDays: actual,
+      chosen: 'a', prediction: 'p', predictedP: 50, expectedNum: expected, actualNum: actual,
       sealedAt: '2026-10-01T00:00:00.000Z', sealHash: 'ABCD1234', openAt: '2026-11-01T00:00:00.000Z',
       result: 'r', verdict: 'same', wrongJudgment: '', nextChange: '', abandReason: '',
       status: 'archived', step: 7, skippedWait: false,
@@ -225,19 +226,20 @@ describe('calibration：你自己的预估偏差', () => {
   }
 
   it('不足 3 对不给结论', () => {
-    expect(calibration([c(1, 10, 15), c(2, 12, 18)])).toBeNull();
+    expect(calibration([c(1, 10, 15), c(2, 12, 18)], 'quoting')).toBeNull();
   });
 
   it('3 对就算', () => {
-    const r = calibration([c(1, 10, 15), c(2, 8, 12), c(3, 12, 18)])!;
+    const r = calibration([c(1, 10, 15), c(2, 8, 12), c(3, 12, 18)], 'quoting')!;
     expect(r.n).toBe(3);
     expect(r.avgExpected).toBe(10);
     expect(r.avgActual).toBe(15);
     expect(r.ratio).toBe(1.5);
+    expect(r.unit).toBe('money');
   });
 
   it('没有天数的案卷不计入', () => {
-    const r = calibration([c(1, 10, 15), c(2, 8, 12), c(3, 12, 18), c(4, null, null), c(5, 10, null)])!;
+    const r = calibration([c(1, 10, 15), c(2, 8, 12), c(3, 12, 18), c(4, null, null), c(5, 10, null)], 'quoting')!;
     expect(r.n).toBe(3);
   });
 
@@ -245,18 +247,51 @@ describe('calibration：你自己的预估偏差', () => {
     const cases = [c(1, 10, 15), c(2, 8, 12), c(3, 12, 18, 'pricing')];
     // quoting 只有 2 对，给不出结论
     expect(calibration(cases, 'quoting')).toBeNull();
-    // 不按关口过滤则 3 对成立
-    expect(calibration(cases)!.n).toBe(3);
+    // pricing 那一条自己也不足 3 对
+    expect(calibration(cases, 'pricing')).toBeNull();
   });
 
   it('用总和比，不让一单的极端值主导', () => {
     // 估 1 天用 10 天 + 估 100 天用 100 天 → 总和比 1.09，逐单比的均值会是 5.5
-    const r = calibration([c(1, 1, 10), c(2, 100, 100), c(3, 100, 100)])!;
+    const r = calibration([c(1, 1, 10), c(2, 100, 100), c(3, 100, 100)], 'quoting')!;
     expect(r.ratio).toBeCloseTo(210 / 201, 2);
   });
 
   it('实际比预估快时 ratio 小于 1', () => {
-    const r = calibration([c(1, 20, 10), c(2, 20, 10), c(3, 20, 10)])!;
+    const r = calibration([c(1, 20, 10), c(2, 20, 10), c(3, 20, 10)], 'quoting')!;
     expect(r.ratio).toBe(0.5);
+  });
+});
+
+describe('关口的可比数：钱类收金额，人货类收天数', () => {
+  const EXPECTED: Record<string, 'money' | 'days'> = {
+    quoting: 'money', pricing: 'money', priceup: 'money', channel: 'money',
+    accept: 'days', product: 'days', hiring: 'days', partner: 'days',
+  };
+
+  it('八个关口的单位都对', () => {
+    for (const [id, unit] of Object.entries(EXPECTED)) {
+      expect(getGate(id as any).measure.unit).toBe(unit);
+    }
+  });
+
+  it('每个关口都有自己的落槌问法和回看问法，不共用一句', () => {
+    const seen = new Set<string>();
+    for (const id of Object.keys(EXPECTED)) {
+      const m = getGate(id as any).measure;
+      expect(m.expected.length).toBeGreaterThan(4);
+      expect(m.actual.length).toBeGreaterThan(4);
+      seen.add(m.expected);
+    }
+    expect(seen.size).toBe(8);
+  });
+
+  it('报价收金额，招人收天数', () => {
+    expect(getGate('quoting').measure.unit).toBe('money');
+    expect(getGate('quoting').measure.expected).toContain('报');
+    expect(getGate('hiring').measure.unit).toBe('days');
+    expect(getGate('hiring').measure.expected).toContain('招');
+    // 金额类与天数类的问法在语义上不能互换
+    expect(getGate('quoting').measure.expected).not.toBe(getGate('hiring').measure.expected);
   });
 });

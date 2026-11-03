@@ -17,6 +17,9 @@ const date = (v: unknown): v is string => typeof v === 'string' && Number.isFini
 const maybeDate = (v: unknown) => v === null || date(v);
 
 /** 严格检查导入内容，再补齐旧版新增字段；不截断、不默默丢弃案卷。 */
+/** 旧版本把「天数」当通用单位；只有这几个关口的旧数据还成立 */
+const LEGACY_DAYS_GATES = new Set(['accept', 'product', 'hiring', 'partner']);
+
 export function parseState(value: unknown): AppState {
   if (!record(value) || ![1, STATE_VERSION].includes(value.version as number) || !Array.isArray(value.cases)) {
     throw new Error('备份版本不支持，或缺少案卷数组。');
@@ -51,10 +54,10 @@ export function parseState(value: unknown): AppState {
     for (const key of ['openedEarlyAt', 'archivedAt']) {
       if (raw[key] !== undefined && !maybeDate(raw[key])) return fail();
     }
-    for (const key of ['expectedDays', 'actualDays']) {
+    for (const key of ['expectedNum', 'actualNum']) {
       const v = raw[key];
       if (v !== undefined && v !== null
-        && (typeof v !== 'number' || !Number.isFinite(v) || v < 0 || v > 100000)) return fail();
+        && (typeof v !== 'number' || !Number.isFinite(v) || v < 0 || v > 1000000)) return fail();
     }
     if (raw.furthestStep !== undefined && (!Number.isInteger(raw.furthestStep)
       || (raw.furthestStep as number) < 2 || (raw.furthestStep as number) > 6)) return fail();
@@ -66,12 +69,20 @@ export function parseState(value: unknown): AppState {
         || !text(draft.next, 40) || !verdicts.includes(draft.verdict as string)) return fail();
     }
     const c = raw as unknown as DecisionCase;
+    /**
+     * v1 收的是「天数」，不分关口。钱类关口当时填的天数对金额没有意义，
+     * 丢掉；人/货类关口的天数照旧可用，映射到 expectedNum / actualNum。
+     */
+    const legacy = raw as unknown as { expectedDays?: number | null; actualDays?: number | null };
+    const keepLegacy = LEGACY_DAYS_GATES.has(c.gate);
     return {
       ...c,
       nonActionOption: c.nonActionOption ?? c.options.find(o => hasNonAction([o])) ?? '',
       furthestStep: c.furthestStep ?? Math.max(2, Math.min(6, c.step)),
       openedEarlyAt: c.openedEarlyAt ?? null,
       archivedAt: c.archivedAt ?? (c.status === 'archived' ? c.updatedAt : null),
+      expectedNum: c.expectedNum ?? (keepLegacy ? legacy.expectedDays ?? null : null),
+      actualNum: c.actualNum ?? (keepLegacy ? legacy.actualDays ?? null : null),
     };
   });
   return { version: STATE_VERSION, cases };

@@ -43,7 +43,7 @@ export default function Me({ initialTab }: { initialTab?: keyof typeof TABS }) {
         <details className="record-details"><summary>{L('逐条查看概率与案卷', 'See each probability and case')}</summary><ul>{ps.map(c => <li key={c.id}><a className="record-link" href={caseLink(c)}>{c.predictedP}% · {c.question}</a></li>)}</ul></details>
       </>}
       <Section title={L('最近归档的', 'Recently archived')}>{archived.length ? archived.slice(0, 6).map(c => <a key={c.id} className="caserow" href={caseLink(c)}>
-        <div className="case-main"><h3 className="caselow-q">{c.question}</h3><p className="hint">{gateName(c.gate)} · {c.prediction}（{c.predictedP}%）</p><p className="card-d">{L('结果：', 'Result: ')}{c.result}</p><p className="hint">{L('归档于 ', 'Archived ')}{fmtDate(archivedTime(c))}</p></div>
+        <div className="case-main"><h3 className="caselow-q">{c.question}</h3><p className="hint">{gateName(c.gate, lang)} · {c.prediction}（{c.predictedP}%）</p><p className="card-d">{L('结果：', 'Result: ')}{c.result}</p><p className="hint">{L('归档于 ', 'Archived ')}{fmtDate(archivedTime(c))}</p></div>
       </a>) : <p className="hint">{L('还没有归档记录。', 'Nothing archived yet.')}</p>}
       <button className="btn btn--text" onClick={() => setTab('history')}>{L('打开全部案卷 →', 'Open all cases →')}</button></Section>
     </section>}

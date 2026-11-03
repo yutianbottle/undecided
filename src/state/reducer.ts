@@ -8,9 +8,9 @@ export type Action =
   | { type: 'case/create'; c: DecisionCase }
   | { type: 'case/patch'; id: string; patch: Partial<DecisionCase> }
   | { type: 'case/abandon'; id: string; reason: AbandReason }
-  | { type: 'case/seal'; id: string; choice: string; prediction: string; p: number; openAt: string; skipped: boolean; expectedDays?: number | null }
+  | { type: 'case/seal'; id: string; choice: string; prediction: string; p: number; openAt: string; skipped: boolean; expectedNum?: number | null }
   | { type: 'case/review-draft'; id: string; draft: NonNullable<DecisionCase['reviewDraft']> }
-  | { type: 'case/reopen'; id: string; result: string; verdict: string; wrong: string; next: string; actualDays?: number | null }
+  | { type: 'case/reopen'; id: string; result: string; verdict: string; wrong: string; next: string; actualNum?: number | null }
   | { type: 'case/open-early'; id: string }
   | { type: 'all/clear' }
   | { type: 'all/import'; s: AppState; mode: 'merge' | 'replace' };
@@ -61,7 +61,7 @@ export function reducer(state: AppState, a: Action): AppState {
     case 'case/seal':
       return touch(a.id, c => {
         const next = { ...c, chosen: a.choice, prediction: a.prediction, predictedP: a.p, openAt: a.openAt,
-          expectedDays: a.expectedDays ?? null };
+          expectedNum: a.expectedNum ?? null };
         if (!editable(c) || c.step !== 6 || completeIssues(next).length) return c;
         const t = nowISO();
         return { ...next, sealedAt: t, sealHash: sealHash(JSON.stringify({
@@ -79,7 +79,7 @@ export function reducer(state: AppState, a: Action): AppState {
         if (c.status !== 'sealed' || !reviewAvailable(c) || !draft.result.trim() || !reviewValid(draft)) return c;
         const { reviewDraft: _draft, ...original } = c;
         return { ...original, result: a.result, verdict: draft.verdict,
-          wrongJudgment: a.wrong, nextChange: a.next, actualDays: a.actualDays ?? null,
+          wrongJudgment: a.wrong, nextChange: a.next, actualNum: a.actualNum ?? null,
           status: 'archived', archivedAt: nowISO() };
       });
     case 'case/open-early':
