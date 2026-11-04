@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 import type { GateId } from '../state/types';
 import { useLang } from '../i18n';
@@ -17,11 +17,10 @@ const H = 320;
 const PAD = 44;
 
 const PAPER_45 = '#A8A49E';   /* 关口点与标签 */
-const PAPER_25 = '#8B8781';   /* 坐标轴文字 */
+const PAPER_25 = '#97938E';   /* 坐标轴文字 */
 const LAMP = '#D9AE63';
 const CONTOUR = 'rgba(237,235,230,.09)';
 const AXIS = 'rgba(237,235,230,.12)';
-const CONTOUR2 = 'rgba(237,235,230,.42)';
 const FONT = 'var(--sans)';
 
 /** 三条不规则且不闭合的等高线，用于区分不同区域。 */
@@ -31,36 +30,37 @@ const CONTOURS = [
   'M -30 116 C 36 102 90 116 152 102 C 212 88 252 62 320 72 C 388 82 416 108 476 98 C 532 89 578 70 630 78',
 ];
 
-/**
- * 取舍与招人的坐标相同，因此分别偏移 6–9 像素以保持点位可辨识；
- * 偏移小于一个字符高度，不改变读图结论。其余关口使用 terrainPoint 的真实坐标。
- */
+/** 小幅分开同簇圆点，标签通过引线放在独立位置。 */
 const NUDGE: Partial<Record<GateId, { dx: number; dy: number }>> = {
+  pricing: { dx: 0, dy: -10 },
+  channel: { dx: -10, dy: 0 },
+  priceup: { dx: 10, dy: 2 },
+  accept: { dx: 0, dy: 10 },
   product: { dx: -9, dy: -6 },
   hiring: { dx: 9, dy: 6 },
 };
-
-/**
- * 标签相对圆点的像素偏移。可逆性为 3 的四个关口位于同一竖线，
- * 通过分配不同方向避免标签重叠。
- */
-const LABELS: Partial<Record<GateId, { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' }>> = {
-  quoting: { dx: -12, dy: 4, anchor: 'end' },
-  accept: { dx: 0, dy: 16, anchor: 'middle' },
-  pricing: { dx: 0, dy: -10, anchor: 'middle' },
-  channel: { dx: -12, dy: 4, anchor: 'end' },
-  priceup: { dx: 12, dy: 4, anchor: 'start' },
-  product: { dx: -12, dy: -2, anchor: 'end' },
-  hiring: { dx: 12, dy: 12, anchor: 'start' },
-  partner: { dx: -4, dy: -14, anchor: 'end' },
+const LABELS: Record<string, { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' }> = {
+  quoting: { dx: -14, dy: 24, anchor: 'end' },
+  accept: { dx: 0, dy: 48, anchor: 'middle' },
+  pricing: { dx: -20, dy: -30, anchor: 'end' },
+  channel: { dx: -38, dy: -4, anchor: 'end' },
+  priceup: { dx: 38, dy: 24, anchor: 'start' },
+  product: { dx: -14, dy: -22, anchor: 'end' },
+  hiring: { dx: 14, dy: 14, anchor: 'start' },
+  partner: { dx: -4, dy: -18, anchor: 'end' },
+};
+// 地图内用短名；完整名称和数值保留在可访问标签、悬停说明与关口列表。
+const SHORT_EN: Record<string, string> = {
+  quoting: 'Quoting', accept: 'Client', pricing: 'Pricing', channel: 'Channel',
+  priceup: 'Raise price', product: 'Product', hiring: 'Hiring', partner: 'Partner',
 };
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
-function toXY(x: number, y: number) {
+function toXY(x: number, y: number, width = W, height = H) {
   return {
-    x: PAD + clamp01(x) * (W - 2 * PAD),
-    y: H - PAD - clamp01(y) * (H - 2 * PAD),
+    x: PAD + clamp01(x) * (width - 2 * PAD),
+    y: height - PAD - clamp01(y) * (height - 2 * PAD),
   };
 }
 
@@ -73,6 +73,16 @@ export function Terrain(props: TerrainProps): JSX.Element {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
   const { userPoints = [], onPick, height = 300 } = props;
+  const container = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(W);
+  useEffect(() => {
+    const element = container.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => setWidth(Math.max(1, Math.min(W, entry.contentRect.width))));
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const mapHeight = width < 500 ? 360 : H;
   const [hover, setHover] = useState<GateId | null>(null);
   const hg = hover ? GATES.find((g) => g.id === hover) : undefined;
 
@@ -81,45 +91,41 @@ export function Terrain(props: TerrainProps): JSX.Element {
 
   return (
     <div>
-    <div className="terrain-scroll" role="region" aria-label={L('关口地形图，可横向滚动', 'Gate map, scroll horizontally')} tabIndex={0}><svg
-      viewBox={`0 0 ${W} ${H}`}
+    <div className="terrain-scroll" ref={container} role="region" aria-label={L('关口地形图', 'Gate map')}><svg
+      viewBox={`0 0 ${width} ${mapHeight}`}
       width="100%"
       preserveAspectRatio="xMidYMid meet"
       className="terrain-map"
       role="group"
       aria-label={L('关口地形图：横轴可逆性 1 到 5，纵轴反馈周期从短到长', 'Gate map: reversibility across, feedback time up')}
-      style={{ display: 'block', width: '100%', height: 'auto', maxHeight: height }}
+      style={{ display: 'block', width: '100%', height: 'auto', maxHeight: Math.max(height, mapHeight) }}
     >
       {/* 等高线 */}
       {CONTOURS.map((d, i) => (
-        <path key={i} d={d} fill="none" stroke={CONTOUR} strokeWidth={1} strokeLinecap="round" />
+        <path key={i} d={d} transform={`scale(${width / W} ${mapHeight / H})`} fill="none" stroke={CONTOUR} strokeWidth={1} strokeLinecap="round" />
       ))}
 
       {/* 两条极淡的轴 */}
-      <line x1={PAD} y1={PAD} x2={PAD} y2={H - PAD} stroke={AXIS} strokeWidth={1} />
-      <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} stroke={AXIS} strokeWidth={1} />
+      <line x1={PAD} y1={PAD} x2={PAD} y2={mapHeight - PAD} stroke={AXIS} strokeWidth={1} />
+      <line x1={PAD} y1={mapHeight - PAD} x2={width - PAD} y2={mapHeight - PAD} stroke={AXIS} strokeWidth={1} />
 
       {/* 轴上只放最短的词，完整解释在图下面 */}
-      <g fontFamily={FONT} fontSize={13} fill={PAPER_25}>
+      <g fontFamily={FONT} fontSize={12} fill={PAPER_25}>
         <text x={PAD - 8} y={PAD + 4} textAnchor="end">{L('久', 'slow')}</text>
-        <text x={PAD - 8} y={H - PAD} textAnchor="end">{L('快', 'fast')}</text>
-        <text x={PAD} y={H - PAD + 17} textAnchor="start">{L('能改', 'reversible')}</text>
-        <text x={W - PAD} y={H - PAD + 17} textAnchor="end">{L('改不了', 'permanent')}</text>
+        <text x={PAD - 8} y={mapHeight - PAD} textAnchor="end">{L('快', 'fast')}</text>
+        <text x={PAD} y={mapHeight - PAD + 24} textAnchor="start">{L('能改', 'reversible')}</text>
+        <text x={width - PAD} y={mapHeight - PAD + 24} textAnchor="end">{L('改不了', 'permanent')}</text>
       </g>
-      {/* 方向提示 */}
-      <g fontFamily={FONT} fontSize={13} fill={CONTOUR2}>
-        <text x={PAD + 6} y={PAD - 6} textAnchor="start">{L('↑ 越往上，结果来得越慢', '↑ up: slower to know')}</text>
-        <text x={W - PAD} y={PAD - 6} textAnchor="end">{L('越往右，越改不回来 →', 'right: harder to undo →')}</text>
-      </g>
-
       {/* 八个关口 */}
       {ordered.map((g) => {
         const base = terrainPoint(g.reversibility, g.feedbackDays);
-        const p = toXY(base.x, base.y);
+        const p = toXY(base.x, base.y, width, mapHeight);
         const n = NUDGE[g.id];
         const x = p.x + (n?.dx ?? 0);
         const y = p.y + (n?.dy ?? 0);
-        const lab = LABELS[g.id] ?? { dx: 12, dy: 4, anchor: 'start' as const };
+        const lab = width < 320 && g.id === 'product'
+          ? { ...LABELS.product, dy: -46 }
+          : LABELS[g.id];
         const on = hover === g.id;
 
         return (
@@ -142,8 +148,8 @@ export function Terrain(props: TerrainProps): JSX.Element {
             style={{ cursor: onPick ? 'pointer' : 'default' }}
           >
             <title>{L(`${g.name} · 可逆性 ${g.reversibility}/5 · 反馈约 ${g.feedbackDays} 天`, `${gateName(g.id, lang)} · reversibility ${g.reversibility}/5 · ~${g.feedbackDays} days`)}</title>
-            {/* 地图点提供辅助入口，完整触控入口位于下方关口列表。 */}
-            <circle cx={x} cy={y} r={8} fill="transparent" />
+            <line x1={x} y1={y} x2={x + lab.dx} y2={y + lab.dy - 5} stroke={on ? LAMP : AXIS} />
+            <circle cx={x} cy={y} r={12} fill="transparent" />
             <circle
               cx={x}
               cy={y}
@@ -156,11 +162,11 @@ export function Terrain(props: TerrainProps): JSX.Element {
               y={y + lab.dy}
               textAnchor={lab.anchor}
               fontFamily={FONT}
-              fontSize={13}
+              fontSize={12}
               fill={on ? LAMP : PAPER_45}
               style={{ transition: 'fill 160ms', userSelect: 'none' }}
             >
-              {gateName(g.id, lang)}
+              {lang === 'zh' ? g.name : SHORT_EN[g.id]}
             </text>
           </g>
         );
@@ -169,7 +175,7 @@ export function Terrain(props: TerrainProps): JSX.Element {
       {/* 用户案卷按归一化坐标绘制为独立标记，不与关口连线。 */}
       <g pointerEvents="none">
         {userPoints.map((p, i) => {
-          const c = toXY(p.x, p.y);
+          const c = toXY(p.x, p.y, width, mapHeight);
           const n = p.gate ? NUDGE[p.gate] : undefined;
           // 空心金环表示该关口存在用户案卷。
           return (
@@ -179,12 +185,12 @@ export function Terrain(props: TerrainProps): JSX.Element {
         })}
       </g>
     </svg></div>
-    <div style={{ minHeight: 22, textAlign: 'center' }}>
-      {hg && (
-        <p className="hint" style={{ marginTop: 4 }}>
+    <div className="terrain-caption" aria-live="polite">
+      {hg ? (
+        <p className="hint">
           {L(`${hg.name}：${revText(hg.reversibility, lang)}，约 ${hg.feedbackDays} 天知道结果`, `${gateName(hg.id, lang)}: ${revText(hg.reversibility, lang)}, ~${hg.feedbackDays} days to know`)}
         </p>
-      )}
+      ) : <p className="hint">{L('选择一个关口，看看它的处境。', 'Choose a gate to explore its context.')}</p>}
     </div>
     </div>
   );

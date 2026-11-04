@@ -26,9 +26,10 @@
   --sans:"PingFang SC","Noto Sans SC",-apple-system,BlinkMacSystemFont,sans-serif;
   --mono:"SF Mono","JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
 
-  /* 中文最小字号设为 12px，避免小字号笔画粘连。 */
-  --fs-q:30px; --fs-h1:34px; --fs-h2:22px; --fs-body:15px;
-  --fs-hint:13px; --fs-label:12px; --fs-micro:12px;
+  /* 六级文字：页标题、段标题、条目、正文、说明、标签；最小 12px。 */
+  --fs-h1:34px; --fs-h2:22px; --fs-title:17px; --fs-body:16px;
+  --fs-hint:14px; --fs-label:12px;
+  --fs-q:var(--fs-h1); --fs-micro:var(--fs-label);
   --lh:1.9; --lh-tight:1.5;
   --sp1:8px; --sp2:16px; --sp3:24px; --sp4:40px; --sp5:72px;
   --radius:2px;
@@ -42,31 +43,31 @@
 /* 大屏布局同步扩大内容区域和字号。 */
 @media (min-width: 1100px){
   :root{
-    --fs-q:34px; --fs-h1:38px; --fs-h2:25px; --fs-body:16px;
-    --fs-hint:14px; --fs-label:13px; --fs-micro:12px;
+    --fs-h1:38px; --fs-h2:25px; --fs-body:16px;
+    --fs-hint:14px; --fs-label:12px;
     --w:760px;
     --sp4:48px; --sp5:88px;
   }
 }
 @media (min-width: 1500px){
   :root{
-    --fs-q:40px; --fs-h1:46px; --fs-h2:30px; --fs-body:18px;
-    --fs-hint:15px; --fs-label:14px; --fs-micro:13px;
+    --fs-h1:46px; --fs-h2:30px; --fs-title:20px; --fs-body:18px;
+    --fs-hint:15px; --fs-label:13px;
     --w:900px;
     --sp4:60px; --sp5:112px;
   }
 }
 @media (min-width: 2000px){
   :root{
-    --fs-q:44px; --fs-h1:50px; --fs-h2:32px; --fs-body:19px;
-    --fs-hint:16px; --fs-label:15px;
+    --fs-h1:50px; --fs-h2:32px; --fs-body:19px;
+    --fs-hint:16px; --fs-label:14px;
     --w:960px;
   }
 }
 /* 窄屏布局减少留白，保持中文字号不低于 12px。 */
 @media (max-width: 720px){
   :root{
-    --fs-q:26px; --fs-h1:28px; --fs-h2:20px;
+    --fs-h1:28px; --fs-h2:20px;
     --sp4:32px; --sp5:56px;
   }
 }

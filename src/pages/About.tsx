@@ -52,7 +52,7 @@ export default function About() {
             {GATES.map((g) => (
               <div key={g.id} className="caserow" style={{ cursor: 'default' }}>
                 <div style={{ minWidth: 0 }}>
-                  <div className="caselow-q" style={{ fontSize: 15 }}>{gateName(g.id, lang)}</div>
+                  <div className="caselow-q" style={{ fontSize: 'var(--fs-body)' }}>{gateName(g.id, lang)}</div>
                   <div className="caselow-meta">
                     <span className="gate-tag">
                       {L(g.reversibility <= 2 ? '做错了能改回来' : g.reversibility === 3 ? '改起来有代价' : '基本改不回来', g.reversibility <= 2 ? 'reversible' : g.reversibility === 3 ? 'costly to undo' : 'hard to undo')}
@@ -98,7 +98,7 @@ export default function About() {
                 <div className="hint" style={{ color: 'var(--lamp)', letterSpacing: '.06em', marginBottom: 4 }}>
                   {lang === 'zh' ? KIND_LABEL[r.kind].zh : KIND_LABEL[r.kind].en}
                 </div>
-                <p className="card-d" style={{ fontSize: 13 }}>{lang === 'zh' ? r.cite : (r.citeEn ?? r.cite)}</p>
+                <p className="card-d" style={{ fontSize: 'var(--fs-label)' }}>{lang === 'zh' ? r.cite : (r.citeEn ?? r.cite)}</p>
                 <p className="hint" style={{ marginTop: 4 }}>{L('用于：', 'Used for: ')}{(lang === 'zh' ? r.usedFor : (r.usedForEn ?? r.usedFor)).join(lang === 'zh' ? '、' : ', ')}</p>
                 {r.note && <p className="hint" style={{ marginTop: 2, color: 'var(--fog)' }}>{lang === 'zh' ? r.note : (r.noteEn ?? r.note)}</p>}
               </li>
@@ -117,17 +117,17 @@ export default function About() {
         </Section>
 
         <Section title={L('侵权与免责', 'Rights and disclaimer')}>
-          <p className="card-d" style={{ fontSize: 13 }}>
+          <p className="card-d" style={{ fontSize: 'var(--fs-label)' }}>
             {L('1.', '1.')} {L('内容', 'Content')}{L('：本项目对第三方著作只做转述与标注引用，不复制原文。若权利人认为某处引用不当，请提出，我们会在核实后删除或改写。', ': third-party works are paraphrased and cited, never copied. If a rights holder objects to a citation, tell us and we will verify and remove or rewrite it.')}
-          </p><p className="card-d" style={{ fontSize: 13, marginTop: 20 }}>
+          </p><p className="card-d" style={{ fontSize: 'var(--fs-label)', marginTop: 20 }}>
             {L('2.', '2.')} {L('名称', 'Name')}{L('：产品名「未决」未做商标注册。若与在先权利冲突，请告知，会改名。', ': the name “Undecided” is not trademarked. If it conflicts with an earlier right, tell us and we will rename it.')}
-          </p><p className="card-d" style={{ fontSize: 13, marginTop: 20 }}>
+          </p><p className="card-d" style={{ fontSize: 'var(--fs-label)', marginTop: 20 }}>
             {L('3.', '3.')} {L('非专业建议', 'Not professional advice')}{L('：本项目不提供法律、财税、心理、投资或医疗建议。涉及合伙、股权、合同的决定，请咨询执业律师；涉及情绪与睡眠的问题，请咨询专业人士。', ': no legal, tax, psychological, investment or medical advice. For partnership, equity or contract decisions, consult a practising lawyer; for mood or sleep, consult a professional.')}
-          </p><p className="card-d" style={{ fontSize: 13, marginTop: 20 }}>
+          </p><p className="card-d" style={{ fontSize: 'var(--fs-label)', marginTop: 20 }}>
             {L('4.', '4.')} {L('不保证结果', 'No promised outcome')}{L('：本工具不承诺提高你的决策正确率。它只帮你把决定写下来、把该知道的东西递到眼前、在到期后再次打开网站时，让你回看结果。', ': this tool does not promise better decisions. It helps you write the decision down, puts what you should know in front of you, and brings you back to the result when due.')}
-          </p><p className="card-d" style={{ fontSize: 13, marginTop: 20 }}>
+          </p><p className="card-d" style={{ fontSize: 'var(--fs-label)', marginTop: 20 }}>
             {L('5.', '5.')} {L('基准率', 'Base rates')}{L('：有来源的会标注来源；没有来源的写明“暂无基准”。绝不编造数字——这是本项目唯一的硬约束。', ': sourced numbers are cited; unsourced ones are marked “no base rate” — no invented figures, that being the project’s one hard rule.')}
-          </p><p className="card-d" style={{ fontSize: 13, marginTop: 20 }}>
+          </p><p className="card-d" style={{ fontSize: 'var(--fs-label)', marginTop: 20 }}>
             {L('6.', '6.')} {L('代码许可', 'Licence')}{L('：PolyForm Noncommercial 1.0.0。可以自己用、自己改、非商业分发；不可用于任何商业目的，改过的版本也一样。商业授权需单独书面同意。完整条款见仓库根目录的 LICENSE。', ': PolyForm Noncommercial 1.0.0. Use it, change it, share it non-commercially; no commercial use, including of modified versions. Commercial use requires written permission. Full terms in LICENSE at the repo root.')}
           </p>
         </Section>

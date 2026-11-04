@@ -21,10 +21,10 @@ export function Field({ value, onChange, max, placeholder, rows = 1, autoFocus, 
     </div>
   );
 }
-export function StepBar({ step, total }: { step: number; total: number }) {
+export function StepBar({ step, total, label }: { step: number; total: number; label?: string }) {
   const { lang } = useLang();
   const L = (zh: string, en: string) => (lang === 'zh' ? zh : en);
-  return <div className="progress" role="progressbar" aria-label={L('决策进度', 'Decision progress')} aria-valuenow={step} aria-valuemin={0} aria-valuemax={total}>
+  return <div className="progress" role="progressbar" aria-label={L('决策进度', 'Decision progress')} aria-valuetext={label} aria-valuenow={step} aria-valuemin={0} aria-valuemax={total}>
     <i style={{ width: `${Math.min(100, step / total * 100)}%` }} />
   </div>;
 }

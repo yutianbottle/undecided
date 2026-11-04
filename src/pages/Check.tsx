@@ -37,8 +37,8 @@ export default function Check() {
         </h1>
         <p className="hint" style={{ marginTop: 12, maxWidth: 620 }}>
           {L(
-            '这一步不在七步里，在它前面。它不评价你，只是先确认一件事：现在是不是一个能做决定的时候。',
-            'This is not one of the seven steps. It comes before them. It is not judging you — it only checks whether now is a time to decide at all.',
+            '开始前，先照顾一下自己。这一步不评价你，只是确认：现在是不是一个能做决定的时候。',
+            'Before you begin, check in with yourself. This is not judging you — it only asks whether now is a time to decide.',
           )}
         </p>
 

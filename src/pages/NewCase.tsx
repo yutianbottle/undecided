@@ -61,7 +61,7 @@ export default function NewCase() {
       <div className="wrap">
         <a className="btn btn--text" href="#/" style={{ paddingLeft: 0 }}>{L('← 台面', '← Desk')}</a>
 
-        <p className="eyebrow">{L('建案卷 · 进入七步之前', 'New case · before the seven steps')}</p>
+        <p className="eyebrow">{L('先把这件事写下来', 'Put the decision into words')}</p>
         <h1 className="h1" style={{ marginTop: 'var(--sp3)' }}>{L('现在，有什么是你还没定的？', 'What have you not decided yet?')}</h1>
 
         <div style={{ marginTop: 'var(--sp4)' }}>

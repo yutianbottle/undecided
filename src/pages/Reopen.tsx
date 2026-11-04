@@ -29,7 +29,7 @@ export default function Reopen({ id }: { id: string }) {
   return <Shell>
     <main className="wrap">
       <a className="btn btn--text back-link" href="#/">{L('← 台面', '← Desk')}</a>
-      <p className="eyebrow">{L('第 7 步 / 共 7 步', 'Step 7 of 7')} · {archived ? L('已归档', 'Archived') : L('到期回看', 'Due for review')}</p>
+      <p className="eyebrow">{archived ? L('已归档', 'Archived') : L('到期回看', 'Due for review')}</p>
       <h1 className="h2">{c.question}</h1>
       <p className="hint">{L('封存于 ', 'Sealed ')}{fmtDate(c.sealedAt)}{L(' · 原计划回看 ', ' · scheduled ')}{fmtDate(c.openAt)}</p>
       {c.openedEarlyAt && <p className="hint">{L('提前开封于 ', 'Opened early ')}{fmtDateTime(c.openedEarlyAt)}</p>}

@@ -52,7 +52,7 @@ export default function Ledger(): JSX.Element {
               {L('越靠右上（改不回来、结果来得慢），越值得花十分钟走完一遍再拍。', 'Top right (hard to undo, slow feedback) deserves ten minutes.')}<br />
               {L('越靠左下（能改、几天就知道），越该现在就做，别想太久。', 'Bottom left (reversible, days to know) should be done now, not deliberated.')}
             </p>
-            <p className="hint" style={{ marginTop: 6, color: 'var(--fog)' }}>
+            <p className="hint" style={{ marginTop: 6, color: 'var(--lamp)' }}>
               {L('外面套着金环的，是你已在那个关口完成落槌。', 'A gold ring means you have sealed a decision in that gate.')}
             </p>
           </div>
@@ -85,7 +85,7 @@ export default function Ledger(): JSX.Element {
                     )}
                   </div>
                 </div>
-                <div className="days">{empty ? '—' : `${n}`}</div>
+                <div className="days">{empty ? L('查看提醒 →', 'Explore →') : `${n}`}</div>
               </a>
             );
           })}
