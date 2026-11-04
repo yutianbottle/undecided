@@ -78,6 +78,28 @@ Then it shows the traps this kind of decision usually sets — not "be rational"
 
 ---
 
+## Why not just make it a skill
+
+People ask: why not write these steps as a prompt and install it inside an AI?
+
+Because the first thing it loses is **visibility, and a record you can review.**
+
+A skill's output lives in the conversation. Scroll past it today, open a new session tomorrow, and it is gone. Three months later, if you want to know what you predicted and whether it happened, you have to dig back through chat history — and most people will not. Undecided is the opposite: what is pending stays on the desk with "hanging for N days"; the prediction is sealed and cannot be edited; on the due date it comes back and sets prediction and result side by side.
+
+A few more things a prompt structurally cannot do:
+
+- **Hard constraints belong in code.** "No advice" in a prompt is soft — your next line is "so which one should I pick?", and the model's instinct is to answer. The interface has no such input box, so it cannot answer.
+- **The record needs a home that belongs to no model.** A skill depends on a client, an account, a session. Change tools, lose the network, or have the service retired, and your decisions go with it. Undecided keeps the data in your own browser, exportable as JSON.
+- **It pushes the decision back into "asking an AI".** If the tool lives inside an AI, step one is already opening the AI — when what this needs most is leaving the window that always has an answer.
+- **The tempo is wrong.** Conversation rewards speed: ask, get a response. A decision needs slowness: eight seconds of stillness, the four-state door, stopping after three facts. A chat box has no reason to make you pause; an interface does.
+- **No seal, no reckoning.** Review requires that the original text still exists and was not edited afterwards. Conversation content is editable, rewritable, and gets pushed out by the next round of context.
+
+A skill is good at carrying "how to do it". Undecided carries "what you have not done yet" — it needs a place, a deadline, and a side-by-side comparison you have to face when the date arrives.
+
+**What can be seen gets remembered; what can be sealed can be reviewed.**
+
+---
+
 ## The eight gates
 
 Not every decision deserves a slow pass. Some should be made now; some deserve thought.
