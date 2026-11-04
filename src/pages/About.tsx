@@ -23,12 +23,12 @@ export default function About() {
 
         <Section title={L('这是什么', 'What this is')}>
           <p className="card-d">
-            {L('未决是给', 'Undecided is for ')}<b style={{ color: 'var(--paper)', fontWeight: 400 }}>{L('一个人做公司的人', 'people who run a company of one')}</b>{L('用的。', '.')}
-            {L('没有董事会、没有合伙人、没有可以商量的人——这是这类决定的共同处境，也是这个工具只做这几件事的原因。', ' No board, no partner, no one to talk it over with. That is the shared situation behind these decisions, and the reason this tool does so little.')}
+            {L('未决是给', 'Undecided is for people who ')}<b style={{ color: 'var(--paper)', fontWeight: 400 }}>{L('要自己拍板的人', 'have to make the call themselves')}</b>{L('用的。', '.')}
+            {L('它不假设你缺建议——今天建议太便宜了。它假设你缺的是：把通用答案放回自己的处境里掂一遍，认出这类决定常踩的坑，然后留下一个到期能对账的判断。', ' It does not assume you lack advice — advice is cheap now. It assumes what you lack is this: putting the general answer back into your own situation, recognising the trap this kind of decision usually sets, and leaving a judgement you will have to answer for on the due date.')}
           </p>
           <p className="card-d" style={{ marginTop: 12 }}>
             {L('它不接 AI，不给你建议，不评分，不排名。', 'No AI, no advice, no scoring, no ranking.')}
-            {L('它只做三件事：让悬着的东西显形、把该知道的东西递到眼前、到期后再次打开网站时，让你回看预测与结果。', ' It does three things: make what is hanging visible, put what you should know in front of you, and bring you back to your prediction when it is due.')}
+            {L('它只做三件事：让悬着的东西显形、把该知道的东西递到眼前、到期后再次打开网站时，让你回看预测与结果。它只照亮，不替你走。', ' It does three things: make what is hanging visible, put what you should know in front of you, and bring you back to your prediction when it is due. It lights the desk; it does not walk the step for you.')}
           </p>
         </Section>
 

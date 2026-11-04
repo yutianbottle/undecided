@@ -10,6 +10,20 @@ No account, no server, no AI advice. The data stays on your own machine.
 
 ---
 
+## The easiest mistake is handing the decision over
+
+A question you have not settled gets an answer in thirty seconds. The model gives you a complete analysis: assess the client's budget, benchmark against market rates, leave room to negotiate, watch your exposure. It sounds airtight.
+
+But it does not know that this client paid you 45 days late, that quoting low last time made them trust you less, or that what you are actually afraid of is not the wrong number but being thought expensive.
+
+**The cheaper answers get, the easier it is to hand the judgement over.** Once is nothing. A hundred times, and you can no longer make a call when the information is incomplete and nobody has vouched for it — which is what most real decisions look like.
+
+There is a second failure that has nothing to do with AI. You know the methods: sunk cost, base rates, opportunity cost. But when the thing is actually yours, the only sentence left in your head is "let me think about it." Not because you do not understand, but because you never laid the situation out: what you are afraid of, which fact is hard, which option is just delay wearing a costume.
+
+Undecided is built for those two failures: **it will not let you outsource the judgement, and it will not let you bury it under "let me think about it."**
+
+---
+
 ## You have probably had these
 
 Thursday night. A client messages you a brief and wants a price by tomorrow. You scroll back through the chat three times, find what you quoted last time, and adjust it by 20% on feel.
@@ -22,6 +36,8 @@ None of these were hard to figure out. They were **never decided**.
 
 And never decided wears you down more than decided wrong.
 
+Worse now: an AI is always available to hand you something that looks like an answer, so the thing feels handled. But you did not make a judgement — you swapped "undecided" for "someone decided for me."
+
 ---
 
 ## What it does
@@ -29,7 +45,7 @@ And never decided wears you down more than decided wrong.
 Three things. There is no fourth.
 
 1. **Makes what is hanging visible.** Every item has a deadline, a state, and "hanging for N days".
-2. **Puts what you should know in front of you.** Not advice — where people usually go wrong in this kind of decision, what methods exist, whether there is data.
+2. **Puts what you should know in front of you.** Not advice — where people usually go wrong in this kind of decision, what methods exist, whether there is data. Sourced numbers are cited; unsourced ones say "no base rate".
 3. **Brings you back to your prediction.** Whatever you wrote at the call gets taken out on the day and set beside the result.
 
 ---
@@ -46,17 +62,19 @@ This is not a limitation. It is deliberate.
 
 ---
 
-## How this differs from asking an AI
+## The division of labour with an AI
 
 Ask an AI "what should I quote for this" and it will say: assess the client's budget, benchmark against market rates, leave room to negotiate.
 
 All true. The problem is what it does not know: this client paid you 45 days late last time, and quoting low made them trust you less, not more.
 
-Undecided does the reverse — **it puts the three things an AI would say in front of you, then asks: which one does not apply to you?**
+Undecided reverses the order — **it puts the three things an AI would say in front of you, then asks: which one does not apply to you, and why?**
 
 The sentence you write about *why* is the real variable in the decision.
 
-**An AI gives you a general answer. You supply the situation. Only the second one can make a decision.**
+Then it shows the traps this kind of decision usually sets — not "be rational" in general, but where quoting, hiring and partnerships specifically go wrong; one move you can use now; and whether there is any data at all. It lights the desk. It does not walk the step for you.
+
+**The AI puts the general answer on the table. Which part belongs to your situation is your call. So is the signature.**
 
 ---
 
@@ -231,7 +249,7 @@ The cost is just as clear: change computer, change browser, clear the cache, and
 
 ## About the author
 
-**Longway Li** — a studio of one, building tools on the side.
+**Longway Li** — independent developer. Tools, and some research.
 
 Homepage: <https://longway-li.pages.dev>
 
@@ -248,9 +266,9 @@ Homepage: <https://longway-li.pages.dev>
 
 ## One line
 
-This desk does not tell you what to choose.
+This desk does not tell you what to choose, and it does not ask an AI for you.
 
-It only guarantees that you thought about it, wrote it down, and will come back to settle the account.
+It only guarantees that the judgement was yours, the reasons were written in your hand, and you will come back to settle the account.
 
 ---
 
@@ -261,4 +279,3 @@ This project is free, has no ads, and uploads nothing. Take the code, change it 
 If it helped you settle something that had been hanging for a while, you can buy me a coffee.
 
 <img src="./docs/donate.jpg" alt="Donation QR code" width="300">
-
