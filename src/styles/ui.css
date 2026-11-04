@@ -148,6 +148,11 @@
 .site-nav>div{display:flex;gap:24px}
 .nav-side{display:flex;align-items:center;gap:14px}
 .save-state{font-size:11px;color:var(--paper-56);white-space:nowrap}
+/* 顶部 GitHub 入口：图标刻意压得比导航文字弱，它是退路，不是主张 */
+.nav-gh{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;margin:-6px -6px -6px 0;border-radius:var(--radius);color:var(--fog);transition:color .15s}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;display:block}
+.nav-gh:hover,.nav-gh:focus-visible{color:var(--paper)}
+.nav-gh:focus-visible{outline:1px solid var(--lamp);outline-offset:2px}
 .site-nav a{font-size:13px;min-height:40px;display:inline-flex;align-items:center;color:var(--paper-66)}
 .site-nav a[aria-current]{color:var(--lamp);box-shadow:0 1px var(--lamp)}
 .stage:not(.stage--focus)>.wrap{padding-top:40px}
