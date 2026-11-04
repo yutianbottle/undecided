@@ -19,7 +19,7 @@ export default function Sealed({ id }: { id: string }) {
   if (c.status !== 'sealed' && c.status !== 'archived') return <Shell><main className="wrap"><p>{L('这件案卷尚未封存。', 'This case is not sealed yet.')}</p><a className="btn" href={`#/case/${id}`}>{L('返回案卷', 'Back to case')}</a></main></Shell>;
   const due = reviewAvailable(c);
   return <Shell glow={0.05}><main className="wrap sealed-wrap">
-    <p className="eyebrow">{L('第 6 步 / 共 7 步 · 封存', 'Step 6 of 7 · Seal')}</p>
+    <p className="eyebrow">{L('留待回看', 'Set aside for review')}</p>
     <h1 className="h1">{L('已封存', 'Sealed')}</h1><p className="hint">{L('这张纸现在只读了。', 'This page is read-only now.')}</p>
     <div style={{ marginTop: 32 }}><div className="sealbox">{sealDisplay(c.sealHash)}</div>
       <p className="hint" style={{ marginTop: 16 }}>{L('封存于 ', 'Sealed ')}{fmtDateTime(c.sealedAt)}</p><p className="hint">{L('原计划回看：', 'Scheduled: ')}{fmtDate(c.openAt)}</p>

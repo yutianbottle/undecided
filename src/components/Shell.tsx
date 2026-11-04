@@ -11,7 +11,9 @@ function Navigation() {
   const { saveOK } = useStore();
   const current = route.name === 'gate' ? 'ledger' : route.name === 'about' ? 'me' : route.name;
   return <nav className="site-nav" aria-label={t.nav.main}>
-    <a className="brand" href="#/" aria-label={t.nav.home}>{t.nav.brand}</a>
+    <a className="brand" href="#/" aria-label={t.nav.home}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z M15 3v5h4" /></svg>
+    </a>
     <div>
       {[['desk', '#/', t.nav.desk], ['ledger', '#/ledger', t.nav.ledger], ['me', '#/me', t.nav.me]].map(([id, url, label]) =>
         <a href={url} key={id} aria-current={current === id ? 'page' : undefined}>{label}</a>)}
@@ -58,5 +60,10 @@ export function Shell({ children, glow = 0.10 }: { children: ReactNode; glow?: n
 
 export function Foot() {
   const t = useT();
-  return <footer className="foot"><span>{t.foot.local}</span><a href="#/about">{t.foot.about}</a></footer>;
+  const { saveOK } = useStore();
+  const { lang } = useLang();
+  return <footer className="foot">
+    <div className="foot-meta"><span role="status">{saveOK ? t.shell.saved : t.shell.saveErr}</span><a href="#/about">{t.foot.about}</a></div>
+    <div className="foot-tools"><LangSwitch /><a href="https://github.com/yutianbottle/undecided" target="_blank" rel="noopener noreferrer" aria-label={lang === 'zh' ? '在 GitHub 上查看源码' : 'View source on GitHub'}>GitHub ↗</a></div>
+  </footer>;
 }

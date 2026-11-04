@@ -26,10 +26,10 @@ h1,h2,h3,p,ul,ol{margin:0}
 ul,ol{padding:0;list-style:none}
 
 .q-serif{font-family:var(--serif); font-weight:400; letter-spacing:.02em}
-.h1{font-family:var(--serif); font-size:var(--fs-h1); line-height:1.4; letter-spacing:.06em; color:var(--paper)}
+.h1{font-family:var(--serif); font-size:var(--fs-h1); line-height:1.4; letter-spacing:.02em; color:var(--paper)}
 .h2{font-family:var(--serif); font-size:var(--fs-h2); line-height:1.5; color:var(--paper)}
-.hint{font-size:var(--fs-hint); color:var(--paper-66); line-height:1.85}
-.warn{font-size:var(--fs-hint); color:var(--rust); line-height:1.85}
+.hint{font-size:var(--fs-hint); color:var(--paper-66); line-height:1.8}
+.warn{font-size:var(--fs-hint); color:var(--rust); line-height:1.8}
 .mono{font-family:var(--mono); letter-spacing:.08em}
 
 .progress{height:1px; background:var(--line-2); margin-top:0; position:relative; overflow:hidden}

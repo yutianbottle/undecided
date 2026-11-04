@@ -15,7 +15,7 @@ import type { GateId } from '../state/types';
 
 const SECTION_TITLE = {
   margin: 0,
-  fontSize: 12,
+  fontSize: 'var(--fs-label)',
   letterSpacing: '.08em',
   color: 'var(--paper-56)',
 } as const;
@@ -48,7 +48,7 @@ function CostFloorCalc() {
       <summary
         style={{
           cursor: 'pointer',
-          fontSize: 12,
+          fontSize: 'var(--fs-label)',
           letterSpacing: '.04em',
           color: open ? 'var(--paper-78)' : 'var(--paper-56)',
           listStyle: 'none',
@@ -59,7 +59,7 @@ function CostFloorCalc() {
       </summary>
 
       <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-        <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12, color: 'var(--paper-66)' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 'var(--fs-label)', color: 'var(--paper-66)' }}>
           {L('这单的直接成本', 'Direct cost of this job')}
           <input
             className="field"
@@ -67,10 +67,10 @@ function CostFloorCalc() {
             value={cost}
             onChange={(e) => setCost(e.target.value)}
             placeholder={L('例：8000', 'e.g. 8000')}
-            style={{ width: 140, fontSize: 13 }}
+            style={{ width: 140, fontSize: 'var(--fs-label)' }}
           />
         </label>
-        <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12, color: 'var(--paper-66)' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 'var(--fs-label)', color: 'var(--paper-66)' }}>
           {L('想赚多少毛利', 'Margin you want')}
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <input
@@ -78,28 +78,28 @@ function CostFloorCalc() {
               inputMode="numeric"
               value={margin}
               onChange={(e) => setMargin(e.target.value)}
-              style={{ width: 72, fontSize: 13 }}
+              style={{ width: 72, fontSize: 'var(--fs-label)' }}
             />
-            <span style={{ fontSize: 13 }}>%</span>
+            <span style={{ fontSize: 'var(--fs-label)' }}>%</span>
           </span>
         </label>
       </div>
 
       {r ? (
         <div style={{ marginTop: 14, borderTop: '1px solid var(--line-2)', paddingTop: 12 }}>
-          <p style={{ fontSize: 13, color: 'var(--paper-78)' }}>
+          <p style={{ fontSize: 'var(--fs-label)', color: 'var(--paper-78)' }}>
             {L('保本价', 'Floor price')}
-            <b style={{ fontFamily: 'var(--mono)', fontSize: 18, fontWeight: 400, color: 'var(--lamp)', marginLeft: 10 }}>
+            <b style={{ fontFamily: 'var(--mono)', fontSize: 'var(--fs-body)', fontWeight: 400, color: 'var(--lamp)', marginLeft: 10 }}>
               {fmt(r.floor)}
             </b>
           </p>
-          <p style={{ marginTop: 6, fontSize: 12, color: 'var(--paper-56)' }}>
+          <p style={{ marginTop: 6, fontSize: 'var(--fs-label)', color: 'var(--paper-56)' }}>
             {L(
               `毛利若降到 ${r.lowerMargin}% → ${fmt(r.lower)}（差 ${fmt(r.floor - r.lower)}）`,
               `If margin drops to ${r.lowerMargin}% → ${fmt(r.lower)} (${fmt(r.floor - r.lower)} lower)`,
             )}
           </p>
-          <p style={{ marginTop: 8, fontSize: 12, lineHeight: 1.8, color: 'var(--paper-56)' }}>
+          <p style={{ marginTop: 8, fontSize: 'var(--fs-label)', lineHeight: 1.8, color: 'var(--paper-56)' }}>
             {L(
               '这单低于这个价，达不到你要的毛利。报多少由你定。',
               'Below this the job does not reach the margin you set. What to quote is yours to decide.',
@@ -107,7 +107,7 @@ function CostFloorCalc() {
           </p>
         </div>
       ) : (
-        <p style={{ marginTop: 12, fontSize: 12, color: 'var(--paper-56)' }}>
+        <p style={{ marginTop: 12, fontSize: 'var(--fs-label)', color: 'var(--paper-56)' }}>
           {L('填两个数，这里出保本价。', 'Fill in both numbers and the floor price appears here.')}
         </p>
       )}
@@ -124,7 +124,7 @@ function HowTo({ steps }: { steps: string[] }) {
       <summary
         style={{
           cursor: 'pointer',
-          fontSize: 12,
+          fontSize: 'var(--fs-label)',
           letterSpacing: '.04em',
           color: open ? 'var(--paper-78)' : 'var(--paper-56)',
           listStyle: 'none',
@@ -135,8 +135,8 @@ function HowTo({ steps }: { steps: string[] }) {
       </summary>
       <ol style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
         {steps.map((s, i) => (
-          <li key={i} style={{ display: 'flex', gap: 10, fontSize: 12, lineHeight: 1.8, color: 'var(--paper-78)' }}>
-            <span className="mono" style={{ fontSize: 12, color: 'var(--paper-56)', paddingTop: 3 }}>
+          <li key={i} style={{ display: 'flex', gap: 10, fontSize: 'var(--fs-label)', lineHeight: 1.8, color: 'var(--paper-78)' }}>
+            <span className="mono" style={{ fontSize: 'var(--fs-label)', color: 'var(--paper-56)', paddingTop: 3 }}>
               {i + 1}
             </span>
             <span>{s}</span>
@@ -196,7 +196,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
             {layerName(g.layer, lang)}
           </p>
 
-          <p className="h2" style={{ marginTop: 'var(--sp5)', fontSize: 20, color: 'var(--paper-78)' }}>
+          <p className="h2" style={{ marginTop: 'var(--sp5)', fontSize: 'var(--fs-h2)', color: 'var(--paper-78)' }}>
             {L('你还没在这个关口完成过落槌。', 'You have not sealed a decision in this gate yet.')}
           </p>
           <p className="hint" style={{ marginTop: 'var(--sp2)' }}>
@@ -318,7 +318,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
               {shownM.map((c) => (
                 <li key={c.id} style={{ padding: '18px 0', borderBottom: '1px solid var(--line)' }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
-                    <span style={{ fontSize: 15, color: 'var(--paper)' }}>{c.name}</span>
+                    <span style={{ fontSize: 'var(--fs-body)', color: 'var(--paper)' }}>{c.name}</span>
                     {typeof c.minutes === 'number' && <span className="days">{L(`约 ${c.minutes} 分钟`, `~${c.minutes} min`)}</span>}
                   </div>
                   <p className="card-d" style={{ marginTop: 4 }}>{c.oneLine}</p><Evidence grade={c.evidence} />

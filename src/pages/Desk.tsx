@@ -43,11 +43,11 @@ export default function Desk() {
           <div className="caselow-meta">
             <span className="gate-tag">{gateName(c.gate, lang)}</span>
             {c.status === 'draft' && c.step < 7 && (
-              <span className="gate-tag" style={{ color: 'var(--fog)' }}>{t.desk.stepN(c.step - 1)}</span>
+              <span className="gate-tag">{(lang === 'zh' ? ['摆选项', '写事实', '换位自问', '看照明', '落槌'] : ['Options', 'Facts', 'Friend', 'Light', 'Call'])[Math.max(0, Math.min(4, c.step - 2))]}</span>
             )}
           </div>
         </div>
-        <div className="days">{rightText}</div>
+        <div className={`days${c.status === 'sealed' && reviewAvailable(c) ? ' days--ready' : ''}`}>{rightText}</div>
       </a>
     );
   }
@@ -81,10 +81,6 @@ export default function Desk() {
             <div style={{ marginTop: 26 }}>
               <p className="hint">{t.desk.startHint}</p>
               <p className="hint" style={{ marginTop: 6 }}>{t.desk.startHint2}</p>
-            </div>
-
-            <div style={{ marginTop: 'var(--sp4)' }}>
-              <a className="btn" href="#/check">{t.desk.writeOwn}</a>
             </div>
           </div>
         ) : (

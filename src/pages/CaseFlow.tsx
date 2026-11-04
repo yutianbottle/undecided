@@ -92,14 +92,8 @@ function Body({
         <a className="btn btn--text" href="#/" style={{ paddingLeft: 0 }}>{L('← 台面', '← Desk')}</a>
 
         {!locked && <div className="step-header">
-          <p className="eyebrow">{L(`第 ${step - 1} 步 / 共 7 步 · ${names[step - 2]}`, `Step ${step - 1} of 7 · ${names[step - 2]}`)}</p>
-          <StepBar step={step - 1} total={7} />
-          <nav className="step-nav" aria-label={L('案卷步骤', 'Case steps')}>
-            {names.map((name, i) => <button key={name} aria-label={L(`第 ${i + 1} 步：${name}`, `Step ${i + 1}: ${name}`)} aria-current={step === i + 2 ? 'step' : undefined}
-              disabled={i + 2 > (c.furthestStep ?? c.step) || !!stepIssues(c, i + 2, lang).length}
-              onClick={() => set({ step: i + 2 })}>{name}</button>)}
-            <span>{L('封存', 'Seal')}</span><span>{L('回看', 'Review')}</span>
-          </nav>
+          <StepBar step={step - 1} total={7} label={names[step - 2]} />
+          <p className="step-location">{L('此刻 · ', 'Now · ')}{names[step - 2]}</p>
         </div>}
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginTop: 'var(--sp3)' }}>
@@ -192,7 +186,7 @@ function StepOptions({ c, set, next }: { c: DecisionCase; set: (p: Partial<Decis
           <span className="hint">{L('参考：', 'Suggestions: ')}</span>
           {lengthErr && <p className="warn" style={{ marginTop: 8 }}>{lengthErr}</p>}
           {hints.map((h) => (
-            <button key={h} className="btn" style={{ fontSize: 12, padding: '7px 12px', marginRight: 8, marginTop: 8 }} onClick={() => add(h)}>{h}</button>
+            <button key={h} className="btn" style={{ fontSize: 'var(--fs-label)', padding: '7px 12px', marginRight: 8, marginTop: 8 }} onClick={() => add(h)}>{h}</button>
           ))}
         </div>
       )}
@@ -243,7 +237,7 @@ function StepFacts({ c, set, next, back }: { c: DecisionCase; set: (p: Partial<D
             <ol style={{ marginTop: 10 }}>
               {aiTakes.map((t, i) => (
                 <li key={i} style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
-                  <span className="mono" style={{ fontSize: 12, color: 'var(--paper-42)', paddingTop: 4 }}>{i + 1}</span>
+                  <span className="mono" style={{ fontSize: 'var(--fs-label)', color: 'var(--paper-56)', paddingTop: 4 }}>{i + 1}</span>
                   <span className="card-d">{t}</span>
                 </li>
               ))}
@@ -258,12 +252,12 @@ function StepFacts({ c, set, next, back }: { c: DecisionCase; set: (p: Partial<D
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {aiTakes.map((_, i) => (
                 <button key={i} className={`btn${picked === i ? ' btn--rule' : ''}`}
-                  style={{ fontSize: 13 }} aria-pressed={picked === i} onClick={() => set({ aiPick: i })}>
+                  style={{ fontSize: 'var(--fs-label)' }} aria-pressed={picked === i} onClick={() => set({ aiPick: i })}>
                   {L(`第 ${i + 1} 条`, `#${i + 1}`)}
                 </button>
               ))}
               <button className={`btn${allApply ? ' btn--rule' : ''}`}
-                style={{ fontSize: 13 }} aria-pressed={allApply} onClick={() => set({ aiPick: 99 })}>
+                style={{ fontSize: 'var(--fs-label)' }} aria-pressed={allApply} onClick={() => set({ aiPick: 99 })}>
                 {L('都适用', 'All apply')}
               </button>
             </div>
@@ -349,7 +343,7 @@ function StepDistance({ c, set, next, back }: { c: DecisionCase; set: (p: Partia
   const ok = c.distance.trim().length > 0;
   return (
     <div>
-      <p className="h2" style={{ fontSize: 20, color: 'var(--paper-78)', marginBottom: 10 }}>
+      <p className="h2" style={{ fontSize: 'var(--fs-h2)', color: 'var(--paper-78)', marginBottom: 10 }}>
         {L('如果你的朋友坐在这里，把这个情况告诉你，你会跟他说什么？', 'If a friend sat here and told you this, what would you say to them?')}
       </p>
       <p className="hint" style={{ marginBottom: 'var(--sp3)' }}>
@@ -426,14 +420,14 @@ function LightCardView({ card }: { card: LightCard }) {
         <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--line)' }}>
           {isBias ? (
             <>
-              <p className="card-d" style={{ fontSize: 12 }}>{L('什么时候成立：', 'Holds when: ')}{concept.whenToUse}</p>
-              <p className="card-d" style={{ fontSize: 12, marginTop: 8 }}>{L('什么时候不成立：', 'Does not hold when: ')}{concept.whenNot}</p>
+              <p className="card-d" style={{ fontSize: 'var(--fs-label)' }}>{L('什么时候成立：', 'Holds when: ')}{concept.whenToUse}</p>
+              <p className="card-d" style={{ fontSize: 'var(--fs-label)', marginTop: 8 }}>{L('什么时候不成立：', 'Does not hold when: ')}{concept.whenNot}</p>
             </>
           ) : (
-            <ol className="card-d" style={{ fontSize: 12, paddingLeft: 0 }}>
+            <ol className="card-d" style={{ fontSize: 'var(--fs-label)', paddingLeft: 0 }}>
               {(concept.howTo ?? []).map((s, i) => (
                 <li key={i} style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
-                  <span className="mono" style={{ color: 'var(--paper-56)', fontSize: 11 }}>{i + 1}</span>
+                  <span className="mono" style={{ color: 'var(--paper-56)', fontSize: 'var(--fs-label)' }}>{i + 1}</span>
                   <span>{s}</span>
                 </li>
               ))}
@@ -508,9 +502,14 @@ function StepRule({
   if (phase !== 'form') {
     return (
       <div className="rulestage">
-        <div className="h2" role="status" style={{ color: 'var(--paper-56)', letterSpacing: '.08em', fontSize: 26 }}>
+        <div className="h2" role="status" style={{ color: 'var(--paper-56)', letterSpacing: '.08em', fontSize: 'var(--fs-h2)' }}>
           {phase === 'ready' ? L('现在落槌', 'Make the call') : L('你确定了吗', 'Are you sure')}
         </div>
+        <dl className="seal-preview">
+          <dt>{L('你选择', 'Your choice')}</dt><dd>{c.chosen}</dd>
+          <dt>{L('你预测', 'Your prediction')}</dt><dd>{c.prediction} · {c.predictedP}%</dd>
+          <dt>{L('回看日期', 'Review on')}</dt><dd>{fmtDate(openAt)}</dd>
+        </dl>
         <div className={`ruleline${phase === 'wait' ? ' run' : ' done'}`}><i /></div>
         {phase === 'ready' ? (
           <button className="btn btn--rule" onClick={doSeal}>{L('落　槌', 'Seal it')}</button>
@@ -524,12 +523,28 @@ function StepRule({
             <p className="rulehint">{L('八秒。不改任何东西，只是停一下。', 'Eight seconds. Nothing changes. Just a pause.')}</p>
           </>
         )}
+        <button className="btn btn--text" onClick={() => {
+          if (timerRef.current) window.clearTimeout(timerRef.current);
+          endHold();
+          setSkipped(false);
+          setPhase('form');
+          onPhaseChange(false);
+        }}>{L('← 返回修改', '← Back to edit')}</button>
       </div>
     );
   }
 
   return (
     <div>
+      <section className="call-context" aria-label={L('落槌前回看', 'Before the call')}>
+        <h2 className="group-title">{L('先回到你写下的事实', 'Return to the facts you wrote')}</h2>
+        <dl className="record-grid">
+          <dt>{L('事实', 'Facts')}</dt><dd>{c.facts.filter(f => f.trim()).map((f, i) => <p key={i}>{f}</p>)}</dd>
+          {c.aiGap && <><dt>{L('具体处境', 'Situation')}</dt><dd>{c.aiGap}</dd></>}
+          {c.falsifySignal && <><dt>{L('反证条件', 'Falsifier')}</dt><dd>{c.falsifySignal}</dd></>}
+          <dt>{L('如果朋友问我', 'If a friend asked me')}</dt><dd>{c.distance}</dd>
+        </dl>
+      </section>
       {echo ? (
         <div className="card" style={{ marginBottom: 'var(--sp4)', borderColor: 'var(--lamp-25)' }}>
           <div className="card-kicker">{L('上一次同类决定', 'Last decision of this kind')} · {fmtDate(echo.sealedAt)}</div>
@@ -613,8 +628,8 @@ function StepRule({
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <input type="range" aria-label={L('预测发生的概率', 'Probability')} min={1} max={99} value={c.predictedP}
             onChange={(e) => set({ predictedP: Number(e.target.value) })}
-            style={{ flex: 1, accentColor: 'var(--lamp)' }} />
-          <span className="mono" style={{ fontSize: 20, color: 'var(--lamp)', minWidth: 52, textAlign: 'right' }}>
+            className="probability-range" style={{ flex: 1 }} />
+          <span className="mono" style={{ fontSize: 'var(--fs-h2)', color: 'var(--lamp)', minWidth: 52, textAlign: 'right' }}>
             {c.predictedP}%
           </span>
         </div>
@@ -663,7 +678,7 @@ function Abandon({ id, onAbandon }: { id: string; onAbandon: (id: string, r: Aba
             onAbandon(id, r);
             window.location.hash = '#/';
           }}>
-            <span className="opt-txt" style={{ fontSize: 14 }}>{abandonReasonLabel(r, lang)}</span>
+            <span className="opt-txt" style={{ fontSize: 'var(--fs-hint)' }}>{abandonReasonLabel(r, lang)}</span>
           </button>
         ))}
       </div>
