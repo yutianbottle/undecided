@@ -59,8 +59,8 @@ export function LangProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     document.title = lang === 'zh'
-      ? '未决 · 一个人做公司的决策台'
-      : 'Undecided · a decision desk for one';
+      ? '未决 · 把决定留在自己手里'
+      : 'Undecided · the decision stays yours';
     try { localStorage.setItem(KEY, lang); } catch { /* 无法持久化语言设置时继续使用当前语言。 */ }
   }, [lang]);
 

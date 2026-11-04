@@ -12,7 +12,7 @@ export const en: Dict = {
   foot: { local: 'Data stays in this browser', about: 'About & sources' },
 
   desk: {
-    tagline: 'You run a company of one. There is no one to ask.',
+    tagline: 'An AI can give you an answer. It cannot give you your situation.',
     newCase: '+ New decision',
     count: (live, sealed) => `${live} open · ${sealed} sealed`,
     startersIntro: 'These are probably on your desk right now:',
@@ -266,9 +266,9 @@ export const en: Dict = {
     title: 'About',
     whatTitle: 'What this is',
     what1a: 'Undecided is for people who',
-    what1b: 'run a company of one',
-    what1c: '. No board, no partner, no one to ask. That is the shared condition behind these decisions, and the reason this tool does only a few things.',
-    what2: 'It does not call an AI, give advice, score you, or rank you. It does three things: makes what is pending visible, puts what you should know in front of you, and comes back on the due date.',
+    what1b: 'have to make the call themselves',
+    what1c: '. It does not assume you lack advice — advice is cheap now. It assumes what you lack is this: putting the general answer back into your own situation, recognising the trap this kind of decision usually sets, and leaving a judgement you will have to answer for on the due date.',
+    what2: 'It does not call an AI, give advice, score you, or rank you. It does three things: makes what is pending visible, puts what you should know in front of you, and comes back on the due date. It lights the desk; it does not walk the step for you.',
     aiTitle: 'How it differs from asking an AI',
     ai1: 'Ask an AI and you get a correct, general answer that fits anyone. Nothing wrong with it — but it does not know your client paid 45 days late, or that quoting low last time made them trust you less.',
     ai2: 'This tool does the opposite: it names what the AI would say first, then asks you —',
@@ -302,7 +302,7 @@ export const en: Dict = {
     l5: 'Base rates',
     l5b: ': where a source exists it is cited; where none exists it says "no base rate". Numbers are never invented — the one hard rule of this project.',
     l6: 'License',
-    l6b: ': MIT. Use, modify, distribute, including commercially; no warranty. Full text in LICENSE.',
+    l6b: ': PolyForm Noncommercial 1.0.0. Use it, change it, share it non-commercially; no commercial use, including of modified versions. Full text in LICENSE.',
     kind: { paper: 'Paper', book: 'Book', report: 'Report', practice: 'Practice' },
   },
 
