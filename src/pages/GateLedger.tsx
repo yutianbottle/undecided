@@ -185,7 +185,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
       <Shell>
         <div className="wrap">
           <a className="btn btn--text" href={href({ name: 'ledger' })} style={{ marginBottom: 'var(--sp3)', paddingLeft: 0 }}>
-            {L('← 账本', '← Ledger')}
+            {L('← 关口', '← Gates')}
           </a>
           <h1 className="h1">{gateName(g.id, lang)}</h1>
           <p className="hint" style={{ marginTop: 'var(--sp1)' }}>
@@ -235,7 +235,7 @@ export default function GateLedger({ gate }: { gate: GateId }): JSX.Element {
           href={href({ name: 'ledger' })}
           style={{ marginBottom: 'var(--sp3)', paddingLeft: 0 }}
         >
-          {L('← 账本', '← Ledger')}
+          {L('← 关口', '← Gates')}
         </a>
 
         <h1 className="h1">{gateName(g.id, lang)}</h1>

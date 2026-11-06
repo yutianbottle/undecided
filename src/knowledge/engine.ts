@@ -72,13 +72,13 @@ export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | numb
     cards.push({ kind: 'rate', baseRate, note });
   } else {
     /**
-     * 报价与定价这两类，账本页有一张能算完的卡（成本底价）。
-     * 照明卡保持只读；此处仅提示可计算项，输入仍在账本页完成。
+     * 报价与定价这两类，关口页有一张能算完的卡（成本底价）。
+     * 照明卡保持只读；此处仅提示可计算项，输入仍在关口页完成。
      */
     const calculable = gate === 'quoting' || gate === 'pricing';
     const hint = calculable
       ? lang === 'zh'
-        ? '\n\n这单有一个能算的数：成本底价。翻到账本的「成本底价」卡，填两个数就有了。'
+        ? '\n\n这单有一个能算的数：成本底价。翻到关口的「成本底价」卡，填两个数就有了。'
         : '\n\nThere is one number you can work out here: the floor price. On the ledger page, under the cost-floor card, fill in two values.'
       : '';
     cards.push({ kind: 'none', note: note + hint });
@@ -86,7 +86,7 @@ export function lightUp(gate: GateId, lang: LangCode = 'zh', seed: string | numb
   return cards;
 }
 
-/** 关口账本：该类决定的全部知识，按类型分组 */
+/** 单个关口：该类决定的全部知识，按类型分组 */
 export function gateLedger(gate: GateId, lang: LangCode = 'zh') {
   const g = getGate(gate);
   const biases = edgesFrom(gate, '易犯')

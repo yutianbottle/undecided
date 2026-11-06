@@ -24,7 +24,7 @@ function showUpdateBar(reg: ServiceWorkerRegistration) {
   bar.innerHTML = '';
 
   const text = document.createElement('span');
-  text.textContent = zh ? '有新版本。刷新后生效，账本数据不受影响。' : 'A new version is ready. Refresh to load it — your records are untouched.';
+  text.textContent = zh ? '有新版本。刷新后生效，记录不受影响。' : 'A new version is ready. Refresh to load it — your records are untouched.';
 
   const btn = document.createElement('button');
   btn.textContent = zh ? '刷新' : 'Refresh';

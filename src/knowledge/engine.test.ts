@@ -177,7 +177,7 @@ describe('gateLedger', () => {
     expect([...weights].sort((a, b) => b - a)).toEqual(weights);
   });
 
-  it('other 关口不抛异常，返回空账本', () => {
+  it('other 关口不抛异常，返回空记录', () => {
     expect(() => gateLedger('other')).not.toThrow();
     const ledger = gateLedger('other');
     expect(ledger.gate.id).toBe('other');
@@ -185,7 +185,7 @@ describe('gateLedger', () => {
     expect(ledger.methods).toEqual([]);
   });
 
-  it('英文账本中的卡片字段不回落为中文', () => {
+  it('英文界面中的卡片字段不回落为中文', () => {
     const cjk = /[\u3400-\u9fff]/;
     for (const gate of GATE_IDS) {
       const ledger = gateLedger(gate, 'en');

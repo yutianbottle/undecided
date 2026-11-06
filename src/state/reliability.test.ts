@@ -123,7 +123,7 @@ describe('备份迁移、导入和异常保护', () => {
     const merged = mergeStates(current, incoming);
     expect(merged.cases).toHaveLength(2); expect(merged.cases[0]).toBe(current.cases[0]);
   });
-  it('损坏原始数据不会被空账本自动覆盖', () => {
+  it('损坏原始数据不会被空记录自动覆盖', () => {
     memory.set(STORAGE_KEY, '{bad json');
     const loaded = loadState();
     expect(getReadIssue()).toBeTruthy(); expect(saveState(loaded).ok).toBe(false);
@@ -173,7 +173,7 @@ describe('阅读版导出', () => {
       facts: ['Repeat client'], distance: 'Ask for the scope first', chosen: 'Quote 30k',
       prediction: 'They accept in 3 days', result: 'Accepted', verdict: 'same', status: 'archived',
     })], instant, 'en');
-    expect(md).toContain('# My decision ledger');
+    expect(md).toContain('# My decision log');
     expect(md).toContain('Reviewed');
     expect(md).toContain('Did it match what you expected');
     expect(md).not.toMatch(/[\u3400-\u9fff]/);

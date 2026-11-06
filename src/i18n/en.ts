@@ -2,7 +2,7 @@ import type { Dict } from './zh';
 
 /** English copy. Same shape as zh — TypeScript will flag any missing key. */
 export const en: Dict = {
-  nav: { brand: 'Undecided', desk: 'Desk', ledger: 'Ledger', me: 'Me', main: 'Main navigation', home: 'Undecided, back to desk', lang: 'Language' },
+  nav: { brand: 'Undecided', desk: 'Desk', ledger: 'Gates', me: 'Me', main: 'Main navigation', home: 'Undecided, back to desk', lang: 'Language' },
   shell: {
     saved: 'Local only · saved',
     saveErr: 'Saving failed',
@@ -56,7 +56,7 @@ export const en: Dict = {
 
   common: {
     back: '← Desk',
-    backLedger: '← Ledger',
+    backLedger: '← Gates',
     next: 'Next →',
     prev: '← Back',
     saveDraft: 'Save draft',
@@ -182,7 +182,7 @@ export const en: Dict = {
   },
 
   ledger: {
-    title: 'Ledger',
+    title: 'The eight gates',
     intro: 'Every decision you have made, and the kinds you have not touched.',
     terrainNote: 'Dots are gates. A gold ring means you have decided something there.',
     axisX: 'Horizontal',

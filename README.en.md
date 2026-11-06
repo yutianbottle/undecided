@@ -4,7 +4,7 @@
 
 **中文: [README.md](./README.md)** ｜ **Live: <https://yutianbottle.github.io/undecided/>**
 
-A decision ledger that never goes online. You write down what is still undecided, make the call, seal it, and open it again when it is due — the prediction you wrote sits next to the result you got.
+A decision log that never goes online. You write down what is still undecided, make the call, seal it, and open it again when it is due — the prediction you wrote sits next to the result you got.
 
 No account, no server, no AI advice. The data stays on your own machine.
 
@@ -164,14 +164,14 @@ These decisions happen at night — a client messages you just before bed, you a
 ## It gets more like you as you use it
 
 - **Before the call**, if you have decided in the same gate before, your previous choice, prediction, result and review are placed in front of you before you sign.
-- **The ledger** counts how many times you have decided in each gate. An untouched gate shows one line; the knowledge unfolds only after you have decided there — reading it before you have been burned in that situation is just words.
+- **The gates page** counts how many times you have decided in each gate. An untouched gate shows one line; the knowledge unfolds only after you have decided there — reading it before you have been burned in that situation is just words.
 - **The lighting cards are random per case.** Two quotes in the same gate do not show the same bias card; the seed is the case id, so reopening one case shows the same card — it must not jump while you read it.
 - **Your own bias.** At the call you can optionally enter one figure; at review you enter the actual one. After three pairs both that gate's page and the Me page state the pattern in your own numbers. The unit follows the gate — money gates take an amount, people/product gates take days:
 
   > Quoting: you expected ¥44,250 on average, it closed at ¥37,500. You tend to price high by 15% — next time multiply by 0.85.
   > Hiring: you expected 31.7 days, it took 44.3. Your estimates run fast by 40% — multiply by 1.4.
 
-  This is the only number on the site computed from your own data, and it needs no ledger backfill to start.
+  This is the only number on the site computed from your own data, and it needs no backlog to start.
 - **The Me page** holds your prediction distribution, your reviewed results, and every case, searchable by keyword and filterable by gate and status. The "Your baseline" section at the top puts every gate's logged figures side by side; gates short of three pairs show "2 / 3" rather than a verdict.
 - **Open early**: if the outcome is already clear, you can review before the due date. Both the scheduled date and the actual opening time are kept.
 
@@ -204,7 +204,7 @@ npm run dev
 
 Open `http://localhost:5188`.
 
-**Always use the same address.** Data is stored per origin (protocol + host + port): a different port (5189, say) is a different, empty ledger — the old data still exists, this address just cannot see it. If the port is taken the program fails loudly instead of quietly moving to another one, precisely to prevent this.
+**Always use the same address.** Data is stored per origin (protocol + host + port): a different port (5189, say) is a different, empty record — the old data still exists, this address just cannot see it. If the port is taken the program fails loudly instead of quietly moving to another one, precisely to prevent this.
 
 Closing the terminal or rebooting will not lose your data. Only these will: a different address, a different browser, clearing the cache.
 
@@ -263,7 +263,7 @@ It then runs full-screen from its own icon, like a native app. **It also opens o
 
 **The data is still in your own browser.**
 
-Deploying it to the web does not upload your ledger: the server holds static pages only, no database. Anyone opening that URL sees an empty ledger; your records exist only in the browser on your device.
+Deploying it to the web does not upload your records: the server holds static pages only, no database. Anyone opening that URL sees an empty record; your records exist only in the browser on your device.
 
 The cost is just as clear: change computer, change browser, clear the cache, and it is gone. **Export a JSON once a month** and keep it somewhere you can find — that is the only reliable backup.
 
