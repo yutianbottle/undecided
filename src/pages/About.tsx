@@ -65,7 +65,7 @@ export default function About() {
             ))}
           </div>
           <p className="hint" style={{ marginTop: 16 }}>
-            {L('每个决定走七步：摆选项 → 写事实 → 换人称自问 → 看照明 → 落槌 → 封存 → 到期开封。', 'Seven steps: options → facts → third-person question → the light → the call → seal → reopen when due. ')}
+            {L('每个决定走七步：摆选项 → 写事实 → 换位自问 → 看照明 → 落槌 → 封存 → 到期开封。', 'Seven steps: options → facts → third-person question → the light → the call → seal → reopen when due. ')}
             {L('落槌前有八秒静止，封存后不可修改。', 'Eight seconds of stillness before the call. No edits after sealing.')}
           </p>
         </Section>
