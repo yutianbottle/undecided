@@ -31,7 +31,7 @@ export default function Ledger(): JSX.Element {
   return (
     <Shell>
       <div className="wrap ledger-wrap">
-        <h1 className="h1">{L('账本', 'Ledger')}</h1>
+        <h1 className="h1">{L('八个关口', 'The eight gates')}</h1>
         <p className="hint" style={{ marginTop: 'var(--sp1)' }}>
           {L('这里记着你做过的决定，和尚未落槌的那几类。', 'Every decision you have made, and the kinds you have not touched.')}
         </p>

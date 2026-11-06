@@ -1,6 +1,6 @@
 /** 界面文案（中文）。新增 key 时英文会自动报类型错，防止漏翻。 */
 export const zh = {
-  nav: { brand: '未决', desk: '台面', ledger: '账本', me: '我', main: '主导航', home: '未决，返回台面', lang: '语言' },
+  nav: { brand: '未决', desk: '台面', ledger: '关口', me: '我', main: '主导航', home: '未决，返回台面', lang: '语言' },
   shell: {
     saved: '仅存本机 · 已保存',
     saveErr: '本机保存异常',
@@ -54,7 +54,7 @@ export const zh = {
 
   common: {
     back: '← 台面',
-    backLedger: '← 账本',
+    backLedger: '← 关口',
     next: '下一步 →',
     prev: '← 上一步',
     saveDraft: '存草稿',
@@ -180,7 +180,7 @@ export const zh = {
   },
 
   ledger: {
-    title: '账本',
+    title: '八个关口',
     intro: '这里记着你做过的决定，和还没碰过的那几类。',
     terrainNote: '圆点是关口。金环 = 你在那个关口做过决定。',
     axisX: '横轴',
