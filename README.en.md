@@ -291,6 +291,3 @@ Homepage: <https://longway-li.pages.dev>
 This desk does not tell you what to choose, and it does not ask an AI for you.
 
 It only guarantees that the judgement was yours, the reasons were written in your hand, and you will come back to settle the account.
-
----
-
