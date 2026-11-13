@@ -43,7 +43,8 @@ function showUpdateBar(reg: ServiceWorkerRegistration) {
 }
 
 // 仅在生产构建中注册 Service Worker，避免影响开发环境的热更新。
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+// 小红书小工具沙箱里没有 SW，注册会抛 SecurityError，直接跳过。
+if ('serviceWorker' in navigator && import.meta.env.PROD && import.meta.env.VITE_XHS_SANDBOX !== '1') {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register(`./sw.js?v=${__BUILD_ID__}`)

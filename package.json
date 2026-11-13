@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "build:xhs": "VITE_XHS_SANDBOX=1 vite build --outDir dist-xhs --emptyOutDir",
     "preview": "vite preview",
     "test": "vitest run"
   },
